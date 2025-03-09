@@ -1,4 +1,4 @@
-package config;
+package com.social.Social.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ import java.util.Collections;
 @Configuration //khai báo config
 @EnableWebSecurity // kích hoạt bảo mật
 public class AppConfig {
-    private  final  CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final  CustomAccessDeniedHandler customAccessDeniedHandler;
 
     public AppConfig(CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.customAccessDeniedHandler = customAccessDeniedHandler;
@@ -30,7 +30,7 @@ public class AppConfig {
         httpSecurity.sessionManagement(
                 managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize -> Authorize
-                        .requestMatchers("api/**").authenticated()
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
 
         ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)

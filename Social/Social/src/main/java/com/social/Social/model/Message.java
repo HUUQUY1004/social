@@ -16,8 +16,8 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private  Long from;
-    private Long to;
+    private  Long fromUser;
+    private Long toUserId;
     private String content ;
     private String imageUrl;
     private String videoUrl;

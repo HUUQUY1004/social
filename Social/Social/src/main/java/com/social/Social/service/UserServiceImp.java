@@ -2,6 +2,7 @@ package com.social.Social.service;
 
 import com.social.Social.model.User;
 import com.social.Social.responsitory.UserRepository;
+import com.social.Social.config.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImp  implements  UserService{
     @Autowired
     private UserRepository userRepository;
+    private JwtProvider jwtProvider;
     @Override
     public User findUserByToken(String jwt) throws Exception {
-        return null;
+        return findUserByEmail( jwtProvider.getEmailFromJwtToken(jwt));
     }
 
     @Override
