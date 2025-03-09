@@ -1,7 +1,9 @@
 package com.social.Social.controller;
 
 import com.social.Social.model.FriendRequest;
+import com.social.Social.model.User;
 import com.social.Social.response.FriendResponse;
+import com.social.Social.response.Invitation;
 import com.social.Social.responsitory.FriendRequestRepository;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.service.FriendService;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController()
 @RequestMapping("/api/friend")
@@ -35,5 +39,16 @@ public class FriendController {
         }
         return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
 
+    }
+    @GetMapping("/getInvitation")
+    public ResponseEntity<Invitation> getInvitation(
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        List<User> userList = friendService.getListInvitation(jwt);
+
+        Invitation invitation = new Invitation();
+        invitation.setInvitations(userList);
+        invitation.setStatus(200);
+        return  new ResponseEntity<>(invitation, HttpStatus.OK);
     }
 }

@@ -8,6 +8,8 @@ import com.social.Social.responsitory.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FriendRequestImp implements  FriendService{
     @Autowired
@@ -68,5 +70,11 @@ public class FriendRequestImp implements  FriendService{
         FriendRequest request = friendRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu kết bạn"));
         friendRequestRepository.delete(request);
+    }
+
+    @Override
+    public List<User> getListInvitation(String jwt) throws Exception {
+       User user = userService.findUserByToken(jwt);
+       return friendRequestRepository.findAllByReceiver(user);
     }
 }
