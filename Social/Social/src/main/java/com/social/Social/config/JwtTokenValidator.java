@@ -1,4 +1,4 @@
-package config;
+package com.social.Social.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,11 +22,13 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURL = request.getRequestURI();
-
+        System.out.println("Request URL: " + request.getRequestURI());
 //        Bỏ các xt ko bắt đầu api
         if(!requestURL.startsWith("/api/"))
         {
+            System.out.println("Permit all, no JWT validation required.");
             filterChain.doFilter(request, response);
+            return;
         }
         String jwt = request.getHeader(JwtConstant.JWT_HEADER);
 
@@ -37,7 +39,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                 Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 
                 String email = String.valueOf(claims.get("email"));
-                String authorities = String.valueOf(claims.get("authorities "));
+                String authorities = String.valueOf(claims.get("authorities"));
 
                 List<GrantedAuthority> authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
                 Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorityList);
@@ -56,4 +58,5 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
 
     }
+
 }
