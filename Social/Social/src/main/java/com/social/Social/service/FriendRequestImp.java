@@ -1,14 +1,17 @@
 package com.social.Social.service;
 
+import com.social.Social.DTO.FriendRequestDTO;
 import com.social.Social.model.FriendRequest;
 import com.social.Social.model.RequestStatus;
 import com.social.Social.model.User;
 import com.social.Social.responsitory.FriendRequestRepository;
 import com.social.Social.responsitory.UserRepository;
+import jakarta.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FriendRequestImp implements  FriendService{
@@ -26,7 +29,7 @@ public class FriendRequestImp implements  FriendService{
                 .findById(receiverId)
                 .orElseThrow(() -> new RuntimeException("Người nhận không tồn tại"));
 
-        if (friendRequestRepository.findBySenderAndReceiver(sender, receiver).isPresent()) {
+        if (friendRequestRepository.findBySenderAndReceiver(sender, receiver,RequestStatus.PENDING).isPresent()) {
             throw new RuntimeException("Đã gửi yêu cầu kết bạn rồi!");
         }
         if(sender.getId() == receiverId){
@@ -73,8 +76,14 @@ public class FriendRequestImp implements  FriendService{
     }
 
     @Override
-    public List<User> getListInvitation(String jwt) throws Exception {
+    public List<FriendRequestDTO> getListInvitation(String jwt) throws Exception {
        User user = userService.findUserByToken(jwt);
-       return friendRequestRepository.findAllByReceiver(user);
+        List<Tuple> results = friendRequestRepository.findAllByReceiver(user, RequestStatus.PENDING);
+
+        return  results.stream().map(tuple -> new FriendRequestDTO(
+                tuple.get(0, Long.class),
+                tuple.get(1, User.class)
+        )).collect(Collectors.toList());
+
     }
 }

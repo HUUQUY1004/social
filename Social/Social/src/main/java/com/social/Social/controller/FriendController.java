@@ -1,5 +1,6 @@
 package com.social.Social.controller;
 
+import com.social.Social.DTO.FriendRequestDTO;
 import com.social.Social.model.FriendRequest;
 import com.social.Social.model.User;
 import com.social.Social.response.FriendResponse;
@@ -40,11 +41,46 @@ public class FriendController {
         return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
 
     }
+
+    @PostMapping("reject/{requestId}")
+    public ResponseEntity<FriendResponse> rejectRequest(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long requestId
+    ) throws Exception {
+        friendService.rejectFriendRequest(requestId);
+        FriendResponse friendResponse = new FriendResponse();
+        friendResponse.setStatus(200);
+        friendResponse.setMessage("Đã từ chối lời mờ");
+        return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
+    }
+    @DeleteMapping("delete/{requestId}")
+    public ResponseEntity<FriendResponse> deleteRequest(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long requestId
+    ) throws Exception {
+        friendService.deleteInvitation(requestId);
+        FriendResponse friendResponse = new FriendResponse();
+        friendResponse.setStatus(200);
+        friendResponse.setMessage("Đã xóa lời mờ");
+        return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("accept/{requestId}")
+    public ResponseEntity<FriendResponse> acceptFriend(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long requestId
+    ) throws Exception {
+        friendService.acceptFriendRequest(requestId);
+        FriendResponse friendResponse = new FriendResponse();
+        friendResponse.setStatus(200);
+        friendResponse.setMessage("Đã chấp nhận lời mời kết bạn");
+        return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
+    }
     @GetMapping("/getInvitation")
     public ResponseEntity<Invitation> getInvitation(
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
-        List<User> userList = friendService.getListInvitation(jwt);
+        List<FriendRequestDTO> userList = friendService.getListInvitation(jwt);
 
         Invitation invitation = new Invitation();
         invitation.setInvitations(userList);
