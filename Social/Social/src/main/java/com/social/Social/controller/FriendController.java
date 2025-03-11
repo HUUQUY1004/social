@@ -87,4 +87,6 @@ public class FriendController {
         invitation.setStatus(200);
         return  new ResponseEntity<>(invitation, HttpStatus.OK);
     }
+
+
 }

@@ -20,6 +20,8 @@ public class User {
     private String username;
     private String description;
     private String nickname;
+    private String avatar;
+    private String banner;
     private String password;
 
     @JsonIgnore
