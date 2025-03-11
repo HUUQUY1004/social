@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImp  implements  UserService{
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private JwtProvider jwtProvider;
     @Override
     public User findUserByToken(String jwt) throws Exception {
@@ -18,6 +19,12 @@ public class UserServiceImp  implements  UserService{
 
     @Override
     public User findUserByEmail(String email) throws Exception {
-        return null;
+        User user = userRepository.findByEmail(email);
+
+        if(user == null) {
+            throw  new Exception("User not found");
+        }
+
+        return user;
     }
 }
