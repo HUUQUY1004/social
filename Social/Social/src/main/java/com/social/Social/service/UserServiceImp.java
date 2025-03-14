@@ -27,4 +27,25 @@ public class UserServiceImp  implements  UserService{
 
         return user;
     }
+
+    @Override
+    public boolean updateAvatar(String jwt, String path) throws Exception {
+        User user = findUserByToken(jwt);
+        int check = userRepository.updateAvatar(user.getId(),path );
+        return check >0;
+    }
+
+    @Override
+    public boolean updateBanner(String jwt, String path) throws Exception {
+        User user = findUserByToken(jwt);
+        int check = userRepository.updateBanner(user.getId(), path);
+        return check >0;
+    }
+
+    @Override
+    public boolean updateDescription(String jwt, String description) throws Exception {
+        User user = findUserByToken(jwt);
+        int check = userRepository.updateDescription(user.getId(), description);
+        return  check >0;
+    }
 }

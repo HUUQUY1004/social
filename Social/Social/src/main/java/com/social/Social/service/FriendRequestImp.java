@@ -10,6 +10,7 @@ import jakarta.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +53,19 @@ public class FriendRequestImp implements  FriendService{
         request.setStatus(RequestStatus.ACCEPTED);
         friendRequestRepository.save(request);
 
+
+
         User sender = request.getSender();
         User receiver = request.getReceiver();
+
+        // Đảm bảo danh sách bạn bè không bị null
+        if (sender.getFriends() == null) {
+            sender.setFriends(new ArrayList<>());
+        }
+        if (receiver.getFriends() == null) {
+            receiver.setFriends(new ArrayList<>());
+        }
+
         sender.getFriends().add(receiver);
         receiver.getFriends().add(sender);
         userRepository.save(sender);
