@@ -7,6 +7,7 @@ import './login.scss'
 import Footer from "../../component/Footer/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { login } from "../../action/action";
 
 function Login() {
     const navigate = useNavigate()
@@ -30,24 +31,18 @@ function Login() {
         e.preventDefault();
         if(handInvalid()){
             const {email, password} = value
-            const {data} = await axios.post('http://localhost:5000/api/user/login',{
-                email,
-                password
-            })
-            if(data.status === false){
-                alert(data.msg)
-            }
-            else{
-                localStorage.setItem('instagram-user', JSON.stringify(data.user))
+            const data = await login(email, password)
+            if(data.message === 'Login success'){
+                localStorage.setItem('access_token', data.jwt)
                 navigate('/')
             }
+            else {
+                console.log(data);
+                
+            }
+        
         }
     }
-    useEffect(()=>{
-        if(localStorage.getItem('instagram-user')){
-            navigate('/')
-        }
-    })
     return ( 
         <div>
         <div className="login__wrapper flex j-center a-center">
