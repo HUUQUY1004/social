@@ -1,0 +1,26 @@
+.post-item {
+    height: 293px;
+    width: 300px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    &:hover .post-item-content {
+        display: flex;
+    }
+    .post-item-content {
+        display: none;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        gap: 10px;
+        .like,
+        .comment {
+            font-weight: 700;
+            color: var(--white-color);
+            .post-item-icon {
+                font-size: 20px;
+                margin: 0 10px;
+            }
+        }
+    }
+}

@@ -1,0 +1,146 @@
+
+.login__wrapper{
+    margin: 20px 0 ;
+    padding: 5px 0;
+    .inner{
+
+        width: 350px;
+        .content{
+            border:  1px solid var(--separator);
+            padding: 10px;
+
+            .logo{
+                margin: 20px  0 0 0 ;
+                .logo-bg{
+                    background-image: url('../../source/logo.png');
+                    width: 175px;
+                    height: 50px;
+                    background-size: 175px 184px;
+                    background-repeat: no-repeat;
+                    background-position: 0 0 ;
+                }
+                h2{
+                    color: var(--text-primary);
+                    font-size:  20px;
+                    text-align: center;
+                }
+            }
+            .line-wrapper{
+                padding: 10px 0;
+                gap: 10px;
+                .line-1{
+                    position: relative;
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: -101px;
+                        height: 1px;
+                        padding: 0.5px 0;
+                        width: 98px;
+                        background-color: var(--separator);
+                    }
+                    
+                }
+                .text-line{
+                    text-transform: uppercase;
+                    color: var(--text-primary);
+                    font-weight: 600;
+                    font-size: 13px;
+                }
+                .line-2{
+                    position: relative;
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        height: 1px;
+                        padding: 0.5px 0;
+                        width: 98px;
+                        background-color: var(--separator);
+                    }
+                }
+            }
+            .login-w{
+                padding: 10px 0 18px 0; 
+                p{
+                    i{
+                        color: #385185;
+                    }
+                    span{
+                        margin-left: 5px;
+                        color: #385185;
+                        font-weight: 550;
+                    }
+                }
+                .forget-link{
+                    margin-top: 8px;
+                    font-size: 12px;
+                }
+            }
+            .form{
+               padding: 5px 0;
+               gap: 10px;
+               margin:  10px  0 5px 0;
+               .input-wrapper{
+                position: relative;
+                input{
+                    border:  1px solid var(--separator);
+                    background-color: var(--second-background);
+                    width: 258px;
+                    padding: 10px 5px;
+                    &:focus ~ span {
+                        top: -10px;
+                        left: 0;
+                        font-size: 8px;
+                    }
+                }
+                span{
+                    color: var(--text-primary);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding: 10px 5px;
+                    font-size: 12px;
+                    pointer-events: none;
+                    transition:  0.5s;
+                }
+               }
+               .btn-submit{
+                margin-top: 5px;
+                background-color: var(--blue-color);
+                padding: 7px 10px;
+                color: var(--white-color);
+                cursor: pointer;
+               }
+            }
+        }
+        .check-account{
+            margin: 10px 0;
+            border: 1px solid var(--separator);
+            padding: 20px 30px;
+            font-size: 14px;
+            p{
+                
+            }
+            a{
+                padding: 0 0 0 5px ;
+                color: var(--blue-color);
+                font-weight: 600;
+            }
+        }
+        .download{
+            margin: 10px 0 0 0 ;
+            .img_download{
+                padding:  10px;
+                gap:  10px;
+                img{
+                    width: 110px;
+                    height: 40px;
+                }
+            }
+        }
+    }
+
+}

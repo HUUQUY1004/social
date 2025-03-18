@@ -1,0 +1,42 @@
+.notify__wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 99999999;
+    .notify-inner {
+        height: 200px;
+        width: 400px;
+        border-radius: 20px;
+        background-color: var(--white-color);
+        overflow: hidden;
+        padding: 5px 0;
+        .notify-title {
+            padding-top: 30px;
+            font-weight: 450;
+            font-size: 20px;
+        }
+        .notify-content {
+            margin-top: -25px;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .notify-btn {
+            width: 100%;
+            .agree {
+                color: #ed4956;
+                font-weight: 600;
+            }
+            .agree,
+            .refuse {
+                padding-top: 5px;
+                padding: 10px;
+                width: 100%;
+                border-top: 1px solid var(--separator);
+                cursor: pointer;
+            }
+        }
+    }
+}

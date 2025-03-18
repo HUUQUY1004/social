@@ -1,0 +1,209 @@
+.profile {
+    padding: 30px 30px 40px 30px;
+    overflow: hidden;
+    .information {
+        gap: 100px;
+        margin-bottom: 44px;
+        width: 940px;
+        padding: 0 70px;
+        .img {
+            height: 150px;
+            width: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid var(--separator);
+            & img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+        .infor {
+            font-weight: 500;
+            gap: 20px;
+            .top {
+                gap: 20px;
+                .username {
+                    font-weight: 400;
+                }
+                .btn {
+                    padding: 10px 20px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 600;
+                }
+                .icon {
+                    padding: 5px;
+                    cursor: pointer;
+                    svg {
+                        font-size: 26px;
+                    }
+                }
+                .user-diff {
+                    margin-left: 20px;
+                    flex: 1 1;
+                    gap: 20px;
+                    .following {
+                        font-size: 15px;
+                        padding: 7px 16px;
+                        color: var(--white-color);
+                        background-color: var(--blue-color);
+                        cursor: pointer;
+                    }
+                    .inbox {
+                        font-size: 15px;
+                        padding: 7px 16px;
+                        background-color: #efefef;
+                        cursor: pointer;
+                    }
+                    span {
+                        padding: 5px;
+                        cursor: pointer;
+                        svg {
+                            font-size: 26px;
+                        }
+                    }
+                }
+            }
+            .center {
+                gap: 40px;
+                .count-post,
+                .count_followers,
+                .count_following {
+                    span {
+                        font-weight: 500;
+                        margin-right: 8px;
+                    }
+                    font-weight: 400;
+                    font-size: 14px;
+                }
+            }
+            .bottom {
+                .name {
+                    font-weight: 500;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+    .content-profile {
+        border-top: 1px solid var(--separator);
+        width: 940px;
+        .nav {
+            padding: 10px;
+            gap: 30px;
+            .item {
+                padding: 5px;
+                gap: 5px;
+                cursor: pointer;
+                .icon {
+                    font-size: 12px;
+                    transform: translateY(3px);
+                }
+                .text {
+                }
+            }
+            .item.active {
+                font-weight: 600;
+                position: relative;
+                &::after {
+                    position: absolute;
+                    content: '';
+                    top: -10px;
+                    left: 0;
+                    right: 0;
+                    border-top: 1px solid #333;
+                }
+            }
+        }
+        .content-by-nav {
+            .content-ui {
+                padding: 60px 0;
+                margin: 0;
+                .up-post,
+                .saving-empty-content,
+                .tag-you {
+                    gap: 20px;
+                    width: 100%;
+                    height: 100%;
+                    font-size: 14px;
+                    .icon {
+                        height: 60px;
+                        width: 60px;
+                        border-radius: 50%;
+                        border: 3px solid #333;
+                        font-size: 30px;
+                    }
+                    .title {
+                        font-size: 34px;
+                    }
+                    .description {
+                        max-width: 345px;
+                        text-align: center;
+                    }
+                    .share-fist {
+                        color: var(--blue-color);
+                        font-weight: bold;
+                        cursor: pointer;
+                        &:hover {
+                            color: rgba(0, 55, 107);
+                        }
+                    }
+                    .trash {
+                        margin-top: 10px;
+                        padding: 8px;
+                        gap: 5px;
+                        color: var(--blue-color);
+                        font-weight: 600;
+                        span {
+                            svg {
+                                font-size: 18px;
+                            }
+                        }
+                    }
+                }
+                .saving-empty {
+                    .add-new-album {
+                        width: 940px;
+                        padding-bottom: 20px;
+                        .text {
+                            font-size: 12px;
+                            color: var(--text-primary);
+                        }
+                        .new-album {
+                            font-size: 14px;
+                            color: var(--blue-color);
+                            font-weight: bold;
+                            cursor: pointer;
+                            &:hover {
+                                color: rgba(0, 55, 107);
+                            }
+                        }
+                    }
+                }
+                .album {
+                    margin-top: 20px;
+                    .item-album {
+                        width: 293px;
+                        height: 300px;
+                        border: 1px solid var(--separator);
+                        margin-bottom: 20px;
+                        background-image: linear-gradient(180deg, var(--white-color), var(--separator), #ccc, #ddd);
+                        cursor: pointer;
+                        position: relative;
+                        border-radius: 5px;
+                        &:hover {
+                            background-image: linear-gradient(var(--white-color), var(--separator));
+                        }
+                        .name {
+                            position: absolute;
+                            left: 20px;
+                            bottom: 20px;
+                            font-weight: 550;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+.account{
+    padding: 5px 0;
+    margin-bottom: 10px;
+    cursor: pointer;
+    .left{
+        .avatar{
+            height: 40px;
+            width: 40px;
+            overflow: hidden;
+            border-radius:50% ;
+            img{
+                height: 100%;
+                width: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        .information{
+            margin-left: 12px;
+            color: var(--text-primary);
+            .username{
+                color:  var(--text-color);
+            }
+            .tick{
+                color: var(--blue-bold)
+            }
+            .name{
+                font-size: 14px;
+            }
+            .description{
+                font-size: 12px;
+            }
+        }
+    }
+    .right{
+        .btn{
+            padding: 7px 16px;
+            color: var(--white-color);
+            background-color: var(--blue-bold);
+            font-weight: 650;
+            cursor: pointer;
+        }
+    }
+}

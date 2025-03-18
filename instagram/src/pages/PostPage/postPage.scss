@@ -1,0 +1,223 @@
+.inner-post-page {
+    min-width: 500px;
+    max-width: 100%;
+    height: 665px;
+    max-height: 100%;
+    background-color: var(--white-color);
+    border-radius: 2px;
+    .file {
+        img {
+            height: 100%;
+            width: auto;
+        }
+    }
+    .detail {
+        width: 500px;
+        height: 100%;
+        background-color: var(--white-color);
+        header {
+            border-bottom: 1px solid var(--separator);
+            .left {
+                padding: 14px 4px 14px 14px;
+                .img {
+                    height: 32px;
+                    width: 32px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        object-fit: contain;
+                    }
+                }
+                .information {
+                    margin-left: 20px;
+                    a {
+                        font-size: 14px;
+                        color: #000;
+                        font-weight: 600;
+                    }
+                }
+            }
+            .right {
+                padding: 14px;
+                span {
+                    cursor: pointer;
+                    padding: 5px;
+                    svg {
+                        font-size: 20px;
+                    }
+                }
+            }
+        }
+        .content-comment {
+            flex: 1;
+            padding: 14px;
+            height: 400px;
+            .item-comment {
+                .avatar {
+                    height: 32px;
+                    width: 32px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        object-fit: contain;
+                    }
+                }
+                .main {
+                    margin-left: 20px;
+                    div {
+                        a {
+                            font-size: 14px;
+                            color: #000;
+                            font-weight: 600;
+                        }
+                        .comment {
+                            margin-left: 10px;
+                        }
+                    }
+                    .times {
+                        margin-top: 5px;
+                        color: #717171;
+                        font-size: 12px;
+                    }
+                }
+            }
+            .item-comment + .item-comment {
+                margin-top: 8px;
+            }
+        }
+        .interaction {
+            padding: 14px;
+            height: 100px;
+            .left,
+            .right {
+                span {
+                    padding: 5px;
+                    cursor: pointer;
+                    svg {
+                        font-size: 25px;
+                    }
+                    .red {
+                        fill: red;
+                    }
+                }
+            }
+            .left {
+                span:not(:first-child) {
+                    margin-left: 10px;
+                }
+                .comment {
+                    svg {
+                        transform: rotateY(180deg);
+                    }
+                }
+            }
+            .like-post-and-time {
+                padding-left: 10px;
+                margin-top: 10px;
+                h4 {
+                    font-weight: 500;
+                }
+                p {
+                    margin-top: 2px;
+                    text-transform: uppercase;
+                    font-size: 10px;
+                }
+            }
+        }
+        .comment-post {
+            height: 52px;
+            border-top: 1px solid var(--separator);
+            padding: 14px;
+            .icon {
+                span {
+                    position: relative;
+                    cursor: pointer;
+                    padding: 0 10px;
+                    svg {
+                        font-size: 20px;
+                    }
+                    .emoji {
+                        position: absolute;
+                        left: 25px;
+                        top: -190px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 5px #ddd;
+                        &::after {
+                            position: absolute;
+                            content: '';
+                            // top: -30px;
+                            left: 4px;
+                            border-width: 16px 11px;
+                            border-style: solid;
+                            border-color: var(--text-primary) transparent transparent transparent;
+                        }
+                        .EmojiPickerReact.epr-main {
+                            width: 300px !important;
+                            height: 180px !important;
+                        }
+
+                        .epr-header {
+                            display: none;
+                        }
+                        .epr-preview {
+                            display: none;
+                        }
+                    }
+                }
+            }
+            .text {
+                flex: 1;
+                outline: none;
+                border: none;
+                padding: 5px 10px;
+            }
+            div {
+                .bold {
+                    opacity: 1;
+                    color: var(--blue-bold);
+                    font-weight: 600;
+                }
+                .blur {
+                    opacity: 0.3;
+                    font-weight: 600;
+                    color: var(--blue-bold);
+                }
+            }
+        }
+    }
+    .custom {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        div {
+            background-color: var(--white-color);
+            height: auto;
+            width: 400px;
+            border-radius: 8px;
+            overflow: hidden;
+            ul {
+                li {
+                    font-size: 14px;
+                    padding: 18px 8px;
+                    text-align: center;
+                    cursor: pointer;
+                    border-bottom: 1px solid var(--separator);
+                }
+                .delete {
+                    font-weight: 600;
+                    color: var(--red);
+                }
+            }
+        }
+    }
+}
