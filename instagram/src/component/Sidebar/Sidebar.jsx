@@ -172,7 +172,7 @@ function Sidebar({ currentUser }) {
                             <img src={images.noAvatar} alt="default" />
                         )}
                     </p>
-                    <NavLink to={`/${currentUser.username}`} className="link">
+                    <NavLink to={`/profile`} className="link">
                         Trang cá nhân
                     </NavLink>
                 </div>

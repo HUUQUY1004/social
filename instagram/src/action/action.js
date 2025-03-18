@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+export const BASE_URL = "http://localhost:5000";
 
 export const token = localStorage.getItem("access_token");
 
@@ -22,6 +22,7 @@ export const getMyProfile = async () => {
     `${BASE_URL}/api/profile/my-profile`,
     config
   );
+  console.log("profile: ", data);
 
   return data;
 };

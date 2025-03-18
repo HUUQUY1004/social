@@ -17,6 +17,7 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
+import { BASE_URL, getMyProfile } from '../../action/action';
 function Profile() {
     const [dataUser, setDataUser] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
@@ -26,18 +27,13 @@ function Profile() {
     const [showNewSaving, setShowNewSaving] = useState(false);
     const [showPopup, setShowPopup] = useState(false); //ở chỗ bánh răng
     const [postList, setPostList] = useState([]);
-    const dataLocal = JSON.parse(localStorage.getItem('instagram-user'));
     const { username } = useParams();
     // ref flow and unflow
     const flowRef = useRef();
-    const getUser = async () => {
-        const res = await axios.get(`http://localhost:5000/api/user/${username}`);
-        setDataUser(res.data.user);
-        setIsLoading(false);
-    };
+
     const getCurrentUser = async () => {
-        const res = await axios.get(`http://localhost:5000/api/user/${dataLocal.username}`);
-        setCurrentUser(res.data.user);
+        const data = await getMyProfile()
+        setCurrentUser(data.user);
     };
     useEffect(() => {
         getCurrentUser();
@@ -50,33 +46,6 @@ function Profile() {
     useEffect(() => {
         getPost();
     }, [dataUser]);
-    useEffect(() => {
-        getUser();
-    }, [username]);
-    // Hàm flow and unFlow
-    let isFlow = false;
-    // IEE
-    (function checkFlow() {
-        for (let i = 0; i < currentUser?.following.length; i++) {
-            if (currentUser?.following[i]._id === dataUser?._id) {
-                isFlow = true;
-            }
-        }
-    })();
-    const unFlow = async () => {
-        unFollowing(currentUser._id, dataUser?._id);
-    };
-    const flow = async () => {
-        following(currentUser._id, dataUser?._id);
-    };
-    const handleClick = (ref) => {
-        if (ref.current?.innerHTML === 'Bỏ theo dõi') {
-            unFlow();
-        }
-        if (ref.current?.innerHTML === 'Theo dõi') {
-            flow();
-        }
-    };
     const nav = [
         {
             name: 'BÀI VIẾT',
@@ -101,7 +70,8 @@ function Profile() {
                 <div className="profile flex j-center a-center flex-column">
                     <div className="information flex">
                         <div className="img">
-                            <img src={dataUser?.isAvatarImage ? dataUser?.avatarImage : images.noAvatar} alt="avatar" />
+                            <img src={currentUser?.avatar ? `${BASE_URL +currentUser?.avatar}` : 
+                                images.noAvatar} alt="avatar" />
                         </div>
                         <div className="infor flex flex-column">
                             <div className="top flex a-center">
@@ -123,9 +93,9 @@ function Profile() {
                                         <button
                                             className="following br-8"
                                             ref={flowRef}
-                                            onClick={() => handleClick(flowRef)}
+                                            
                                         >
-                                            {isFlow ? textUnFlow : textFlow}
+                                            Hi
                                         </button>
                                         <button className="inbox br-8">Nhắn tin</button>
                                         <span>
@@ -140,11 +110,11 @@ function Profile() {
                                     bài viết
                                 </h3>
                                 <h3 className="count_followers">
-                                    <span>{dataUser?.followers.length}</span>
+                                    <span>0</span>
                                     người theo dõi
                                 </h3>
                                 <h3 className="count_following">
-                                    Đang theo dõi <span>{dataUser?.following.length}</span>người dùng
+                                    Đang theo dõi <span>0</span>người dùng
                                 </h3>
                             </div>
                             <div className="bottom">

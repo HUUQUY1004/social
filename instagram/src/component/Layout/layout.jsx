@@ -16,7 +16,7 @@ function DefaultLayout({children}) {
             else{
                 const data = await getMyProfile()
                 setIsLoading(false)
-                 await setCurrentUser(data)
+                 await setCurrentUser(data.user)
                 
             }
         } catch (error) {
