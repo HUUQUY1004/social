@@ -46,6 +46,8 @@ public class UserServiceImp  implements  UserService{
     public boolean updateDescription(String jwt, String description) throws Exception {
         User user = findUserByToken(jwt);
         int check = userRepository.updateDescription(user.getId(), description);
+
+        
         return  check >0;
     }
 }
