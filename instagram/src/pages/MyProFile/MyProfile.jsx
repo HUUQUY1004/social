@@ -19,6 +19,7 @@ import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
 import { BASE_URL, getMyProfile } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
+import ChangeAvatar from '../../component/Change/Avatar/avatar';
 function Profile() {
     const [dataUser, setDataUser] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
@@ -27,6 +28,7 @@ function Profile() {
     const [showPost, setShowPost] = useState(false);
     const [showNewSaving, setShowNewSaving] = useState(false);
     const [showChangeDescription, setShowChangeDescription] = useState(false);
+    const [showChangeAvatar, setShowChangeAvatar] = useState(false);
     const [showPopup, setShowPopup] = useState(false); //ở chỗ bánh răng
     const [postList, setPostList] = useState([]);
 
@@ -71,7 +73,7 @@ function Profile() {
             ) : (
                 <div className="profile flex j-center a-center flex-column">
                     <div className="information flex">
-                        <div className="img">
+                        <div className="img" onClick={()=>setShowChangeAvatar(true)}>
                             <img src={currentUser?.avatar ? `${BASE_URL +currentUser?.avatar}` : 
                                 images.noAvatar} alt="avatar" />
                         </div>
@@ -250,6 +252,9 @@ function Profile() {
                 showChangeDescription && <ChangeDescription 
                 onCloseChange={setShowChangeDescription}
                />
+            }
+            {
+                showChangeAvatar && <ChangeAvatar onOpen={setShowChangeAvatar}/>
             }
             {/* {showPopup && (
                 <PopupWrapper isClose={false} onClose={showPopup}>
