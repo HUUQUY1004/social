@@ -1,0 +1,66 @@
+.chat-input__wrapper {
+    position: absolute;
+    bottom: 0px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-radius: 20px;
+    border: 1px solid var(--separator);
+    background-color: var(--white-color);
+    z-index: 1000;
+    margin-bottom: 10px;
+    .button-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 0 10px;
+        svg {
+            font-size: 20px;
+        }
+        .emoji-pick {
+            position: absolute;
+            top: -460px;
+        }
+    }
+    .input-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background-color: #ffffff34;
+        border-radius: 15px;
+        .input {
+            width: 90%;
+            height: 60%;
+            background-color: transparent;
+            color: var(--white);
+            border: none;
+            padding: 5px 16px;
+            font-size: 16px;
+            &::selection {
+                background-color: #9a86f3;
+            }
+            &:focus {
+                outline: none;
+            }
+        }
+        .submit-btn {
+            height: 100%;
+            flex: 1;
+            border-radius: 15px;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            color: var(--blue-bold);
+            font-weight: 600;
+            svg {
+                font-size: 20px;
+                color: #333;
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+.intro__wrapper{
+    position: relative;
+    height: 625px;
+    width: 465px;
+    background-image: url('../../source/bg-intro.png');
+    background-size: 468px 634px;
+    background-repeat: no-repeat;
+    img{
+        position: absolute;
+        top: 25px;
+        right: 57px;
+        animation: fade 1.5s;
+         @keyframes fade {
+            from {
+                opacity: 0;
+            }
+            to{
+                opacity: 1;
+            }
+         }
+    }
+}

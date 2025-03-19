@@ -1,0 +1,104 @@
+.sidebar__wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 244px;
+    padding: 15px 7px 30px;
+    border-right: 1px solid var(--separator);
+    .logo {
+        background-image: url('../../source/logo.png');
+        width: 220px;
+        height: 73px;
+        background-position: 11px 10px;
+        background-repeat: no-repeat;
+        background-size: 110px 123px;
+    }
+    .sidebar {
+        position: relative;
+        .sidebar-item {
+            margin-bottom: 10px;
+            &:hover {
+                background-color: var(--separator);
+            }
+            a {
+                padding: 12px 17px;
+                gap: 10px;
+                font-size: 17px;
+                transition: transform;
+                transition-delay: 1s;
+                .icon {
+                    color: black;
+                    font-size: 20px;
+                }
+                &:hover {
+                    .icon {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+            a.active {
+                font-weight: 650;
+            }
+            .item {
+                padding: 12px 17px;
+                gap: 10px;
+                cursor: pointer;
+                font-size: 17px;
+                .icon {
+                    color: black;
+                    font-size: 20px;
+                }
+                &:hover {
+                    .icon {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+        }
+    }
+    .current-user {
+        padding: 12px 17px;
+        .avatar {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+
+            img {
+                height: 100%;
+                width: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        .link {
+            font-size: 17px;
+            margin-left: 10px;
+            height: 100%;
+            width: 100%;
+        }
+        .link.active {
+            font-weight: 600;
+        }
+        .link.active .avatar {
+            border: 2px solid var(--black-color);
+        }
+        &:hover {
+            background-color: var(--separator);
+            img {
+                transform: scale(1.1);
+            }
+        }
+    }
+    .more {
+        position: absolute;
+        bottom: 30px;
+        padding: 12px 17px;
+        cursor: pointer;
+        width: 229.2px;
+        h4 {
+            margin-left: 10px;
+            font-weight: 500;
+        }
+    }
+}

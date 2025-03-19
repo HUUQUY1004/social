@@ -1,0 +1,11 @@
+.translate__wrapper {
+    position: absolute;
+    top: 0;
+    right: -400px;
+    height: 100vh;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    background-color: var(--white-color);
+    z-index: 1;
+}

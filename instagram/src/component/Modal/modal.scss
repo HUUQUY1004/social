@@ -1,0 +1,53 @@
+.modal__saving {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    .inner {
+        width: 400px;
+        height: 175px;
+        border-radius: 20px;
+        background-color: var(--white-color);
+        .saving-title {
+            width: 100%;
+            padding: 8px 0;
+            justify-content: end;
+            gap: 90px;
+            p {
+                font-size: 20px;
+                cursor: pointer;
+                padding: 5px;
+            }
+        }
+        .saving-input {
+            height: 100%;
+            width: 100%;
+            padding: 10px 30px;
+            flex: 1;
+            border-top: 1px solid var(--separator);
+            border-bottom: 1px solid var(--separator);
+            .input {
+                border: 1px solid var(--text-color);
+                padding: 10px;
+                width: 100%;
+                border-radius: 8px;
+            }
+        }
+        .saving-create {
+            width: 100%;
+            .done {
+                padding: 8px;
+                font-weight: bold;
+                color: var(--text-primary);
+            }
+        }
+        .saving-create.album {
+            cursor: pointer;
+            .done {
+                color: var(--blue-color);
+            }
+        }
+    }
+}

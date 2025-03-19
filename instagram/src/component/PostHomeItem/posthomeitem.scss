@@ -1,0 +1,145 @@
+.post-home-item {
+    margin-bottom: 30px;
+    .post-header {
+        padding-bottom: 15px;
+        .post-user {
+            .img {
+                height: 24px;
+                width: 24px;
+                border-radius: 50%;
+                overflow: hidden;
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: contain;
+                }
+            }
+            .information {
+                margin-left: 10px;
+                .username {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                span {
+                    margin-left: 10px;
+                    color: #737373;
+                    font-size: 14px;
+                }
+            }
+        }
+        .post-icon {
+            span {
+                padding: 5px;
+                cursor: pointer;
+                svg {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+    .post-content {
+        .post-file {
+            padding-bottom: 20px;
+            img {
+                width: 468px;
+                height: auto;
+            }
+        }
+        .interaction {
+            .left,
+            .right {
+                span {
+                    padding: 5px;
+                    cursor: pointer;
+                    svg {
+                        font-size: 25px;
+                    }
+                    .red {
+                        fill: red;
+                    }
+                }
+            }
+            .left {
+                span:not(:first-child) {
+                    margin-left: 10px;
+                }
+                .comment {
+                    svg {
+                        transform: rotateY(180deg);
+                    }
+                }
+            }
+        }
+        .description {
+            gap: 8px;
+            padding: 5px 0 10px;
+            a {
+                font-weight: 600;
+                font-size: 14px;
+            }
+            p {
+                font-size: 14px;
+            }
+        }
+        .see-comment {
+            color: #737373;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        form {
+            .comment {
+                padding: 5px 0 10px;
+                flex: 1;
+                position: relative;
+                input {
+                    outline: none;
+                    border: none;
+                    padding: 1px 0;
+                    width: 100%;
+                }
+                span {
+                    position: absolute;
+                    right: 10px;
+                    color: var(--blue-color);
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+            }
+            .icon {
+                span {
+                    position: relative;
+                    .emoji {
+                        position: absolute;
+                        left: 0;
+                        bottom: -190px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 5px #ddd;
+                        &::after {
+                            position: absolute;
+                            content: '';
+                            top: -30px;
+                            left: 10px;
+                            border-width: 16px 11px;
+                            border-style: solid;
+                            border-color: transparent transparent var(--text-primary) transparent;
+                        }
+                        .EmojiPickerReact.epr-main {
+                            width: 300px !important;
+                            height: 180px !important;
+                        }
+
+                        .epr-header {
+                            display: none;
+                        }
+                        .epr-preview {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .separator {
+        border: 1px solid var(--separator);
+    }
+}
