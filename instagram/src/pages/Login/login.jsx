@@ -15,7 +15,7 @@ function Login() {
         email:'',
         password:''
     })
-    const handlChange = (e)=>{
+    const handleChange = (e)=>{
         setValue({...value,[e.target.name]: e.target.value})
     }
     const handInvalid = ()=>{
@@ -27,11 +27,13 @@ function Login() {
         }
         return true
     }
-    const handlSubmit = async (e)=>{
+    const handleSubmit = async (e)=>{
         e.preventDefault();
         if(handInvalid()){
             const {email, password} = value
             const data = await login(email, password)
+            console.log(data);
+            
             if(data.message === 'Login success'){
                 localStorage.setItem('access_token', data.jwt)
                 navigate('/')
@@ -56,13 +58,13 @@ function Login() {
                         </div>
                         <h2>Đăng kí để xem ảnh và video từ bạn bè</h2>
                     </div>
-                    <form className='flex flex-column j-center a-center form' onSubmit={(e)=>handlSubmit(e)}>
+                    <form className='flex flex-column j-center a-center form' onSubmit={(e)=>handleSubmit(e)}>
                         <div className="input-wrapper">
-                            <input type="text" name="email" onChange={(e)=>handlChange(e)} />
+                            <input type="text" name="email" onChange={(e)=>handleChange(e)} />
                             <span>Số điện thoại, tên người dùng hoặc email</span>
                         </div>
                         <div className="input-wrapper">
-                            <input type="text" name="password" onChange={(e)=>handlChange(e)}/>
+                            <input type="text" name="password" onChange={(e)=>handleChange(e)}/>
                             <span>Mật khẩu</span>
                         </div>
                         <button type="submit " className='br-8 btn-w268 btn-submit'>Đăng nhập</button>

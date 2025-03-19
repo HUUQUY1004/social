@@ -18,6 +18,7 @@ import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
 import { BASE_URL, getMyProfile } from '../../action/action';
+import ChangeDescription from '../../component/Change/Description/description';
 function Profile() {
     const [dataUser, setDataUser] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
@@ -25,9 +26,10 @@ function Profile() {
     const [selected, setSelected] = useState(0);
     const [showPost, setShowPost] = useState(false);
     const [showNewSaving, setShowNewSaving] = useState(false);
+    const [showChangeDescription, setShowChangeDescription] = useState(false);
     const [showPopup, setShowPopup] = useState(false); //ở chỗ bánh răng
     const [postList, setPostList] = useState([]);
-    const { username } = useParams();
+
     // ref flow and unflow
     const flowRef = useRef();
 
@@ -39,8 +41,8 @@ function Profile() {
         getCurrentUser();
     }, []);
     const getPost = async () => {
-        const { data } = await axios.get(`http://localhost:5000/post/get-post/${dataUser?._id}`);
-        setPostList(data.posts);
+        // const { data } = await axios.get(`http://localhost:5000/post/get-post/${dataUser?._id}`);
+        // setPostList(data.posts);
     };
 
     useEffect(() => {
@@ -75,12 +77,12 @@ function Profile() {
                         </div>
                         <div className="infor flex flex-column">
                             <div className="top flex a-center">
-                                <h3 className="username">{dataUser?.username}</h3>
+                                <h3 className="username">{currentUser?.username}</h3>
                                 {currentUser?._id === dataUser?._id ? (
                                     <div className="flex a-center ">
                                         <button className="br-8 btn">Chỉnh sửa trang cá nhân</button>
                                         <Link
-                                            to={`/${currentUser?.username}/trash`}
+                                            to={`/${currentUser?.id}/trash`}
                                             className="icon"
                                             title="Thùng rác"
                                             onClick={() => setShowPopup(!showPopup)}
@@ -118,7 +120,7 @@ function Profile() {
                                 </h3>
                             </div>
                             <div className="bottom">
-                                <h4 className="name">{dataUser?.name}</h4>
+                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(true)}>{(currentUser?.description.length!==0  ) ? currentUser?.description : 'Thêm mô tả' }</h4>
                             </div>
                         </div>
                     </div>
@@ -158,7 +160,7 @@ function Profile() {
                                                     </p>
                                                     <Link
                                                         className="trash flex a-center"
-                                                        to={`/${currentUser?.username}/trash`}
+                                                        to={`/${currentUser?.id}/trash`}
                                                     >
                                                         <span>
                                                             <FiTrash2 />
@@ -244,6 +246,11 @@ function Profile() {
             <Footer />
             {showPost ? <Post onClose={setShowPost} user={dataUser} /> : <Fragment />}
             {showNewSaving ? <ModalSaving onClose={setShowNewSaving} dataUser={currentUser} /> : <Fragment />}
+            {
+                showChangeDescription && <ChangeDescription 
+                onCloseChange={setShowChangeDescription}
+               />
+            }
             {/* {showPopup && (
                 <PopupWrapper isClose={false} onClose={showPopup}>
                     hii

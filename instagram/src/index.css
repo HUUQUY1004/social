@@ -1,84 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-        'Open Sans', 'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    overflow-x: hidden;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 :root {
-    --back-color: #000;
-    --text-color: #333;
-    --white-color: #fff;
-    --blue-color: #4cb5f9;
-    --blue-bold: #0095f6;
-    --text-primary: rgb(115, 115, 115);
-    --separator: rgb(219, 219, 219);
-    --second-background: rgb(250, 250, 250);
-    --red: #ed4956;
-    --width-edit-post: 500px;
-    --width-total-post: 840px;
-    --width-post: calc(var(--width-total-post) - var(--width-edit-post));
-    --width-content-ui: 940px;
+  --back-color: #000;
+  --text-color: #333;
+  --white-color: #fff;
+  --blue-color: #4cb5f9;
+  --blue-bold: #0095f6;
+  --text-primary: rgb(115, 115, 115);
+  --separator: rgb(219, 219, 219);
+  --second-background: rgb(250, 250, 250);
+  --red: #ed4956;
+  --width-edit-post: 500px;
+  --width-total-post: 840px;
+  --width-post: calc(var(--width-total-post) - var(--width-edit-post));
+  --width-content-ui: 940px;
 }
 .size {
-    width: 700px;
+  width: 700px;
 }
 button {
-    background-color: transparent;
+  background-color: transparent;
 }
 a {
-    color: #000;
+  color: #000;
 }
 .flex {
-    display: flex;
+  display: flex;
 }
 .a-center {
-    align-items: center;
+  align-items: center;
 }
 .j-center {
-    justify-content: center;
+  justify-content: center;
 }
 .j-between {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 .flex-column {
-    flex-direction: column;
+  flex-direction: column;
 }
 .wrap {
-    flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 ul li {
-    list-style: none;
+  list-style: none;
 }
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 input,
 button {
-    outline: none;
-    border: none;
+  outline: none;
+  border: none;
 }
 .br-8 {
-    border-radius: 8px;
+  border-radius: 8px;
 }
 .btn-w268 {
-    width: 268px;
+  width: 268px;
 }
 .br-2 {
-    border-radius: 2px;
+  border-radius: 2px;
 }
 .epr-main {
-    width: 300px;
-    height: 180px;
+  width: 300px;
+  height: 180px;
 }

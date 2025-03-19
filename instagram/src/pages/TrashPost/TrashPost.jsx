@@ -6,8 +6,8 @@ function TrashPost() {
     const [posts, setPosts] = useState([]);
     const userLocal = JSON.parse(localStorage.getItem('instagram-user'));
     const getTrashByUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/post/get-trash-post/${userLocal._id}`);
-        setPosts(data.data);
+        // const { data } = await axios.get(`http://localhost:5000/post/get-trash-post/${userLocal._id}`);
+        // setPosts(data.data);
     };
     useEffect(() => {
         getTrashByUser();
