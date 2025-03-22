@@ -6,22 +6,34 @@ import './search.scss';
 import AccountItem from '../AccountItem/AccountItem';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { searchUser } from '../../action/action';
 function Search() {
     const [isLoading, setIsLoading] = useState(false);
     const [userList, setUserList] = useState([]);
     const [value, setValue] = useState('');
-    const searchUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/user/search/${value}`);
-        if (data.status === true) {
-            setUserList(data.userList);
-        }
-    };
     useEffect(() => {
-        searchUser();
+        if (!value || typeof value !== 'string' || value.trim() === '') return;
+    
+        const getSearchUser = async () => {
+            try {
+                setIsLoading(true);
+                const data  = await searchUser(value);
+                console.log('Search result:', data);
+                setUserList(data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+    
+        getSearchUser();
+    
     }, [value]);
+    
     return (
         <TranSlate minWidth={0} maxWidth={'400px'}>
-            <div className="search__wrapper">
+            <div className="search__wrapper bg-white z-50">
                 <div className="search-header-wrapper">
                     <h2 className="search-header">Tìm kiếm</h2>
                     <div className="input-search br-8">
@@ -37,7 +49,7 @@ function Search() {
                 <div className="search-body">
                     <div className="recently flex a-center j-between">
                         <h4>Gần đây</h4>
-                        {userList.length > 0 ? (
+                        {userList?.length > 0 ? (
                             <p className="delete-all" onClick={() => setUserList([])}>
                                 Xóa tất cả
                             </p>
@@ -46,10 +58,10 @@ function Search() {
                         )}
                     </div>
                     <div className="recently-list">
-                        {userList.length > 0 ? (
+                        {userList?.length > 0 ? (
                             userList.map((item, index) => (
                                 <div className="user-list" key={index}>
-                                    <Link to={`/${item.username}`}>
+                                    <Link to={`/${item.id}`}>
                                         <AccountItem data={item} isFolowing={false} />
                                     </Link>
                                 </div>
