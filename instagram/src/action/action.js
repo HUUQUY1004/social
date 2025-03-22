@@ -39,3 +39,26 @@ export const changeDescription = async (description) => {
   );
   return data;
 };
+export const changeAvatar = async (avatar) => {
+  const formData = new FormData();
+  formData.append("avatar", avatar);
+  formData.append("title", "Avatar");
+  const { data } = await axios.post(
+    `${BASE_URL}/api/profile/update-avatar`,
+    formData,
+    config
+  );
+  return data;
+};
+export const searchUser = async (value) => {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:5000/api/user/search/${value}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};
