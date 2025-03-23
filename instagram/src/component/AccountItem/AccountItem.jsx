@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../action/action';
 import { images } from '../../source';
 import './accountItem.scss';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
@@ -6,7 +7,7 @@ function AccountItem({ data, following, isFolowing, popular = true }) {
         <div className="account flex a-center j-between">
             <div className="left flex">
                 <div className="avatar">
-                    <img src={data.avatar ? data.avatar : images.noAvatar} alt="avatar" />
+                    <img src={data.avatar ? BASE_URL+ data.avatar : images.noAvatar} alt="avatar" />
                 </div>
                 <div className="information">
                     <h4 className="username">

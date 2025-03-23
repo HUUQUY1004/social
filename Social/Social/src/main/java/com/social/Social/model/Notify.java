@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class Notify {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
-    private String imageUrl;
+    private Long id;
+    private String message;
+    private String redirect;
 }

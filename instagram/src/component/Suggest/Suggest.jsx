@@ -11,7 +11,7 @@ function Suggest({ suggestUser, currentUser }) {
             <div className="inner ">
                 <h4 className="suggest-name">Gợi ý cho bạn</h4>
                 <div className="suggest-account">
-                    {suggestUser.map((user, index) => (
+                    {suggestUser?.map((user, index) => (
                         <AccountItem key={index} data={user} following={handlefollowing} isFolowing={true} />
                     ))}
                 </div>

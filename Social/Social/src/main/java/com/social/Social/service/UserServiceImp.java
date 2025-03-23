@@ -4,7 +4,11 @@ import com.social.Social.model.User;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.config.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImp  implements  UserService{
@@ -49,5 +53,11 @@ public class UserServiceImp  implements  UserService{
 
         
         return  check >0;
+    }
+
+    @Override
+    public List<User> getTenUser() {
+        Pageable pageable =  PageRequest.of(0,10);
+        return  userRepository.getTenUser(pageable);
     }
 }

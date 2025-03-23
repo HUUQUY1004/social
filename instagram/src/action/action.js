@@ -62,3 +62,15 @@ export const searchUser = async (value) => {
     return null;
   }
 };
+export const getSuggestion = async () => {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:5000/api/suggestion`,
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};

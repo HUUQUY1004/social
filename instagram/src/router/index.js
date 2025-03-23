@@ -4,6 +4,7 @@ import Messages from "../pages/Messages/Messages";
 import Profile from "../pages/MyProFile/MyProfile";
 import PostPage from "../pages/PostPage/PostPage";
 import Register from "../pages/Register/register";
+import Suggestion from "../pages/Suggesstion/Suggesstion";
 import TrashPost from "../pages/TrashPost/TrashPost";
 export const router = [
   {
@@ -39,5 +40,9 @@ export const router = [
   {
     Component: TrashPost,
     path: "/:username/trash",
+  },
+  {
+    Component: Suggestion,
+    path: "/suggestion-friendships",
   },
 ];

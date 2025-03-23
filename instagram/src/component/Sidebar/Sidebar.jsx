@@ -13,6 +13,7 @@ import {
     faMagnifyingGlass,
     faMessage,
     faSquarePlus,
+    faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BsFillSunFill } from 'react-icons/bs';
@@ -39,6 +40,11 @@ function Sidebar({ currentUser }) {
         {
             name: 'Explore',
             icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+        },
+        {
+            name: 'Bạn bè',
+            icon: <FontAwesomeIcon icon={faUserGroup}/>,
+            link: '/suggestion-friendships',
         },
         {
             name: 'Khám phá',
