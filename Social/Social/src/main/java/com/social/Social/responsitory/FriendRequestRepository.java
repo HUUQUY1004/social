@@ -18,4 +18,7 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
     List<FriendRequest> findByReceiverAndStatus(User receiver, RequestStatus status);
     @Query("SELECT f.id, f.sender FROM FriendRequest f WHERE f.receiver = :user and f.status = :status")
     List<Tuple> findAllByReceiver(@Param("user") User user, @Param("status") RequestStatus status);
+
+    @Query("SELECT  f from FriendRequest f where f.id = :id ")
+    FriendRequest getFriendRequestById(@Param("id") Long id);
 }

@@ -8,6 +8,8 @@ import com.social.Social.responsitory.FriendRequestRepository;
 import com.social.Social.responsitory.UserRepository;
 import jakarta.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -97,5 +99,13 @@ public class FriendRequestImp implements  FriendService{
                 tuple.get(1, User.class)
         )).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<User> getListFriend(String jwt, int offset) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        Pageable pageable = PageRequest.of(offset, 10);
+        List<User> frs = userRepository.getFriend(user.getId(), pageable);
+        return  frs;
     }
 }

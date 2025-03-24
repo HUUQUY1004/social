@@ -2,12 +2,15 @@ package com.social.Social.controller;
 
 import com.social.Social.DTO.FriendRequestDTO;
 import com.social.Social.model.FriendRequest;
+import com.social.Social.model.Notify;
 import com.social.Social.model.User;
 import com.social.Social.response.FriendResponse;
 import com.social.Social.response.Invitation;
 import com.social.Social.responsitory.FriendRequestRepository;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.service.FriendService;
+import com.social.Social.service.NotifyService;
+import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,10 @@ import java.util.List;
 public class FriendController {
     @Autowired
     private FriendService friendService;
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
+    @Autowired
+    private NotifyService notifyService;
 
 
     @PostMapping("/add/{receiverId}")
@@ -38,6 +45,13 @@ public class FriendController {
             friendResponse.setMessage("Gửi thất bại");
             friendResponse.setStatus(401);
         }
+
+//        Add Notify
+//        Notify notify = new Notify();
+//        notify.setRedirect("/invitation-friends");
+//        notify.setUserId(receiverId);
+//        notify.setMessage("Bạn có lời mời kết bạn mới");
+//        notifyService.addNotify(notify);
         return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
 
     }
@@ -50,7 +64,7 @@ public class FriendController {
         friendService.rejectFriendRequest(requestId);
         FriendResponse friendResponse = new FriendResponse();
         friendResponse.setStatus(200);
-        friendResponse.setMessage("Đã từ chối lời mờ");
+        friendResponse.setMessage("Đã từ chối lời mời");
         return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
     }
     @DeleteMapping("delete/{requestId}")
@@ -74,6 +88,9 @@ public class FriendController {
         FriendResponse friendResponse = new FriendResponse();
         friendResponse.setStatus(200);
         friendResponse.setMessage("Đã chấp nhận lời mời kết bạn");
+
+//        Add Notify
+        notifyService.acpNotifyFriendRequest(jwt, requestId);
         return  new ResponseEntity<>(friendResponse, HttpStatus.OK);
     }
     @GetMapping("/getInvitation")
@@ -86,6 +103,21 @@ public class FriendController {
         invitation.setInvitations(userList);
         invitation.setStatus(200);
         return  new ResponseEntity<>(invitation, HttpStatus.OK);
+    }
+
+    @GetMapping({"/{offset}", "/"})
+    public  ResponseEntity<List<User>> getFriendForUser(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable(value = "offset", required = false) String offset
+    ) throws Exception {
+        int offsetInt;
+        try {
+            offsetInt = Integer.parseInt(offset);
+        }catch (NumberFormatException e){
+            offsetInt = 0;
+        }
+
+        return  ResponseEntity.ok(friendService.getListFriend(jwt, offsetInt));
     }
 
 

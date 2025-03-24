@@ -34,4 +34,6 @@ public interface UserRepository  extends JpaRepository<User, Long> {
 
     @Query("select u from User u order by u.id ASC LIMIT  10")
     List<User> getTenUser(Pageable pageable);
+    @Query("SELECT u FROM User u JOIN  u.friends f where  f.id =:userId")
+    List<User> getFriend(@Param(("userId"))Long userId,Pageable pageable);
 }

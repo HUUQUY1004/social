@@ -1,0 +1,36 @@
+package com.social.Social.service;
+
+import com.social.Social.model.FriendRequest;
+import com.social.Social.model.Notify;
+import com.social.Social.model.User;
+import com.social.Social.responsitory.FriendRequestRepository;
+import com.social.Social.responsitory.NotifyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotifyImp implements  NotifyService{
+    @Autowired
+    private NotifyRepository notifyRepository;
+    @Autowired
+    private  UserService userService;
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
+
+
+    @Override
+    public Notify acpNotifyFriendRequest(String jwt, Long requestId) throws Exception {
+        FriendRequest friendRequest = friendRequestRepository.getFriendRequestById(requestId);
+        User user = userService.findUserByToken(jwt);
+        Notify notify = new Notify();
+        notify.setMessage(user.getUsername() +  " đã chấp nhận lời mời kết bạn của bạn");
+        notify.setRedirect("/");
+        notify.setUserId(friendRequest.getSender().getId());
+       return notifyRepository.save(notify);
+    }
+
+    @Override
+    public void deleteNotify() {
+
+    }
+}

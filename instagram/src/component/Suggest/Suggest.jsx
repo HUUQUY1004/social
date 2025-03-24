@@ -2,9 +2,12 @@ import axios from 'axios';
 import AccountItem from '../AccountItem/AccountItem';
 import './suggest.scss';
 import { following } from '../func/commonFunc';
+import { addFriend } from '../../action/action';
 function Suggest({ suggestUser, currentUser }) {
-    const handlefollowing = (_id) => {
-        following(currentUser._id, _id);
+    const handlefollowing = async(userId) => {
+        console.log("id" , userId);
+        
+        await addFriend(userId)
     };
     return (
         <div className="suggest flex j-center">

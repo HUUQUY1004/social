@@ -9,6 +9,8 @@ const config = {
   },
 };
 export const login = async (email, password) => {
+  console.log(email, password);
+
   try {
     const { data } = await axios.post(`${BASE_URL}/auth/login`, {
       email,
@@ -66,6 +68,57 @@ export const getSuggestion = async () => {
   try {
     const { data } = await axios.get(
       `http://localhost:5000/api/suggestion`,
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};
+export const getInvitation = async () => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/api/friend/getInvitation`,
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};
+export const addFriend = async (receiverId) => {
+  try {
+    const { data } = await axios.post(
+      `${BASE_URL}/api/friend/add/${receiverId}`,
+      {},
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};
+export const acceptFriend = async (requestId) => {
+  try {
+    const { data } = await axios.post(
+      `${BASE_URL}/api/friend/accept/${requestId}`,
+      {},
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};
+export const rejectFriend = async (requestId) => {
+  try {
+    const { data } = await axios.post(
+      `${BASE_URL}/api/friend/reject/${requestId}`,
+      {},
       config
     );
     return data;
