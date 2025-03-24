@@ -2,6 +2,8 @@ package com.social.Social.service;
 
 import com.social.Social.model.User;
 
+import java.util.List;
+
 public interface UserService {
     User findUserByToken(String jwt) throws  Exception;
     User findUserByEmail(String email) throws  Exception;
@@ -11,5 +13,7 @@ public interface UserService {
     boolean updateBanner(String jwt, String path) throws  Exception;
 
     boolean updateDescription(String jwt, String description) throws  Exception;
+
+    List<User> getTenUser();
 
 }

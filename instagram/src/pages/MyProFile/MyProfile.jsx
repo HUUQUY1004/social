@@ -122,7 +122,7 @@ function Profile() {
                                 </h3>
                             </div>
                             <div className="bottom">
-                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(true)}>{(currentUser?.description.length!==0  ) ? currentUser?.description : 'Thêm mô tả' }</h4>
+                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(true)}>{(currentUser?.description?.length!==0  ) ? currentUser?.description : 'Thêm mô tả' }</h4>
                             </div>
                         </div>
                     </div>

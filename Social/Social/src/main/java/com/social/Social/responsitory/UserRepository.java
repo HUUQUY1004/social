@@ -2,10 +2,12 @@ package com.social.Social.responsitory;
 
 import com.social.Social.model.User;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 
 import java.util.List;
 
@@ -29,4 +31,9 @@ public interface UserRepository  extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.nickname LIKE %:nickname%")
     List<User> searchUserByNickname(@Param("nickname") String nickname);
+
+    @Query("select u from User u order by u.id ASC LIMIT  10")
+    List<User> getTenUser(Pageable pageable);
+    @Query("SELECT u FROM User u JOIN  u.friends f where  f.id =:userId")
+    List<User> getFriend(@Param(("userId"))Long userId,Pageable pageable);
 }

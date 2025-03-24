@@ -18,8 +18,13 @@ function Login() {
     const handleChange = (e)=>{
         setValue({...value,[e.target.name]: e.target.value})
     }
+    const isValidEmail = (email) => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regex.test(email);
+    };
+    
     const handInvalid = ()=>{
-        if(!value.email.includes('@gmail.com')){
+        if(!isValidEmail(value.email)){
             return false
         }
         if(value.password.length <5 ){
