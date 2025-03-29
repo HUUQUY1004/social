@@ -127,3 +127,13 @@ export const rejectFriend = async (requestId) => {
     return null;
   }
 };
+export const getNotify = async (value) => {
+  const page = value === null ? "" : value;
+  try {
+    const { data } = await axios.get(`${BASE_URL}/api/notify/`, config);
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};

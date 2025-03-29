@@ -2,15 +2,12 @@ package com.social.Social.controller;
 
 import com.social.Social.DTO.FriendRequestDTO;
 import com.social.Social.model.FriendRequest;
-import com.social.Social.model.Notify;
 import com.social.Social.model.User;
 import com.social.Social.response.FriendResponse;
 import com.social.Social.response.Invitation;
 import com.social.Social.responsitory.FriendRequestRepository;
-import com.social.Social.responsitory.UserRepository;
 import com.social.Social.service.FriendService;
 import com.social.Social.service.NotifyService;
-import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

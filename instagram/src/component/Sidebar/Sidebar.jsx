@@ -29,6 +29,7 @@ import Post from '../Post/Post';
 import TranSlate from '../Translate/Translate';
 import Search from '../Search/Search';
 import ConvertAccount from '../CovertAccount/ConvertAccount';
+import NotifyComponent from '../Notify/Notify.compoment';
 
 function Sidebar({ currentUser }) {
     const Menu = [
@@ -115,11 +116,14 @@ function Sidebar({ currentUser }) {
     const [isShowPopup, setIsShowPopup] = useState(false);
     const [createPost, setCreatePost] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
+    const [isNotify, setIsNotify] = useState(false);
     const [isConvert, setIsConvert] = useState(false);
     const moreRef = useRef();
     // Search
     const searchRef = useRef();
+    const notifyRef = useRef();
     useOnClickOutside(searchRef, () => setIsSearch(false));
+    useOnClickOutside(notifyRef, () => setIsNotify(false));
     const handleClickOutside = () => {
         setIsShowPopup(false);
     };
@@ -140,6 +144,9 @@ function Sidebar({ currentUser }) {
         }
         if (name === 'Explore') {
             setIsSearch(true);
+        }
+        if(name === "Thông báo"){
+            setIsNotify(true);
         }
     };
     const navigate = useNavigate();
@@ -194,6 +201,13 @@ function Sidebar({ currentUser }) {
                     <Search />
                 </div>
             )}
+            {
+                isNotify && (
+                    <div ref={notifyRef}>
+                        <NotifyComponent/>
+                    </div>
+                )
+            }
             {isConvert && <ConvertAccount onClose={setIsConvert} />}
         </div>
     );

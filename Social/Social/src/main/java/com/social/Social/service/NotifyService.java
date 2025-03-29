@@ -1,10 +1,14 @@
 package com.social.Social.service;
 
-import com.social.Social.model.Notify;
+import com.social.Social.model.Notifys;
+
+import java.util.List;
 
 public interface NotifyService {
-    Notify acpNotifyFriendRequest(String jwt, Long requestId) throws Exception;
+    Notifys acpNotifyFriendRequest(String jwt, Long requestId) throws Exception;
 
+
+    List<Notifys> getNotifyForUser(String jwt, int page) throws Exception;
 
     void deleteNotify();
 }
