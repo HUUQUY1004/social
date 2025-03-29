@@ -4,10 +4,11 @@ import { getListFriend } from "../../action/action";
 function Friends() {
     const [friends, setFriends] = useState([])
     const getFriends = async ()=>{
-        const data = getListFriend()
+        const data = await getListFriend()
         setFriends(data)
     }
     useEffect(()=>{
+        getFriends()
     }, [])
     return ( 
         <h1>{JSON.stringify(friends)}</h1>

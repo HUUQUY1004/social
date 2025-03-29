@@ -20,9 +20,10 @@ import { following, unFollowing } from '../../component/func/commonFunc';
 import { BASE_URL, getMyProfile, getNumberOfFriends } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
+import { useUser } from '../../store/useStore';
 function Profile() {
     const [dataUser, setDataUser] = useState(undefined);
-    const [currentUser, setCurrentUser] = useState(undefined);
+    const {currentUser} = useUser();
     const [IsLoading, setIsLoading] = useState(false);
     const [selected, setSelected] = useState(0);
     const [showPost, setShowPost] = useState(false);
@@ -36,19 +37,14 @@ function Profile() {
     // ref flow and unflow
     const flowRef = useRef();
 
-    const getCurrentUser = async () => {
-        const data = await getMyProfile()
-        setCurrentUser(data.user);
-    };
+
     const getFriend = async () => {
         const data = await getNumberOfFriends()
         console.log("friend" , data);
         
         setQuantityFriends(data);
     }
-    useEffect(() => {
-        getCurrentUser();
-    }, []);
+
     const getPost = async () => {
         // const { data } = await axios.get(`http://localhost:5000/post/get-post/${dataUser?._id}`);
         // setPostList(data.posts);
@@ -72,8 +68,6 @@ function Profile() {
             icon: <AiOutlineTags />,
         },
     ];
-    const textFlow = 'Theo dõi';
-    const textUnFlow = 'Bỏ theo dõi';
     return (
         <div className="profile__wrapper">
             {IsLoading ? (

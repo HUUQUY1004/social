@@ -150,12 +150,14 @@ export const getNumberOfFriends = async () => {
 
 export const getListFriend = async (value) => {
   let url;
-  if (value === null) {
+  if (!value) {
     url = `${BASE_URL}/api/friend/`;
   } else {
     url = `${BASE_URL}/api/friend/list/${value}`;
   }
   try {
+    console.log("url: " + url);
+
     const { data } = await axios.get(url, config);
     return data;
   } catch (error) {

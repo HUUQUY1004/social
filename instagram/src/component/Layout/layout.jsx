@@ -4,9 +4,10 @@ import React, {useState, useEffect} from 'react';
 import './layout.scss'
 import Loading from "../Loading/loading";
 import { getMyProfile } from "../../action/action";
+import { useUser } from "../../store/useStore";
 function DefaultLayout({children}) {
     const navigate = useNavigate()
-    const [currentUser ,setCurrentUser] = useState({})
+    const {setCurrentUser} = useUser()
     const [isLoading , setIsLoading] = useState(true)
     const getUser = async ()=>{
         try {
@@ -16,7 +17,7 @@ function DefaultLayout({children}) {
             else{
                 const data = await getMyProfile()
                 setIsLoading(false)
-                 await setCurrentUser(data.user)
+                setCurrentUser(data.user)
                 
             }
         } catch (error) {
@@ -31,7 +32,7 @@ function DefaultLayout({children}) {
           {
             isLoading ? <Loading/> : (
                 <div className='container flex'>
-              <Sidebar currentUser={currentUser}/>
+              <Sidebar/>
               <div className='content'>
                   {children}
               </div>
