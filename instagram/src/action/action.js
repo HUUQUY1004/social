@@ -137,3 +137,29 @@ export const getNotify = async (value) => {
     return null;
   }
 };
+
+export const getNumberOfFriends = async () => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/api/friend/quantity`, config);
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return 0;
+  }
+};
+
+export const getListFriend = async (value) => {
+  let url;
+  if (value === null) {
+    url = `${BASE_URL}/api/friend/`;
+  } else {
+    url = `${BASE_URL}/api/friend/list/${value}`;
+  }
+  try {
+    const { data } = await axios.get(url, config);
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};

@@ -108,4 +108,10 @@ public class FriendRequestImp implements  FriendService{
         List<User> frs = userRepository.getFriend(user.getId(), pageable);
         return  frs;
     }
+
+    @Override
+    public Integer getNumberOfFriends(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        return  user.getFriends().size();
+    }
 }

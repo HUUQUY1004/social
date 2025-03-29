@@ -17,4 +17,6 @@ public interface FriendService {
     List<FriendRequestDTO> getListInvitation(String jwt) throws  Exception;
     List<User> getListFriend(String jwt, int offset) throws Exception;
 
+    Integer getNumberOfFriends(String jwt) throws Exception;
+
 }

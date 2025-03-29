@@ -17,7 +17,7 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
-import { BASE_URL, getMyProfile } from '../../action/action';
+import { BASE_URL, getMyProfile, getNumberOfFriends } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 function Profile() {
@@ -31,6 +31,7 @@ function Profile() {
     const [showChangeAvatar, setShowChangeAvatar] = useState(false);
     const [showPopup, setShowPopup] = useState(false); //ở chỗ bánh răng
     const [postList, setPostList] = useState([]);
+    const [quantityFriends, setQuantityFriends] = useState(0);
 
     // ref flow and unflow
     const flowRef = useRef();
@@ -39,6 +40,12 @@ function Profile() {
         const data = await getMyProfile()
         setCurrentUser(data.user);
     };
+    const getFriend = async () => {
+        const data = await getNumberOfFriends()
+        console.log("friend" , data);
+        
+        setQuantityFriends(data);
+    }
     useEffect(() => {
         getCurrentUser();
     }, []);
@@ -49,6 +56,7 @@ function Profile() {
 
     useEffect(() => {
         getPost();
+        getFriend();
     }, [dataUser]);
     const nav = [
         {
@@ -114,12 +122,12 @@ function Profile() {
                                     bài viết
                                 </h3>
                                 <h3 className="count_followers">
-                                    <span>0</span>
-                                    người theo dõi
+                                    <Link to={"/friends"}>
+                                        <span>{quantityFriends}</span>
+                                        người bạn
+                                    </Link>
                                 </h3>
-                                <h3 className="count_following">
-                                    Đang theo dõi <span>0</span>người dùng
-                                </h3>
+                                
                             </div>
                             <div className="bottom">
                                 <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(true)}>{(currentUser?.description?.length!==0  ) ? currentUser?.description : 'Thêm mô tả' }</h4>
