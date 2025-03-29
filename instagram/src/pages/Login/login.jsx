@@ -8,7 +8,10 @@ import Footer from "../../component/Footer/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { login } from "../../action/action";
-
+export const isValidEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+};
 function Login() {
     const navigate = useNavigate()
     const [value, setValue] = useState({
@@ -18,10 +21,7 @@ function Login() {
     const handleChange = (e)=>{
         setValue({...value,[e.target.name]: e.target.value})
     }
-    const isValidEmail = (email) => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return regex.test(email);
-    };
+
     
     const handInvalid = ()=>{
         if(!isValidEmail(value.email)){

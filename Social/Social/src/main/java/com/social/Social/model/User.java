@@ -36,6 +36,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
+    @ToString.Exclude
     private List<User> friends = new ArrayList<>();
 
     public Long getId() {

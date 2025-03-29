@@ -2,41 +2,50 @@ import PopupWrapper from '../PopupWrapper/PopupWrapper';
 import { AiOutlineClose } from 'react-icons/ai';
 import './convertAccount.scss';
 import { useRef, useState } from 'react';
-import { login } from '../func/commonFunc';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
+import { isValidEmail } from '../../pages/Login/login';
+import { login } from '../../action/action';
 function ConvertAccount({ onClose }) {
     const [value, setValue] = useState({
         email: '',
         password: '',
     });
-    const [userConvert, setUserConvert] = useState(undefined);
     const navigate = useNavigate();
     const handleChange = (e) => {
         setValue({ ...value, [e.target.name]: e.target.value });
     };
-    const checkInvalid = () => {
-        if (value.email.includes('@gmail.com') && value.password.length > 6) {
-            return true;
+     const handInvalid = ()=>{
+            if(!isValidEmail(value.email)){
+                return false
+            }
+            if(value.password.length <5 ){
+                return false
+            }
+            return true
         }
-        return false;
-    };
     const ref = useRef();
     useOnClickOutside(ref, () => {
         onClose(false);
     });
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (checkInvalid()) {
-            const { email, password } = value;
-            const { data } = await axios.post('http://localhost:5000/api/user/login', {
-                email,
-                password,
-            });
-            localStorage.setItem('instagram-user', JSON.stringify(data.user));
-            window.location.reload(false);
-        }
+                if(handInvalid()){
+                    const {email, password} = value
+                    const data = await login(email, password)
+                    console.log(data);
+                    
+                    if(data.message === 'Login success'){
+                        localStorage.setItem('access_token', data.jwt)
+                        navigate('/')
+                    }
+                    else {
+                        console.log(data);
+                        
+                    }
+                
+                }
     };
     return (
         <PopupWrapper isClose={false}>

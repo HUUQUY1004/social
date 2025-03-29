@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notify {
+public class Notifys {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
