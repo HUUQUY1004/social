@@ -22,19 +22,25 @@ public class MessageController {
     private  FileStorageService fileStorageService;
 
 
-    @PostMapping("/send")
-    public ResponseEntity<Message> sendMessage(@RequestBody MessageRequest messageRequest) {
+    @PostMapping(value = "/send", consumes = "multipart/form-data")
+    public ResponseEntity<Message> sendMessage(
+            @RequestParam("formUser") Long formUser,
+            @RequestParam("toUserId") Long toUserId,
+            @RequestParam(value = "content", required = false) String content,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "video", required = false) MultipartFile video
+    ) {
 
         Message message = new Message();
-        message.setFromUser(message.getFromUser());
-        message.setToUserId(messageRequest.getToUserId());
-        message.setContent(message.getContent());
-        if (messageRequest.getImage() != null && !messageRequest.getImage().isEmpty()) {
-            String imageUrl = fileStorageService.storeFile(messageRequest.getImage(), "images/");
+        message.setFromUser(formUser);
+        message.setToUserId(toUserId);
+        message.setContent(content);
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = fileStorageService.storeFile(image, "images/");
             message.setImageUrl(imageUrl);
         }
-        if (messageRequest.getVideo() != null && !messageRequest.getVideo().isEmpty()) {
-            String videoUrl = fileStorageService.storeFile(messageRequest.getVideo(), "videos/");
+        if (video!= null && !video.isEmpty()) {
+            String videoUrl = fileStorageService.storeFile(video, "videos/");
             message.setVideoUrl(videoUrl);
         }
 

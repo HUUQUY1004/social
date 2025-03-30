@@ -175,7 +175,7 @@ export const sendMessage = async (body) => {
     formData.append("image", body.image);
     formData.append("video", body.video);
     const { data } = await axios.post(
-      `${BASE_URL}/api/message/send`,
+      `${BASE_URL}/api/messages/send`,
       formData,
       config
     );

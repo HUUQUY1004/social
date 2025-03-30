@@ -22,10 +22,18 @@ function ChatContainer({ currentChat, socket }) {
     // useEffect(() => {
     //     getMessages();
     // }, [currentChat]);
-    const handleSendMess = async (msg) => {
-        console.log(msg);
+    const handleSendMess = async (msg, multipart) => {
+        const body ={
+            formUser : currentUser.id,
+            toUserId : currentChat.id,
+            content : msg,
+            image : multipart,
+            video: ''
+        }
         
-        // const data = await sendMessage()
+        const data = await sendMessage(body)
+        console.log(data);
+        
         // socket.current.emit('send-msg', {
         //     to: currentChat._id,
         //     from: currentUser._id,
