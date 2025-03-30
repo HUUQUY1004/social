@@ -21,8 +21,8 @@ function AccountItem({ idRequest = 0,data, following, isFolowing, popular = true
         
     }
     return (
-        <div className="account flex a-center j-between">
-            <div className="left flex">
+        <div className="account flex a-center j-between hover:bg-slate-200 px-4 py-1">
+            <div className="left flex items-center">
                 <div className="avatar">
                     <img src={data.avatar ? BASE_URL+ data.avatar : images.noAvatar} alt="avatar" />
                 </div>

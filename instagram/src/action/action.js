@@ -165,3 +165,23 @@ export const getListFriend = async (value) => {
     return null;
   }
 };
+
+export const sendMessage = async (body) => {
+  try {
+    const formData = new FormData();
+    formData.append("formUser", body.formUser);
+    formData.append("toUserId", body.toUserId);
+    formData.append("content", body.content);
+    formData.append("image", body.image);
+    formData.append("video", body.video);
+    const { data } = await axios.post(
+      `${BASE_URL}/api/message/send`,
+      formData,
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getListFriend } from "../../action/action";
+import { BASE_URL, getListFriend } from "../../action/action";
+import FriendItem from "./FriendItem";
 
 function Friends() {
     const [friends, setFriends] = useState([])
@@ -11,7 +12,20 @@ function Friends() {
         getFriends()
     }, [])
     return ( 
-        <h1>{JSON.stringify(friends)}</h1>
+        <div className="friends w-[475px] pt-8 ml-5">
+            <h4>Bạn bè của bạn</h4>
+
+            <div className="mt-5 border max-h-96 py-5">
+                {
+                   friends.length ===0 ? (
+                    <h2 className="text-center">Không có người bạn nào</h2>
+                   ):
+                   friends.map((item, index) => (
+                    <FriendItem friend={item} key={index} />
+                ))
+                }
+            </div>
+        </div>
      );
 }
 
