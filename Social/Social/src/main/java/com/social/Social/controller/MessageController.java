@@ -20,8 +20,15 @@ public class MessageController {
     private MessageRepository messageRepository;
     @Autowired
     private  FileStorageService fileStorageService;
+    @Autowired
+    private  MessageService messageService;
 
-
+    @GetMapping("/conversation/{toUserId}")
+    public List<Message> getConversation(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable("toUserId") Long toUserId) throws Exception {
+        return messageService.getMessage(jwt, toUserId);
+    }
     @PostMapping(value = "/send", consumes = "multipart/form-data")
     public ResponseEntity<Message> sendMessage(
             @RequestParam("formUser") Long formUser,
@@ -48,8 +55,5 @@ public class MessageController {
         return ResponseEntity.ok(savedMessage);
     }
 
-//    @GetMapping("/conversation")
-//    public List<Message> getConversation(@RequestParam Long fromUserId, @RequestParam Long toUserId) {
-//        return messageService.getMessagesBetweenUsers(fromUserId, toUserId);
-//    }
+
 }

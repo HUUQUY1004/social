@@ -6,22 +6,23 @@ import ChatInput from '../ChatInput/ChatInput';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../store/useStore';
-import { sendMessage } from '../../action/action';
+import { BASE_URL, getConversation, sendMessage } from '../../action/action';
 function ChatContainer({ currentChat, socket }) {
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const {currentUser} = useUser()
-    // const getMessages = async () => {
-    //     const response = await axios.post('http://localhost:5000/api/message/getmsg', {
-    //         from: currentUser._id,
-    //         to: currentChat._id,
-    //     });
-    //     setMessages(response.data);
-    // };
-    // useEffect(() => {
-    //     getMessages();
-    // }, [currentChat]);
+    console.log("current" ,currentUser);
+    
+    const getMessages = async () => {
+        const data = await getConversation(currentChat.id)
+        console.log(data);
+        
+        setMessages(data);
+    };
+    useEffect(() => {
+        getMessages();
+    }, [currentChat]);
     const handleSendMess = async (msg, multipart) => {
         const body ={
             formUser : currentUser.id,
@@ -66,8 +67,8 @@ function ChatContainer({ currentChat, socket }) {
             <header className="header-chat flex a-center j-between">
                 <div className="information-user-chat flex a-center">
                     <div className="avatar">
-                        {currentChat.isAvatarImage ? (
-                            <img src={currentChat.avatarImage} alt="avatar" />
+                        {currentChat.avatar ? (
+                            <img src={currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}
@@ -78,8 +79,8 @@ function ChatContainer({ currentChat, socket }) {
             <div className="chat-container">
                 <div className="detail-account flex flex-column a-center">
                     <div className="avatar">
-                        {currentChat.isAvatarImage ? (
-                            <img src={currentChat.avatarImage} alt="avatar" />
+                        {currentChat.avatar ? (
+                            <img src={currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}
@@ -96,9 +97,18 @@ function ChatContainer({ currentChat, socket }) {
                     {messages.map((message, index) => {
                         return (
                             <div key={index} ref={scrollRef}>
-                                <div className={`message ${message.fromSelf ? 'sended' : 'recieved'}`}>
+                                <div className={`message ${currentUser.id === message.fromUser ? 'sended' : 'recieved'}`}>
                                     <div className="content-mess ">
-                                        <p>{message.message}</p>
+                                        {
+                                            message.imageUrl? (
+                                                <img src={BASE_URL+ message.imageUrl} alt="image" />
+                                            ) : (
+                                                message.video? (
+                                                    <video src={message.video} controls />
+                                                ) : null
+                                            )
+                                        }
+                                        <p>{message.content}</p>
                                     </div>
                                 </div>
                             </div>

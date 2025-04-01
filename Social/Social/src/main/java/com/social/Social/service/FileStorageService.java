@@ -27,7 +27,8 @@ public class FileStorageService {
 
             file.transferTo(filePath.toFile());
 
-            return "/uploads/" + subDir + "/" + changeName;
+            return Paths.get("/uploads", subDir, changeName).toString();
+
         } catch (IOException e) {
             throw new RuntimeException("Lỗi lưu file: " + e.getMessage(), e);
         }

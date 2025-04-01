@@ -185,3 +185,15 @@ export const sendMessage = async (body) => {
     return null;
   }
 };
+export const getConversation = async (toUserId) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/api/messages/conversation/${toUserId}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    return null;
+  }
+};
