@@ -3,14 +3,18 @@
     bottom: 0px;
     left: 16px;
     right: 16px;
-    display: flex;
+    // display: flex;
     align-items: center;
-    padding: 8px 0;
-    border-radius: 20px;
-    border: 1px solid var(--separator);
+    
     background-color: var(--white-color);
     z-index: 1000;
     margin-bottom: 10px;
+    .chat-input-inner{
+        margin-top: 10px;
+        border: 1px solid var(--separator);
+        padding: 8px 0;
+        border-radius: 20px;
+    }
     .button-container {
         position: relative;
         display: flex;

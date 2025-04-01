@@ -1,3 +1,4 @@
+import Friends from "../pages/Friends/Friends";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
 import Messages from "../pages/Messages/Messages";
@@ -44,5 +45,9 @@ export const router = [
   {
     Component: Suggestion,
     path: "/suggestion-friendships",
+  },
+  {
+    Component: Friends,
+    path: "/friends",
   },
 ];

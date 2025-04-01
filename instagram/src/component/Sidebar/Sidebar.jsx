@@ -26,12 +26,16 @@ import { images } from '../../source';
 import Popup from '../Popup/Popup';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
 import Post from '../Post/Post';
-import TranSlate from '../Translate/Translate';
 import Search from '../Search/Search';
 import ConvertAccount from '../CovertAccount/ConvertAccount';
 import NotifyComponent from '../Notify/Notify.compoment';
+import { BASE_URL } from '../../action/action';
+import { useUser } from '../../store/useStore';
 
-function Sidebar({ currentUser }) {
+function Sidebar() {
+    const {currentUser} = useUser()
+    console.log(currentUser);
+    
     const Menu = [
         {
             name: 'Trang chủ',
@@ -179,8 +183,8 @@ function Sidebar({ currentUser }) {
             <div className="current-user br-8">
                 <div className="flex">
                     <p className="avatar">
-                        {currentUser.isAvatarImage ? (
-                            <img src={currentUser.avatarImage} />
+                        {currentUser.avatar ? (
+                            <img src={ `${BASE_URL}`+currentUser.avatar} />
                         ) : (
                             <img src={images.noAvatar} alt="default" />
                         )}

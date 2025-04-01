@@ -6,6 +6,5 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public interface MessageService {
-    Message saveMessage(Message message);
-    List<Message> getMessagesBetweenUsers(Long from, Long to);
+    List<Message> getMessage(String jwt, Long userId) throws Exception;
 }

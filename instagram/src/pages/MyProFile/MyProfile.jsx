@@ -17,12 +17,13 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
-import { BASE_URL, getMyProfile } from '../../action/action';
+import { BASE_URL, getMyProfile, getNumberOfFriends } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
+import { useUser } from '../../store/useStore';
 function Profile() {
     const [dataUser, setDataUser] = useState(undefined);
-    const [currentUser, setCurrentUser] = useState(undefined);
+    const {currentUser} = useUser();
     const [IsLoading, setIsLoading] = useState(false);
     const [selected, setSelected] = useState(0);
     const [showPost, setShowPost] = useState(false);
@@ -31,17 +32,19 @@ function Profile() {
     const [showChangeAvatar, setShowChangeAvatar] = useState(false);
     const [showPopup, setShowPopup] = useState(false); //ở chỗ bánh răng
     const [postList, setPostList] = useState([]);
+    const [quantityFriends, setQuantityFriends] = useState(0);
 
     // ref flow and unflow
     const flowRef = useRef();
 
-    const getCurrentUser = async () => {
-        const data = await getMyProfile()
-        setCurrentUser(data.user);
-    };
-    useEffect(() => {
-        getCurrentUser();
-    }, []);
+
+    const getFriend = async () => {
+        const data = await getNumberOfFriends()
+        console.log("friend" , data);
+        
+        setQuantityFriends(data);
+    }
+
     const getPost = async () => {
         // const { data } = await axios.get(`http://localhost:5000/post/get-post/${dataUser?._id}`);
         // setPostList(data.posts);
@@ -49,6 +52,7 @@ function Profile() {
 
     useEffect(() => {
         getPost();
+        getFriend();
     }, [dataUser]);
     const nav = [
         {
@@ -64,8 +68,6 @@ function Profile() {
             icon: <AiOutlineTags />,
         },
     ];
-    const textFlow = 'Theo dõi';
-    const textUnFlow = 'Bỏ theo dõi';
     return (
         <div className="profile__wrapper">
             {IsLoading ? (
@@ -114,12 +116,12 @@ function Profile() {
                                     bài viết
                                 </h3>
                                 <h3 className="count_followers">
-                                    <span>0</span>
-                                    người theo dõi
+                                    <Link to={"/friends"}>
+                                        <span>{quantityFriends}</span>
+                                        người bạn
+                                    </Link>
                                 </h3>
-                                <h3 className="count_following">
-                                    Đang theo dõi <span>0</span>người dùng
-                                </h3>
+                                
                             </div>
                             <div className="bottom">
                                 <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(true)}>{(currentUser?.description?.length!==0  ) ? currentUser?.description : 'Thêm mô tả' }</h4>

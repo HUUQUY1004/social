@@ -5,50 +5,74 @@ import { CiFaceSmile } from 'react-icons/ci';
 import ChatInput from '../ChatInput/ChatInput';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
-function ChatContainer({ currentChat, currentUser, socket }) {
+import { useUser } from '../../store/useStore';
+import { BASE_URL, getConversation, sendMessage } from '../../action/action';
+import useWebSocket from '../../hook/useWebSocket';
+function ChatContainer({ currentChat, socket }) {
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null);
+    const {currentUser} = useUser()
+    
     const getMessages = async () => {
-        const response = await axios.post('http://localhost:5000/api/message/getmsg', {
-            from: currentUser._id,
-            to: currentChat._id,
-        });
-        setMessages(response.data);
+        const data = await getConversation(currentChat.id)
+        console.log(data);
+        
+        setMessages(data);
     };
     useEffect(() => {
         getMessages();
     }, [currentChat]);
-    const handleSendMess = async (msg) => {
-        await axios.post('http://localhost:5000/api/message/addmsg', {
-            from: currentUser._id,
-            to: currentChat._id,
-            message: msg,
-        });
-        socket.current.emit('send-msg', {
-            to: currentChat._id,
-            from: currentUser._id,
-            msg,
-        });
-        const msgs = [...messages];
-        msgs.push({ fromSelf: true, message: msg });
-        setMessages(msgs);
-    };
-    useEffect(() => {
-        if (socket.current) {
-            socket.current.on('msg-recieve', (msg) => {
-                setArrivalMessage({ fromSelf: false, message: msg });
-            });
+
+    // 🔥 Kết nối WebSocket
+    useWebSocket(currentUser.id, (newMessage) => {
+        if (newMessage.fromUser === currentChat.id || newMessage.toUserId === currentUser.id) {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
-    }, []);
-    useEffect(() => {
-        arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-    }, [arrivalMessage]);
+    });
+
+    const handleSendMess = async (msg, multipart) => {
+        const body ={
+            formUser : currentUser.id,
+            toUserId : currentChat.id,
+            content : msg,
+            image : multipart,
+            video: ''
+        }
+        
+        const data = await sendMessage(body)
+        console.log("data",data);
+        setMessages([...messages, data])
+
+        // if(multipart){
+        //     const imageUrl = URL.createObjectURL(multipart)
+        //     console.log("URL FILE: " + imageUrl);
+        //     setMessages([...messages, {}])
+        // }
+        
+        // socket.current.emit('send-msg', {
+        //     to: currentChat._id,
+        //     from: currentUser._id,
+        //     msg,
+        // });
+        // const msgs = [...messages];
+        // msgs.push({ fromSelf: true, message: msg });
+        // setMessages(msgs);
+    };
+    // useEffect(() => {
+    //     if (socket.current) {
+    //         socket.current.on('msg-recieve', (msg) => {
+    //             setArrivalMessage({ fromSelf: false, message: msg });
+    //         });
+    //     }
+    // }, []);
+    // useEffect(() => {
+    //     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+    // }, [arrivalMessage]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
-    console.log(messages);
     return (
         <div
             className="chat-container__wrapper flex 
@@ -57,20 +81,20 @@ function ChatContainer({ currentChat, currentUser, socket }) {
             <header className="header-chat flex a-center j-between">
                 <div className="information-user-chat flex a-center">
                     <div className="avatar">
-                        {currentChat.isAvatarImage ? (
-                            <img src={currentChat.avatarImage} alt="avatar" />
+                        {currentChat.avatar ? (
+                            <img src={currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}
                     </div>
-                    <h3>{currentChat.name}</h3>
+                    <h3>{currentChat.username}</h3>
                 </div>
             </header>
             <div className="chat-container">
                 <div className="detail-account flex flex-column a-center">
                     <div className="avatar">
-                        {currentChat.isAvatarImage ? (
-                            <img src={currentChat.avatarImage} alt="avatar" />
+                        {currentChat.avatar ? (
+                            <img src={currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}
@@ -87,9 +111,18 @@ function ChatContainer({ currentChat, currentUser, socket }) {
                     {messages.map((message, index) => {
                         return (
                             <div key={index} ref={scrollRef}>
-                                <div className={`message ${message.fromSelf ? 'sended' : 'recieved'}`}>
+                                <div className={`message ${currentUser.id === message.fromUser ? 'sended' : 'recieved'}`}>
                                     <div className="content-mess ">
-                                        <p>{message.message}</p>
+                                        {
+                                            message.imageUrl? (
+                                                <img src={BASE_URL+ message.imageUrl} alt="image" />
+                                            ) : (
+                                                message.video? (
+                                                    <video src={message.video} controls />
+                                                ) : null
+                                            )
+                                        }
+                                        <p>{message.content}</p>
                                     </div>
                                 </div>
                             </div>

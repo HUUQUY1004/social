@@ -101,7 +101,12 @@ public class FriendController {
         invitation.setStatus(200);
         return  new ResponseEntity<>(invitation, HttpStatus.OK);
     }
-
+    @GetMapping("/quantity")
+    public ResponseEntity<Integer> getNumberOfFriend(
+            @RequestHeader("Authorization") String jwt
+            ) throws Exception {
+        return  ResponseEntity.ok(friendService.getNumberOfFriends(jwt));
+    }
     @GetMapping({"/{offset}", "/"})
     public  ResponseEntity<List<User>> getFriendForUser(
             @RequestHeader("Authorization") String jwt,

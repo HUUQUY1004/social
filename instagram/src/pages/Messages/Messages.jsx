@@ -1,42 +1,36 @@
 import './messages.scss';
-import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { io } from 'socket.io-client';
 import AccountItem from '../../component/AccountItem/AccountItem';
 import ChatContainer from '../../component/ChatContainer/ChatContainer';
+import { useUser } from '../../store/useStore';
+import { getListFriend } from '../../action/action';
 function Messages() {
     const socket = useRef();
-    const userLocal = JSON.parse(localStorage.getItem('instagram-user'));
-    const [currentUser, setCurrentUser] = useState(undefined);
+    const {currentUser}= useUser();
     const [currentChat, setCurrentChat] = useState(undefined);
-    const getCurrentUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/user/get-user-by-id/${userLocal?._id}`);
-        setCurrentUser(data.user);
-    };
-    useEffect(() => {
-        if (currentUser) {
-            socket.current = io('http://localhost:5000');
-            socket.current.emit('add-user', currentUser._id);
+    const [friends, setFriends] = useState([])
+        const getFriends = async ()=>{
+            const data = await getListFriend()
+            setFriends(data)
         }
-    }, [currentUser]);
-    useEffect(() => {
-        getCurrentUser();
-    }, []);
-    console.log(currentChat);
+        useEffect(()=>{
+            getFriends()
+        }, []) 
     return (
         <div className="messages__wrapper flex">
             <div className="left-chat">
                 <header className="header">
-                    <div className="flex a-center">
-                        <h3>{currentUser?.username}</h3>
-                        <span>
+                    <div className="flex a-center items-center">
+                        <h3 className='font-bold'>{currentUser?.username}</h3>
+                        <span className='font-bolds'>
                             <MdKeyboardArrowDown />
                         </span>
                     </div>
                 </header>
                 <div className="user-list">
-                    {currentUser?.following.map((item, index) => {
+                    {friends.map((item, index) => {
                         return (
                             <div key={index} className="chat-item" onClick={() => setCurrentChat(item)}>
                                 <AccountItem data={item} popular={false} />
@@ -71,7 +65,7 @@ function Messages() {
                         </div>
                     </div>
                 ) : (
-                    <ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket} />
+                    <ChatContainer currentChat={currentChat} socket={socket} />
                 )}
             </div>
         </div>
