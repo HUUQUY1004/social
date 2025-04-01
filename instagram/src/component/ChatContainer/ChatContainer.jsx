@@ -12,7 +12,6 @@ function ChatContainer({ currentChat, socket }) {
     const scrollRef = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const {currentUser} = useUser()
-    console.log("current" ,currentUser);
     
     const getMessages = async () => {
         const data = await getConversation(currentChat.id)
@@ -33,7 +32,14 @@ function ChatContainer({ currentChat, socket }) {
         }
         
         const data = await sendMessage(body)
-        console.log(data);
+        console.log("data",data);
+        setMessages([...messages, data])
+
+        // if(multipart){
+        //     const imageUrl = URL.createObjectURL(multipart)
+        //     console.log("URL FILE: " + imageUrl);
+        //     setMessages([...messages, {}])
+        // }
         
         // socket.current.emit('send-msg', {
         //     to: currentChat._id,
@@ -55,10 +61,9 @@ function ChatContainer({ currentChat, socket }) {
     //     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
     // }, [arrivalMessage]);
 
-    // useEffect(() => {
-    //     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    // }, [messages]);
-    // console.log(messages);
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
     return (
         <div
             className="chat-container__wrapper flex 
