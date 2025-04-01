@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../store/useStore';
 import { BASE_URL, getConversation, sendMessage } from '../../action/action';
+import useWebSocket from '../../hook/useWebSocket';
 function ChatContainer({ currentChat, socket }) {
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
@@ -22,6 +23,14 @@ function ChatContainer({ currentChat, socket }) {
     useEffect(() => {
         getMessages();
     }, [currentChat]);
+
+    // 🔥 Kết nối WebSocket
+    useWebSocket(currentUser.id, (newMessage) => {
+        if (newMessage.fromUser === currentChat.id || newMessage.toUserId === currentUser.id) {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+    });
+
     const handleSendMess = async (msg, multipart) => {
         const body ={
             formUser : currentUser.id,

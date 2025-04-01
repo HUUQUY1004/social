@@ -7,6 +7,7 @@ import com.social.Social.service.FileStorageService;
 import com.social.Social.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,8 @@ public class MessageController {
     private  FileStorageService fileStorageService;
     @Autowired
     private  MessageService messageService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/conversation/{toUserId}")
     public List<Message> getConversation(
@@ -52,6 +55,8 @@ public class MessageController {
         }
 
         Message savedMessage = messageRepository.save(message);
+
+        messagingTemplate.convertAndSend("/topic/messages/" + toUserId, savedMessage);
         return ResponseEntity.ok(savedMessage);
     }
 
