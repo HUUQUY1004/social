@@ -21,6 +21,7 @@ import { BASE_URL, getMyProfile, getNumberOfFriends } from '../../action/action'
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 import { useUser } from '../../store/useStore';
+import Story from '../../component/Remarkable/Story';
 function Profile() {
     const [dataUser, setDataUser] = useState(undefined);
     const {currentUser} = useUser();
@@ -128,6 +129,7 @@ function Profile() {
                             </div>
                         </div>
                     </div>
+                    <Story/>
                     <div className="content-profile">
                         <div className="nav flex j-center">
                             {nav.map((item, index) => (
