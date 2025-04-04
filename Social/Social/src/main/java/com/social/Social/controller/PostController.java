@@ -1,16 +1,73 @@
 package com.social.Social.controller;
 
+import com.social.Social.model.Image;
+import com.social.Social.model.Post;
+import com.social.Social.model.PostVisibility;
+import com.social.Social.model.User;
+import com.social.Social.responsitory.ImageRepository;
+import com.social.Social.service.FileStorageService;
+import com.social.Social.service.PostService;
+import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
 @RequestMapping(value = "api/post")
 public class PostController {
+    @Autowired
+    FileStorageService fileStorageService;
+    @Autowired
+    PostService postService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ImageRepository imageRepository;
+    @PostMapping(value = "/create", consumes = "multipart/form-data")
+    public ResponseEntity<Post> craetePost(
+            @RequestHeader("Authorization") String jwt,
+            @RequestParam("title") String title,
+            @RequestParam("isComment") boolean isComment,
+            @RequestParam("isShowLike") boolean isShowLike,
+            @RequestParam("postVisibility") String postVisibility,
+            @RequestParam("scaleImage") double scaleImage,
+            @RequestPart("images") MultipartFile file
+
+            ) throws Exception {
+        User user = userService.findUserByToken(jwt);
+
+        Post post = new Post();
+//        Image
+        Image image = new Image();
+        if (file != null && !file.isEmpty()) {
+            String imageUrl = fileStorageService.storeFile(file, "post/");
+            image.setImageUrl(imageUrl);
+        }
+
+        imageRepository.save(image);
+
+        List<Image> imageList = new ArrayList<>();
+        imageList.add(image);
+
+
+        post.setPostVisibility(PostVisibility.valueOf(postVisibility));
+        post.setScaleImage(scaleImage);
+        post.setTitle(title);
+        post.setImages(imageList);
+        post.setComment(isComment);
+        post.setShowLike(isShowLike);
+        post.setUser(user);
+        Post post1 = postService.createPost(post);
+        return  ResponseEntity.ok(post1);
+    }
 
     @GetMapping("quantity")
     public ResponseEntity<Integer> getNumberOfArticles(

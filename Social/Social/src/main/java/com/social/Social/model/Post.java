@@ -21,8 +21,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private  String title;
-    private String content;
-
+    private boolean isComment;
+    private boolean isShowLike;
+    private double scaleImage;
     @JsonIgnore
     @OneToMany
     private List<Image> images = new ArrayList<>();

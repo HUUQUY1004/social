@@ -13,6 +13,9 @@ import Notify from '../Notify/Notify';
 // Content
 import { images } from '../../source';
 import Picker from 'emoji-picker-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons';
+import { createPost } from '../../action/action';
 const editSize = [
     {
         name: 'Gốc',
@@ -51,6 +54,7 @@ function Post({ onClose, user }) {
     const [openFeature, setOpenFeature] = useState(false);
     const [isComment, setIsComment] = useState(true);
     const [isShowLike, setIsShowLike] = useState(true);
+    const [typeView, setTypeView] = useState("PUBLIC")
     // UP Post
 
     useOnClickOutside(innerRef, () => {
@@ -64,22 +68,23 @@ function Post({ onClose, user }) {
         input.click();
     };
 
-    function imageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFileUp(reader.result);
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-    }
+    // function imageToBase64(file) {
+    //     return new Promise((resolve, reject) => {
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => {
+    //             setFileUp(reader.result);
+    //         };
+    //         reader.onerror = reject;
+    //         reader.readAsDataURL(file);
+    //     });
+    // }
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         // Xử lý file ảnh tại đây, ví dụ: gửi lên máy chủ hoặc xử lý dữ liệu
-        imageToBase64(file).then((base64) => {
-            // setFileUp(base64);
-        });
+        // imageToBase64(file).then((base64) => {
+        //     // setFileUp(base64);
+        // });
+        setFileUp(file)
         setEdit(true);
         setImg(URL.createObjectURL(file));
     };
@@ -100,17 +105,22 @@ function Post({ onClose, user }) {
         setContent(msg);
     };
     const handleUpPost = async () => {
-        const { data } = await axios.post(`http://localhost:5000/post/create/${user._id}`, {
+       const value= {
             title: content,
-            file: fileUp,
+            images: fileUp,
             isComment,
             isShowLike,
             scaleImage: parseFloat(`1.${inputRange}`),
-        });
-        if (data.status === true) {
+            postVisibility: typeView
+        };
+        const data = await createPost(value)
+        
+        if (data) {
             onClose(false);
         }
     };
+    console.log(typeView);
+    
     return (
         <div className="post__wrapper flex a-center j-center">
             <div className="close" onClick={() => onClose(false)}>
@@ -269,6 +279,27 @@ function Post({ onClose, user }) {
                                     className="feature-body"
                                     style={openFeature ? { height: '303px' } : { height: '0' }}
                                 >
+                                    <div className="feature-item">
+                                        <div className="flex a-center j-between">
+                                            <h4 className="feature-name">
+                                                Người xem bài viết
+                                            </h4>
+                                            <select className='text-xs' onChange={(e)=>setTypeView(e.target.value)}>
+                                                <option value='PUBLIC'> 
+                                                    Công khai
+                                                </option>
+                                                <option value='FRIENDS_ONLY'>Bạn bè</option>
+                                                <option value='PRIVATE'>Chỉ mình tôi</option>
+                                            </select>
+                                        </div>
+                                        <div className="feature-description">
+                                            <p>
+                                               Chọn đối tượng có thể xem bài viết này của bạn.Bạn có thể thay đổi trong phần
+                                               tùy chọn này bằng cách mở menu ··· ở đầu bài
+                                                viết.
+                                            </p>
+                                        </div>
+                                    </div>
                                     <div className="feature-item">
                                         <div className="flex a-center j-between">
                                             <h4 className="feature-name">
