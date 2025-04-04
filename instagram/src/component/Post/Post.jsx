@@ -226,8 +226,8 @@ function Post({ onClose, user }) {
                     <div className="add-title-post">
                         <div className="user flex">
                             <div className="avatar">
-                                {user?.isAvatarImage ? (
-                                    <img src={user?.avatarImage} alt="" className="avatarUser" />
+                                {user?.avatar ? (
+                                    <img src={'http://localhost:5000'+ user?.avatar} alt="" className="avatarUser" />
                                 ) : (
                                     <img src={images.noAvatar} alt="" className="avatarUser" />
                                 )}
