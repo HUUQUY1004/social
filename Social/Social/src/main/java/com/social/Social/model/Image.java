@@ -1,9 +1,7 @@
 package com.social.Social.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +15,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
     private String imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    @JsonBackReference
+    private Post post;
 }

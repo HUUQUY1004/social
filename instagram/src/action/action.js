@@ -197,3 +197,27 @@ export const getConversation = async (toUserId) => {
     return null;
   }
 };
+
+// post
+//  1. create post
+export const createPost = async (value) => {
+  const formData = new FormData();
+  formData.append("title", value.title);
+  formData.append("isComment", value.isComment);
+  formData.append("isShowLike", value.isShowLike);
+  formData.append("postVisibility", value.postVisibility);
+  formData.append("scaleImage", value.scaleImage);
+  formData.append("images", value.images);
+  const { data } = await axios.post(
+    `${BASE_URL}/api/post/create`,
+    formData,
+    config
+  );
+  return data;
+};
+
+// getPost for userId
+export const getPostForUserId = async (userId) => {
+  const { data } = await axios.get(`${BASE_URL}/api/post/${userId}`, config);
+  return data;
+};

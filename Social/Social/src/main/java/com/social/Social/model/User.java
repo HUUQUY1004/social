@@ -102,6 +102,22 @@ public class User {
     public void setFriends(List<User> friends) {
         this.friends = friends;
     }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
+    }
 }
 //cascade = CascadeType.ALL giúp tự động cập nhật hoặc xóa dữ liệu liên quan.
 //fetch = FetchType.LAZY giúp tối ưu hóa truy vấn.
