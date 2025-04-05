@@ -215,3 +215,9 @@ export const createPost = async (value) => {
   );
   return data;
 };
+
+// getPost for userId
+export const getPostForUserId = async (userId) => {
+  const { data } = await axios.get(`${BASE_URL}/api/post/${userId}`, config);
+  return data;
+};

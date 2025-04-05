@@ -7,11 +7,12 @@ import axios from 'axios';
 import { images } from '../../source';
 import PostHome from '../../component/PostHome/PostHome';
 import ConvertAccount from '../../component/CovertAccount/ConvertAccount';
+import {useUser} from '../../store/useStore'
 function Home() {
     const [suggestUser, setSuggestUser] = useState([]);
-    const [currentUser, setCurrentUser] = useState(undefined);
     const [isLoading, setIsLoading] = useState(false);
     const [postList, setPostList] = useState(undefined);
+    const {currentUser} = useUser()
     // bên phần account
     const [isConvert, setIsConvert] = useState(false);
     const navigate = useNavigate();
@@ -19,11 +20,6 @@ function Home() {
     const getSuggest = async () => {
         const { data } = await axios.get('http://localhost:5000/api/user/suggest');
         setSuggestUser(data);
-        setIsLoading(false);
-    };
-    const getCurrentUser = async () => {
-        const res = await axios.get(`http://localhost:5000/api/user/${dataLocal.username}`);
-        setCurrentUser(res.data.user);
         setIsLoading(false);
     };
     const getPost = async () => {
@@ -34,7 +30,6 @@ function Home() {
     useEffect(() => {
         getPost();
         getSuggest();
-        getCurrentUser();
     }, []);
     return (
         <div className="home__wrapper flex">

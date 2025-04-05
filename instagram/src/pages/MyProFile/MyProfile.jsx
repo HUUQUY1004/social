@@ -17,7 +17,7 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
-import { BASE_URL, getMyProfile, getNumberOfFriends } from '../../action/action';
+import { BASE_URL, getMyProfile, getNumberOfFriends, getPostForUserId } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 import { useUser } from '../../store/useStore';
@@ -39,21 +39,20 @@ function Profile() {
     const flowRef = useRef();
 
 
-    const getFriend = async () => {
+    const getNumberOfFriend = async () => {
         const data = await getNumberOfFriends()
-        console.log("friend" , data);
-        
         setQuantityFriends(data);
     }
 
     const getPost = async () => {
-        // const { data } = await axios.get(`http://localhost:5000/post/get-post/${dataUser?._id}`);
-        // setPostList(data.posts);
+        const data = await getPostForUserId(currentUser.id)
+        console.log("data",data);     
+        setPostList(data);
     };
 
     useEffect(() => {
         getPost();
-        getFriend();
+        getNumberOfFriend();
     }, [dataUser]);
     const nav = [
         {
@@ -113,7 +112,7 @@ function Profile() {
                             </div>
                             <div className="center flex">
                                 <h3 className="count-post">
-                                    <span>{postList.length}</span>
+                                    <span>{postList?.length}</span>
                                     bài viết
                                 </h3>
                                 <h3 className="count_followers">
@@ -152,7 +151,7 @@ function Profile() {
                                 <div className="content-ui ">
                                     {currentUser?._id === dataUser?._id ? (
                                         <div>
-                                            {postList.length === 0 ? (
+                                            {postList?.length === 0 ? (
                                                 <div className="up-post flex flex-column a-center ">
                                                     <div className="icon flex a-center j-center">
                                                         <AiOutlineCamera />
@@ -201,7 +200,7 @@ function Profile() {
                                             </div>
                                         </div>
                                     </div>
-                                    {dataUser?.saving.length > 0 ? (
+                                    {dataUser?.saving?.length > 0 ? (
                                         <div className=" album flex j-between wrap">
                                             <div className="item-album">
                                                 <h4 className="name">Tất cả bài viết</h4>

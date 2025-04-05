@@ -52,7 +52,7 @@ public class PostController {
             image.setImageUrl(imageUrl);
         }
 
-        imageRepository.save(image);
+
 
         List<Image> imageList = new ArrayList<>();
         imageList.add(image);
@@ -66,13 +66,22 @@ public class PostController {
         post.setShowLike(isShowLike);
         post.setUser(user);
         Post post1 = postService.createPost(post);
+        image.setPost(post);
+        imageRepository.save(image);
         return  ResponseEntity.ok(post1);
     }
-
     @GetMapping("quantity")
     public ResponseEntity<Integer> getNumberOfArticles(
             @RequestHeader("Authorization") String jwt
     ){
         return ResponseEntity.ok(0);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Post>> getPostForUserId(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable("userId") Long userId
+    ) throws Exception {
+        return  ResponseEntity.ok(postService.getPost(jwt,userId));
     }
 }
