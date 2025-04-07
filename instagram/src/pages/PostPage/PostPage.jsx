@@ -73,7 +73,7 @@ function PostPage() {
 
     useEffect(() => {
         // () => post?.like.includes(userLocal._id)
-        setIsLike(() => post?.likedByUsers.includes(currentUser.id));
+        setIsLike(() => post?.likedByUsers.some((item) =>item.id === currentUser.id));
     }, [post]);
     // // 1 mảng chứa idUser của người dùng cmt
     // const uniqueUserIds = Array.from(new Set(post?.comment.map((item) => item.idUser)));
