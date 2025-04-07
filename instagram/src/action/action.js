@@ -227,3 +227,13 @@ export const getPostById = async (id) => {
 
   return data;
 };
+export const likePost = async (id) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/api/post/likePost`,
+    {
+      postId: id,
+    },
+    config
+  );
+  return data;
+};

@@ -10,9 +10,9 @@ import { BiBookmark } from 'react-icons/bi';
 import { CiFaceSmile } from 'react-icons/ci';
 import Picker from 'emoji-picker-react';
 import axios from 'axios';
-import { dislikePost, getCurrentUserByID, likePost, times } from '../../component/func/commonFunc';
+import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
-import { BASE_URL, getPostById } from '../../action/action';
+import { BASE_URL, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 function PostPage() {
     const navigate = useNavigate();
@@ -82,9 +82,9 @@ function PostPage() {
     const handleLike = (idPost) => {
         setIsLike((prev) => !prev);
         if (isLike) {
-            dislikePost(idPost, userLocal._id);
+            // dislikePost(idPost);
         } else {
-            likePost(idPost, userLocal._id);
+            likePost(idPost);
         }
     };
     //handle comment
@@ -122,7 +122,7 @@ function PostPage() {
                     <header className="flex j-between a-center">
                         <div className="left flex">
                             <div className="img">
-                                <img src={images.noAvatar} alt="" />
+                                <img src={post?.user.avatar? BASE_URL + post?.user.avatar: images.noAvatar} alt="" />
                             </div>
                             <div className="information flex a-center">
                                 <Link to={`/${post?.user?.id}`}>{post?.user?.username}</Link>
@@ -136,6 +136,11 @@ function PostPage() {
                         </div>
                     </header>
                     <div className="content-comment">
+                        {
+                            post?.comments.length ===0 ? 
+                            <p className='w-full h-full flex justify-center items-center'>Hãy là người đầu tiên bình luận</p>: 
+                            <p>bl</p> 
+                        }
                         {/* {post?.comments.map((item, index) => {
                             const commentUser = users.find((user) => user._id === item.idUser);
                             const time = times(item.date);
@@ -164,21 +169,24 @@ function PostPage() {
                     </div>
                     <footer>
                         <div className="interaction">
-                            <div className=" flex a-center j-between ">
-                                <div className="left ">
-                                    <span
-                                        className="like"
-                                        title={isLike ? 'Bỏ thích' : 'Thích'}
-                                        onClick={() => handleLike(post._id)}
-                                    >
-                                        {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
-                                    </span>
-                                    <span className="comment" title="Bình luận" onClick={() => divRef.current.focus()}>
-                                        <FaRegComment />
-                                    </span>
-                                    <span className="share" title="Chia sẻ">
-                                        <IoMdPaperPlane />
-                                    </span>
+                            <div className=" flex a-center j-between">
+                                <div className="left">
+                                    <div className='flex'>
+                                        <span
+                                            className="like"
+                                            title={isLike ? 'Bỏ thích' : 'Thích'}
+                                            onClick={() => handleLike(post.id)}
+                                        >
+                                            {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
+                                        </span>
+                                        <span className="comment" title="Bình luận" onClick={() => divRef.current.focus()}>
+                                            <FaRegComment />
+                                        </span>
+                                        <span className="share" title="Chia sẻ">
+                                            <IoMdPaperPlane />
+                                        </span>
+                                    </div>
+                                    
                                 </div>
                                 <div className="right ">
                                     <span className="save" title="Lưu">

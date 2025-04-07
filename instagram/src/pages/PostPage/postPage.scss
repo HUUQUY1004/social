@@ -30,7 +30,7 @@
                     img {
                         height: 100%;
                         width: 100%;
-                        object-fit: contain;
+                        object-fit: cover;
                     }
                 }
                 .information {
@@ -54,9 +54,8 @@
             }
         }
         .content-comment {
-            flex: 1;
+            flex: 1 1;
             padding: 14px;
-            height: 400px;
             .item-comment {
                 .avatar {
                     height: 32px;
@@ -94,7 +93,6 @@
         }
         .interaction {
             padding: 14px;
-            height: 100px;
             .left,
             .right {
                 span {

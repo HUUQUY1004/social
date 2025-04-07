@@ -35,6 +35,4 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
       )
 """)
     List<Post> getVisiblePostsWithImages(@Param("ownerId") Long ownerId, @Param("requesterId") Long requesterId);
-
-
 }

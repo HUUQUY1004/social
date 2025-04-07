@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PostServiceImp implements  PostService{
@@ -36,5 +37,22 @@ public class PostServiceImp implements  PostService{
     @Override
     public Post getPostById(Long id) throws Exception {
         return  postRepository.findById(id).orElseThrow(()->new Exception("Post not found with id " + id));
+    }
+
+    @Override
+    public boolean likePost(String jwt, Long postId) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        if(user == null){
+            throw  new Exception("User nott found");
+        }
+
+        Post post = postRepository.findById(postId).orElseThrow(()-> new Exception("Pots not found"));
+
+        Set<User> likedUsers = post.getLikedByUsers();
+        boolean isLiked = likedUsers.contains(user);
+        boolean b = isLiked ? likedUsers.remove(user) : likedUsers.add(user);
+        post.setLikedByUsers(likedUsers);
+        postRepository.save(post);
+        return  b;
     }
 }

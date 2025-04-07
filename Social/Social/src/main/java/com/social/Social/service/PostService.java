@@ -9,4 +9,6 @@ public interface PostService {
     Post createPost( Post post) throws Exception;
     List<Post> getPost(String jwt, Long userId) throws  Exception;
     Post getPostById(Long id) throws  Exception;
+
+    boolean likePost(String jwt, Long postId) throws  Exception;
 }

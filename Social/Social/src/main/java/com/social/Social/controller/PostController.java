@@ -4,6 +4,8 @@ import com.social.Social.model.Image;
 import com.social.Social.model.Post;
 import com.social.Social.model.PostVisibility;
 import com.social.Social.model.User;
+import com.social.Social.request.LikePost;
+import com.social.Social.response.Response;
 import com.social.Social.responsitory.ImageRepository;
 import com.social.Social.service.FileStorageService;
 import com.social.Social.service.PostService;
@@ -72,12 +74,27 @@ public class PostController {
         imageRepository.save(image);
         return  ResponseEntity.ok(post1);
     }
-
+    @PostMapping("likePost")
+    public  ResponseEntity<Response> likePost(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody LikePost likePost
+            ) throws Exception {
+        System.out.println(likePost.getPostId());
+        boolean check = postService.likePost(jwt,likePost.getPostId());
+        Response response = new Response();
+        response.setStatus(200);
+        if(check){
+            response.setMessage("Like Successfully");
+        }
+        else {
+            response.setMessage("DisLike Successfully");
+        }
+        return ResponseEntity.ok((response));
+    }
     @GetMapping()
     public ResponseEntity<Post> getPostById(
             @RequestParam("id") Long id
     ) throws Exception {
-        System.out.println("ALO");
         return ResponseEntity.ok(postService.getPostById(id));
     }
     @GetMapping("quantity")
