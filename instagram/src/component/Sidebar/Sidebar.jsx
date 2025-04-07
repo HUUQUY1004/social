@@ -34,7 +34,6 @@ import { useUser } from '../../store/useStore';
 
 function Sidebar() {
     const {currentUser} = useUser()
-    console.log(currentUser);
     
     const Menu = [
         {

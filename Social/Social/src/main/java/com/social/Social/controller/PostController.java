@@ -9,6 +9,7 @@ import com.social.Social.service.FileStorageService;
 import com.social.Social.service.PostService;
 import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class PostController {
 
     @Autowired
     ImageRepository imageRepository;
+
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     public ResponseEntity<Post> craetePost(
             @RequestHeader("Authorization") String jwt,
@@ -69,6 +71,14 @@ public class PostController {
         image.setPost(post);
         imageRepository.save(image);
         return  ResponseEntity.ok(post1);
+    }
+
+    @GetMapping()
+    public ResponseEntity<Post> getPostById(
+            @RequestParam("id") Long id
+    ) throws Exception {
+        System.out.println("ALO");
+        return ResponseEntity.ok(postService.getPostById(id));
     }
     @GetMapping("quantity")
     public ResponseEntity<Integer> getNumberOfArticles(

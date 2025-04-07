@@ -27,7 +27,6 @@ export const getMyProfile = async () => {
     `${BASE_URL}/api/profile/my-profile`,
     config
   );
-  console.log("profile: ", data);
 
   return data;
 };
@@ -219,5 +218,12 @@ export const createPost = async (value) => {
 // getPost for userId
 export const getPostForUserId = async (userId) => {
   const { data } = await axios.get(`${BASE_URL}/api/post/${userId}`, config);
+  return data;
+};
+
+export const getPostById = async (id) => {
+  const { data } = await axios.get(`${BASE_URL}/api/post?id=${id}`, config);
+  console.log(data);
+
   return data;
 };

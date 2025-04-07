@@ -6,8 +6,11 @@
     background-color: var(--white-color);
     border-radius: 2px;
     .file {
+        overflow: hidden;
         img {
             height: 100%;
+            max-width: 700px;
+            object-fit: contain;
             width: auto;
         }
     }

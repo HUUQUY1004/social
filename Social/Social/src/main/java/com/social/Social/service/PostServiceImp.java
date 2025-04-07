@@ -32,4 +32,9 @@ public class PostServiceImp implements  PostService{
         List<Post> posts =  postRepository.getVisiblePostsWithImages(user.getId(), userId);
         return  posts;
     }
+
+    @Override
+    public Post getPostById(Long id) throws Exception {
+        return  postRepository.findById(id).orElseThrow(()->new Exception("Post not found with id " + id));
+    }
 }
