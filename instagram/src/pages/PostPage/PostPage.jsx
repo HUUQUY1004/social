@@ -12,7 +12,7 @@ import Picker from 'emoji-picker-react';
 import axios from 'axios';
 import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
-import { BASE_URL, getPostById, likePost } from '../../action/action';
+import { BASE_URL, commentPost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 function PostPage() {
     const navigate = useNavigate();
@@ -81,19 +81,13 @@ function PostPage() {
     // handle like
     const handleLike = (idPost) => {
         setIsLike((prev) => !prev);
-        if (isLike) {
-            // dislikePost(idPost);
-        } else {
             likePost(idPost);
-        }
     };
     //handle comment
-    const handlePostComment = async (idPost, idUser, value) => {
-        const { data } = await axios.post('http://localhost:5000/post/comment', {
-            idPost,
-            idUser,
-            content: value,
-        });
+    const handlePostComment = async (postId,value) => {
+        const data = await commentPost({postId, comment: value})
+        console.log("data", data);
+        
     };
     const liRef = useRef();
     const handleDeletePost = async () => {
@@ -222,7 +216,7 @@ function PostPage() {
                                     style={value.length > 0 ? { cursor: 'pointer' } : { cursor: 'text' }}
                                     onClick={() => {
                                         setValue('');
-                                        handlePostComment(post._id, userLocal._id, value);
+                                        handlePostComment(post.id, value);
                                     }}
                                 >
                                     Đăng

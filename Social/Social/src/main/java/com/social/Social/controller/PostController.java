@@ -96,8 +96,8 @@ public class PostController {
     public  ResponseEntity<Response> comment(
             @RequestHeader("Authorization") String jwt,
             @RequestBody()CommentPost commentPost
-            )
-    {
+            ) throws Exception {
+        postService.commentPost(jwt,commentPost);
         Response response = new Response();
         response.setStatus(200);
         response.setMessage("Success");
