@@ -237,3 +237,11 @@ export const likePost = async (id) => {
   );
   return data;
 };
+export const commentPost = async (value) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/api/post/comment`,
+    value,
+    config
+  );
+  return data;
+};

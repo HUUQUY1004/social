@@ -138,25 +138,24 @@ function PostPage() {
                     <div className="content-comment">
                         {
                             post?.comments.length ===0 ? 
-                            <p className='w-full h-full flex justify-center items-center'>Hãy là người đầu tiên bình luận</p>: 
+                            <p className='w-full h-full flex justify-center items-center text-sa'>Hãy là người đầu tiên bình luận</p>: 
                             <p>bl</p> 
                         }
-                        {/* {post?.comments.map((item, index) => {
-                            const commentUser = users.find((user) => user._id === item.idUser);
+                       {post?.comments.map((item, index) => {
                             const time = times(item.date);
 
                             return (
                                 <div className="item-comment flex a-center" key={index}>
                                     <div className="avatar">
-                                        {commentUser?.isAvatarImage ? (
-                                            <img src={commentUser?.avatarImage} alt="avatar" />
+                                        {item?.avatar ? (
+                                            <img src={BASE_URL+ item?.avatar} alt="avatar" />
                                         ) : (
                                             <img src={images.noAvatar} alt="no-avatar" />
                                         )}
                                     </div>
                                     <div className="main">
                                         <div className="flex a-center">
-                                            <Link to={`/${commentUser?.username}`}>{commentUser?.username}</Link>
+                                            <Link to={`/${item.username}`}>{item.username}</Link>
                                             <p className="comment">{item.content}</p>
                                         </div>
                                         <div className="times">
@@ -165,7 +164,7 @@ function PostPage() {
                                     </div>
                                 </div>
                             );
-                        })} */}
+                        })}
                     </div>
                     <footer>
                         <div className="interaction">

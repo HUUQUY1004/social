@@ -4,6 +4,7 @@ import com.social.Social.model.Image;
 import com.social.Social.model.Post;
 import com.social.Social.model.PostVisibility;
 import com.social.Social.model.User;
+import com.social.Social.request.CommentPost;
 import com.social.Social.request.LikePost;
 import com.social.Social.response.Response;
 import com.social.Social.responsitory.ImageRepository;
@@ -90,6 +91,17 @@ public class PostController {
             response.setMessage("DisLike Successfully");
         }
         return ResponseEntity.ok((response));
+    }
+    @PostMapping("comment")
+    public  ResponseEntity<Response> comment(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody()CommentPost commentPost
+            )
+    {
+        Response response = new Response();
+        response.setStatus(200);
+        response.setMessage("Success");
+        return  ResponseEntity.ok(response);
     }
     @GetMapping()
     public ResponseEntity<Post> getPostById(

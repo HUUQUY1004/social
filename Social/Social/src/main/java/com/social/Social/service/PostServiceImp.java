@@ -2,6 +2,7 @@ package com.social.Social.service;
 
 import com.social.Social.model.Post;
 import com.social.Social.model.User;
+import com.social.Social.request.CommentPost;
 import com.social.Social.responsitory.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,6 @@ public class PostServiceImp implements  PostService{
     UserService userService;
     @Autowired
     PostRepository postRepository;
-
-
     @Override
     public int getNumberOfArticles(String jwt) {
         return 0;
@@ -54,5 +53,14 @@ public class PostServiceImp implements  PostService{
         post.setLikedByUsers(likedUsers);
         postRepository.save(post);
         return  b;
+    }
+
+    @Override
+    public boolean commentPost(String jwt, CommentPost commentPost) throws Exception {
+        User user = userService.findUserByToken(jwt);
+
+        Post post = postRepository.findById(commentPost.getPostId()).orElseThrow(()-> new Exception("Post not found"));
+        return  false;
+
     }
 }
