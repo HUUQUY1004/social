@@ -7,23 +7,18 @@ import './myprofile.scss';
 import { AiOutlineCamera, AiOutlineTable, AiOutlineTags } from 'react-icons/ai';
 import { FiTrash2 } from 'react-icons/fi';
 import { BsBookmark } from 'react-icons/bs';
-import axios from 'axios';
 import Loading from '../../component/Loading/loading';
 import Footer from '../../component/Footer/Footer';
 import Post from '../../component/Post/Post';
 import ModalSaving from '../../component/Modal/ModalSaving';
 import PostList from '../../component/PostList/PostList';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
-import { useParams } from 'react-router-dom';
-import { following, unFollowing } from '../../component/func/commonFunc';
-import { BASE_URL, getMyProfile, getNumberOfFriends, getPostForUserId, getUserById } from '../../action/action';
+import { BASE_URL, getNumberOfFriends, getPostForUserId } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 import { useUser } from '../../store/useStore';
 import Story from '../../component/Remarkable/Story';
 function Profile() {
-    const {userId} = useParams()
     const [dataUser, setDataUser] = useState(undefined);
     const {currentUser} = useUser();
     const [IsLoading, setIsLoading] = useState(false);
@@ -35,7 +30,7 @@ function Profile() {
     const [showPopup, setShowPopup] = useState(false); //ở chỗ bánh răng
     const [postList, setPostList] = useState([]);
     const [quantityFriends, setQuantityFriends] = useState(0);
-    
+
     // ref flow and unflow
     const flowRef = useRef();
 
@@ -47,22 +42,9 @@ function Profile() {
 
     const getPost = async () => {
         const data = await getPostForUserId(currentUser.id)
+        console.log("data",data);     
         setPostList(data);
     };
-    const getUser = async ()=>{
-
-        if(userId){
-            const data = await getUserById(userId)
-            setDataUser(data)
-        }
-        else {
-            setDataUser(currentUser)
-        }
-        
-    }
-    useEffect(()=>{
-        getUser()
-    },[])
 
     useEffect(() => {
         getPost();
@@ -74,7 +56,7 @@ function Profile() {
             icon: <AiOutlineTable />,
         },
         {
-            name: currentUser?.id === dataUser?.id ? 'ĐÃ LƯU' : 'REELS',
+            name: currentUser?._id === dataUser?._id ? 'ĐÃ LƯU' : 'REELS',
             icon: <BsBookmark />,
         },
         {
@@ -89,14 +71,14 @@ function Profile() {
             ) : (
                 <div className="profile flex j-center a-center flex-column">
                     <div className="information flex">
-                        <div className="img" onClick={()=>setShowChangeAvatar(currentUser.id === dataUser.id)}>
-                            <img src={dataUser?.avatar ? `${BASE_URL +dataUser?.avatar}` : 
+                        <div className="img" onClick={()=>setShowChangeAvatar(true)}>
+                            <img src={currentUser?.avatar ? `${BASE_URL +currentUser?.avatar}` : 
                                 images.noAvatar} alt="avatar" />
                         </div>
                         <div className="infor flex flex-column">
                             <div className="top flex a-center">
-                                <h3 className="username">{dataUser?.username}</h3>
-                                {currentUser?.id === dataUser?.id ? (
+                                <h3 className="username">{currentUser?.username}</h3>
+                                {currentUser?._id === dataUser?._id ? (
                                     <div className="flex a-center ">
                                         <button className="br-8 btn">Chỉnh sửa trang cá nhân</button>
                                         <Link
@@ -138,7 +120,7 @@ function Profile() {
                                 
                             </div>
                             <div className="bottom">
-                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(currentUser.id === dataUser.id)}>{(dataUser?.description?.length!==0  ) ? dataUser?.description : dataUser.id == currentUser.id && 'Thêm mô tả' }</h4>
+                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(true)}>{(currentUser?.description?.length!==0  ) ? currentUser?.description : 'Thêm mô tả' }</h4>
                             </div>
                         </div>
                     </div>
@@ -163,7 +145,7 @@ function Profile() {
                         <div className="content-by-nav flex j-center">
                             {selected === 0 ? (
                                 <div className="content-ui ">
-                                    {currentUser?.id === dataUser?.id ? (
+                                    {currentUser?.id === dataUser?._id ? (
                                         <div>
                                             {postList?.length === 0 ? (
                                                 <div className="up-post flex flex-column a-center ">
@@ -282,4 +264,4 @@ function Profile() {
     );
 }
 
-export default Profile;
+export default ProfileUser;

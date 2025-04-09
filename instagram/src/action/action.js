@@ -245,3 +245,7 @@ export const commentPost = async (value) => {
   );
   return data;
 };
+export const getUserById = async (userId) => {
+  const { data } = await axios.get(`${BASE_URL}/api/user/${userId}`, config);
+  return data;
+};

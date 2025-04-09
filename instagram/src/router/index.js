@@ -28,7 +28,7 @@ export const router = [
   },
   {
     Component: Profile,
-    path: "/:id",
+    path: "/:userId",
   },
   {
     Component: PostPage,
