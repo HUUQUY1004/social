@@ -16,4 +16,6 @@ public interface UserService {
 
     List<User> getTenUser();
 
+    User getUserById(Long userId) throws  Exception;
+
 }

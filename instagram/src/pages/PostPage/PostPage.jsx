@@ -10,18 +10,17 @@ import { BiBookmark } from 'react-icons/bi';
 import { CiFaceSmile } from 'react-icons/ci';
 import Picker from 'emoji-picker-react';
 import axios from 'axios';
-import { dislikePost, getCurrentUserByID, likePost, times } from '../../component/func/commonFunc';
+import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
+import { BASE_URL, commentPost, getPostById, likePost } from '../../action/action';
+import { useUser } from '../../store/useStore';
 function PostPage() {
     const navigate = useNavigate();
 
     const ref = useRef();
     const { id } = useParams();
     const [post, setPost] = useState(undefined);
-    const [user, setUser] = useState(undefined);
-    const [currentUser, setCurrentUser] = useState(undefined);
     const [value, setValue] = useState('');
-    const [isFlow, setIsFlow] = useState(true);
     const [isLike, setIsLike] = useState(false);
     const [showPicker, setShowPicker] = useState(false);
     const userLocal = JSON.parse(localStorage.getItem('instagram-user'));
@@ -31,35 +30,31 @@ function PostPage() {
     // GET URL
     const url = window.location.href;
     const checkURLTrash = url.includes('trash');
+
+    // get current user
+    const {currentUser} = useUser()
+
     useOnClickOutside(customRef, () => setIsCustom(false));
     useOnClickOutside(ref, () => {
-        // const searchParams = new URLSearchParams(window.location.pathname); ncc
-        // const currentURL = new URL(window.location.href);
-        // const refeshPathname = currentURL.pathname.replace(currentURL.pathname, '');
-        // window.history.replaceState({}, '', currentURL.href);
         window.history.back();
     });
-    const getPostById = async () => {
+    const getPost = async () => {
         if (checkURLTrash) {
+            console.log("run 1");
+            
             const { data } = await axios.get(`http://localhost:5000/post/trash/${id}`);
             console.log(data);
             setPost(data.post);
         } else {
-            const { data } = await axios.get(`http://localhost:5000/post/${id}`);
-            setPost(data.post);
+            console.log("run 2");
+            
+            const data  = await getPostById(id)
+            setPost(data);
         }
     };
-    const getUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/user/get-user-by-id/${post?.idUser}`);
-        setUser(data.user);
-    };
-
     useEffect(() => {
-        getPostById();
+        getPost();
     }, []);
-    useEffect(() => {
-        getUser();
-    }, [post]);
     const emojiRef = useRef();
     useOnClickOutside(emojiRef, () => {
         setShowPicker(false);
@@ -77,35 +72,22 @@ function PostPage() {
     };
 
     useEffect(() => {
-        setIsLike(() => post?.like.includes(userLocal._id));
+        // () => post?.like.includes(userLocal._id)
+        setIsLike(() => post?.likedByUsers.some((item) =>item.id === currentUser.id));
     }, [post]);
-    // 1 mảng chứa idUser của người dùng cmt
-    const uniqueUserIds = Array.from(new Set(post?.comment.map((item) => item.idUser)));
-    const uniqueUsers = uniqueUserIds?.map((idUser) => getCurrentUserByID(idUser)); // Tạo một mảng duy nhất các người dùng từ id người dùng
-    const [users, setUsers] = useState([]);
-    const convert = async () => {
-        const user = await Promise.all(uniqueUsers);
-        setUsers(user);
-    };
-    useEffect(() => {
-        convert();
-    }, [post]);
+    // // 1 mảng chứa idUser của người dùng cmt
+    // const uniqueUserIds = Array.from(new Set(post?.comment.map((item) => item.idUser)));
+    // const uniqueUsers = uniqueUserIds?.map((idUser) => getCurrentUserByID(idUser)); // Tạo một mảng duy nhất các người dùng từ id người dùng
     // handle like
     const handleLike = (idPost) => {
         setIsLike((prev) => !prev);
-        if (isLike) {
-            dislikePost(idPost, userLocal._id);
-        } else {
-            likePost(idPost, userLocal._id);
-        }
+            likePost(idPost);
     };
     //handle comment
-    const handlePostComment = async (idPost, idUser, value) => {
-        const { data } = await axios.post('http://localhost:5000/post/comment', {
-            idPost,
-            idUser,
-            content: value,
-        });
+    const handlePostComment = async (postId,value) => {
+        const data = await commentPost({postId, comment: value})
+        console.log("data", data);
+        
     };
     const liRef = useRef();
     const handleDeletePost = async () => {
@@ -128,16 +110,16 @@ function PostPage() {
         <PopupWrapper isClose={true}>
             <div className="inner-post-page flex" ref={ref}>
                 <div className="file">
-                    <img src={post?.file} alt={post?.title} />
+                    <img style={{transform: `scale(${post?.scaleImage})`}} src={`${BASE_URL + post?.images[0]?.imageUrl}`} alt={post?.title} />
                 </div>
                 <div className="detail flex flex-column ">
                     <header className="flex j-between a-center">
                         <div className="left flex">
                             <div className="img">
-                                <img src={user?.isAvatarImage ? user?.avatarImage : images.noAvatar} alt="" />
+                                <img src={post?.user.avatar? BASE_URL + post?.user.avatar: images.noAvatar} alt="" />
                             </div>
                             <div className="information flex a-center">
-                                <Link to={`/${user?.username}`}>{user?.username}</Link>
+                                <Link to={`/${post?.user?.id}`}>{post?.user?.username}</Link>
                             </div>
                         </div>
 
@@ -148,22 +130,25 @@ function PostPage() {
                         </div>
                     </header>
                     <div className="content-comment">
-                        {post?.comment.map((item, index) => {
-                            const commentUser = users.find((user) => user._id === item.idUser);
-                            const time = times(item.date);
+                        {
+                            post?.comments.length ===0 ? 
+                            <p className='w-full h-full flex justify-center items-center text-sa'>Hãy là người đầu tiên bình luận</p>: 
+                            
+                       post?.comments.map((item, index) => {
+                            const time = times(item.createdAt);
 
                             return (
                                 <div className="item-comment flex a-center" key={index}>
                                     <div className="avatar">
-                                        {commentUser?.isAvatarImage ? (
-                                            <img src={commentUser?.avatarImage} alt="avatar" />
+                                        {item?.user.avatar ? (
+                                            <img src={BASE_URL+ item?.user.avatar} alt="avatar" />
                                         ) : (
                                             <img src={images.noAvatar} alt="no-avatar" />
                                         )}
                                     </div>
                                     <div className="main">
                                         <div className="flex a-center">
-                                            <Link to={`/${commentUser?.username}`}>{commentUser?.username}</Link>
+                                            <Link to={`/${item.user.id}`}>{item.user.username}</Link>
                                             <p className="comment">{item.content}</p>
                                         </div>
                                         <div className="times">
@@ -172,25 +157,29 @@ function PostPage() {
                                     </div>
                                 </div>
                             );
-                        })}
+                        })
+                        }
                     </div>
                     <footer>
                         <div className="interaction">
-                            <div className=" flex a-center j-between ">
-                                <div className="left ">
-                                    <span
-                                        className="like"
-                                        title={isLike ? 'Bỏ thích' : 'Thích'}
-                                        onClick={() => handleLike(post._id)}
-                                    >
-                                        {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
-                                    </span>
-                                    <span className="comment" title="Bình luận" onClick={() => divRef.current.focus()}>
-                                        <FaRegComment />
-                                    </span>
-                                    <span className="share" title="Chia sẻ">
-                                        <IoMdPaperPlane />
-                                    </span>
+                            <div className=" flex a-center j-between">
+                                <div className="left">
+                                    <div className='flex'>
+                                        <span
+                                            className="like"
+                                            title={isLike ? 'Bỏ thích' : 'Thích'}
+                                            onClick={() => handleLike(post.id)}
+                                        >
+                                            {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
+                                        </span>
+                                        <span className="comment" title="Bình luận" onClick={() => divRef.current.focus()}>
+                                            <FaRegComment />
+                                        </span>
+                                        <span className="share" title="Chia sẻ">
+                                            <IoMdPaperPlane />
+                                        </span>
+                                    </div>
+                                    
                                 </div>
                                 <div className="right ">
                                     <span className="save" title="Lưu">
@@ -199,7 +188,7 @@ function PostPage() {
                                 </div>
                             </div>
                             <div className="like-post-and-time">
-                                <h4>{`${post?.like.length} người thích`}</h4>
+                                <h4>{`${post?.likedByUsers?.length} người thích`}</h4>
                                 <p>{times(post?.createdAt)}</p>
                             </div>
                         </div>
@@ -227,7 +216,7 @@ function PostPage() {
                                     style={value.length > 0 ? { cursor: 'pointer' } : { cursor: 'text' }}
                                     onClick={() => {
                                         setValue('');
-                                        handlePostComment(post._id, userLocal._id, value);
+                                        handlePostComment(post.id, value);
                                     }}
                                 >
                                     Đăng
@@ -239,7 +228,7 @@ function PostPage() {
                 {isCustom && (
                     <div className="custom">
                         <div ref={customRef}>
-                            {user?._id === userLocal._id ? (
+                            {post?.user?.id === currentUser.id ? (
                                 <ul>
                                     <li className="delete" ref={liRef} onClick={() => handleDeletePost()}>
                                         {post?.deleted ? 'Khôi phục' : 'Xóa'}

@@ -60,4 +60,10 @@ public class UserServiceImp  implements  UserService{
         Pageable pageable =  PageRequest.of(0,10);
         return  userRepository.getTenUser(pageable);
     }
+
+    @Override
+    public User getUserById(Long userId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(()-> new Exception("User not found"));
+        return  user;
+    }
 }

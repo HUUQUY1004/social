@@ -47,6 +47,7 @@ public class Post {
     private Set<User> likedByUsers = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @PrePersist
