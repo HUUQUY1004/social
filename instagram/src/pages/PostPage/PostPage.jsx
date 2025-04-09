@@ -133,23 +133,22 @@ function PostPage() {
                         {
                             post?.comments.length ===0 ? 
                             <p className='w-full h-full flex justify-center items-center text-sa'>Hãy là người đầu tiên bình luận</p>: 
-                            <p>bl</p> 
-                        }
-                       {post?.comments.map((item, index) => {
-                            const time = times(item.date);
+                            
+                       post?.comments.map((item, index) => {
+                            const time = times(item.createdAt);
 
                             return (
                                 <div className="item-comment flex a-center" key={index}>
                                     <div className="avatar">
-                                        {item?.avatar ? (
-                                            <img src={BASE_URL+ item?.avatar} alt="avatar" />
+                                        {item?.user.avatar ? (
+                                            <img src={BASE_URL+ item?.user.avatar} alt="avatar" />
                                         ) : (
                                             <img src={images.noAvatar} alt="no-avatar" />
                                         )}
                                     </div>
                                     <div className="main">
                                         <div className="flex a-center">
-                                            <Link to={`/${item.username}`}>{item.username}</Link>
+                                            <Link to={`/${item.user.id}`}>{item.user.username}</Link>
                                             <p className="comment">{item.content}</p>
                                         </div>
                                         <div className="times">
@@ -158,7 +157,8 @@ function PostPage() {
                                     </div>
                                 </div>
                             );
-                        })}
+                        })
+                        }
                     </div>
                     <footer>
                         <div className="interaction">

@@ -49,6 +49,9 @@ function Profile() {
         console.log("data",data);     
         setPostList(data);
     };
+    const getUser = ()=>{
+        
+    }
 
     useEffect(() => {
         getPost();
@@ -149,7 +152,7 @@ function Profile() {
                         <div className="content-by-nav flex j-center">
                             {selected === 0 ? (
                                 <div className="content-ui ">
-                                    {currentUser?._id === dataUser?._id ? (
+                                    {currentUser?.id === dataUser?._id ? (
                                         <div>
                                             {postList?.length === 0 ? (
                                                 <div className="up-post flex flex-column a-center ">
