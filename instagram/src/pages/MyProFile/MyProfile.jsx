@@ -46,7 +46,7 @@ function Profile() {
     }
 
     const getPost = async () => {
-        const data = await getPostForUserId(currentUser.id)
+        const data = await getPostForUserId(userId? userId : currentUser.id)
         setPostList(data);
     };
     const getUser = async ()=>{

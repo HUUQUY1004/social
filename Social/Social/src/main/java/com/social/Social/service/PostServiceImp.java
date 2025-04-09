@@ -34,7 +34,7 @@ public class PostServiceImp implements  PostService{
     @Override
     public List<Post> getPost(String jwt, Long userId) throws Exception {
         User user = userService.findUserByToken(jwt);
-        List<Post> posts =  postRepository.getVisiblePostsWithImages(user.getId(), userId);
+        List<Post> posts =  postRepository.getVisiblePostsWithImages(userId,user.getId() );
         return  posts;
     }
 
