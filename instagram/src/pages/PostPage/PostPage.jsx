@@ -14,6 +14,7 @@ import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
 import { BASE_URL, commentPost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
+import Share from '../../component/share/Share';
 function PostPage() {
     const navigate = useNavigate();
 
@@ -23,7 +24,8 @@ function PostPage() {
     const [value, setValue] = useState('');
     const [isLike, setIsLike] = useState(false);
     const [showPicker, setShowPicker] = useState(false);
-    const userLocal = JSON.parse(localStorage.getItem('instagram-user'));
+
+    const [isShare, setIsShare] = useState(false)
     // custom
     const [isCustom, setIsCustom] = useState(false);
     const customRef = useRef();
@@ -72,13 +74,9 @@ function PostPage() {
     };
 
     useEffect(() => {
-        // () => post?.like.includes(userLocal._id)
         setIsLike(() => post?.likedByUsers.some((item) =>item.id === currentUser.id));
     }, [post]);
-    // // 1 mảng chứa idUser của người dùng cmt
-    // const uniqueUserIds = Array.from(new Set(post?.comment.map((item) => item.idUser)));
-    // const uniqueUsers = uniqueUserIds?.map((idUser) => getCurrentUserByID(idUser)); // Tạo một mảng duy nhất các người dùng từ id người dùng
-    // handle like
+
     const handleLike = (idPost) => {
         setIsLike((prev) => !prev);
             likePost(idPost);
@@ -175,7 +173,7 @@ function PostPage() {
                                         <span className="comment" title="Bình luận" onClick={() => divRef.current.focus()}>
                                             <FaRegComment />
                                         </span>
-                                        <span className="share" title="Chia sẻ">
+                                        <span onClick={()=> setIsShare(true)} className="share" title="Chia sẻ">
                                             <IoMdPaperPlane />
                                         </span>
                                     </div>
@@ -244,6 +242,9 @@ function PostPage() {
                         </div>
                     </div>
                 )}
+                {
+                    isShare && <Share onClose={setIsShare}/>
+                }
             </div>
         </PopupWrapper>
     );
