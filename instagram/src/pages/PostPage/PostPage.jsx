@@ -243,7 +243,7 @@ function PostPage() {
                     </div>
                 )}
                 {
-                    isShare && <Share onClose={setIsShare}/>
+                    isShare && <Share postId={id} onClose={setIsShare}/>
                 }
             </div>
         </PopupWrapper>

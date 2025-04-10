@@ -250,6 +250,10 @@ export const getUserById = async (userId) => {
   return data;
 };
 export const sharePost = async (value) => {
-  const { data } = await axios.post(`${BASE_URL}/api/sharePost`, value, config);
+  const { data } = await axios.post(
+    `${BASE_URL}/api/message/share`,
+    value,
+    config
+  );
   return data;
 };

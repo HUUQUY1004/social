@@ -4,7 +4,7 @@ import PopupWrapper from "../PopupWrapper/PopupWrapper";
 import { getListFriend, sharePost } from "../../action/action";
 import FriendItem from "../../pages/Friends/FriendItem";
 
-function Share({onClose}) {
+function Share({onClose, postId}) {
     const shareRef = useRef();
     useOnClickOutside(shareRef, ()=>onClose(false))
     const [value,setValue] = useState("")
@@ -25,12 +25,15 @@ function Share({onClose}) {
         }
       };
       const handleShare = async ()=>{
+        const url = `${window.location.origin}/p/${postId}`;
         const dataSend = {
             postId,
-            content:value,
+            content:value +"," +url,
             selectedFriends
         }
-        const data = await sharePost(dataSend);
+        // const data = await sharePost(dataSend);
+        console.log(dataSend);
+        
       }
       
     return ( 
@@ -39,7 +42,7 @@ function Share({onClose}) {
                     <h3 className="description-title text font-bold text-center text-sm pb-4 ">Chia sẻ</h3>
                     <div className=" flex border-y py-2 px-4 gap-4">
                         <p className="font-semibold ">Tới: </p>
-                        <input type="text" placeholder=" Tìm kiếm" value={value} onChange={(e)=> setValue(e.target.value)} />
+                        <input type="text" placeholder=" Tìm kiếm" />
                     </div>
                     <div className="px-4 mt-2  flex-1">
                         <h4 className="font-semibold">Gợi ý:</h4>
@@ -57,6 +60,7 @@ function Share({onClose}) {
                             className="py-2 px-3 w-full border rounded-md"
                             type="text"
                             placeholder="Soạn tin nhắn"
+                            value={value} onChange={(e)=> setValue(e.target.value)}
                             />
                         </div>
 
