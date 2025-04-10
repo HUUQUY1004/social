@@ -249,3 +249,7 @@ export const getUserById = async (userId) => {
   const { data } = await axios.get(`${BASE_URL}/api/user/${userId}`, config);
   return data;
 };
+export const sharePost = async (value) => {
+  const { data } = await axios.post(`${BASE_URL}/api/sharePost`, value, config);
+  return data;
+};

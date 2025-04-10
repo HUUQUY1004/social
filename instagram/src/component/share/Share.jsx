@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import useOnClickOutside from "../../hook/useOnClickOutSide";
 import PopupWrapper from "../PopupWrapper/PopupWrapper";
-import { getListFriend } from "../../action/action";
+import { getListFriend, sharePost } from "../../action/action";
 import FriendItem from "../../pages/Friends/FriendItem";
 
 function Share({onClose}) {
@@ -19,12 +19,19 @@ function Share({onClose}) {
     }, [])
     const handleCheck = (friend, checked) => {
         if (checked) {
-          setSelectedFriends((prev) => [...prev, friend]);
+          setSelectedFriends((prev) => [...prev, friend.id]);
         } else {
-          setSelectedFriends((prev) => prev.filter((f) => f.id !== friend.id));
+          setSelectedFriends((prev) => prev.filter((f) => f !== friend.id));
         }
       };
-      console.log(selectedFriends);
+      const handleShare = async ()=>{
+        const dataSend = {
+            postId,
+            content:value,
+            selectedFriends
+        }
+        const data = await sharePost(dataSend);
+      }
       
     return ( 
             <div  className="description__wrapper flex a-center j-center fixed top-0 right-0 bottom-0 left-0 z-1 bg-black/80 bg-opacity-90 ">
@@ -53,7 +60,7 @@ function Share({onClose}) {
                             />
                         </div>
 
-                        <button className={`${selectedFriends.length > 0 ? 'bg-blue-500' : 'bg-blue-200'} py-1 mt-4 rounded-xl text-center w-full text-white transition-colors duration-300`}>
+                        <button onClick={handleShare} className={`${selectedFriends.length > 0 ? 'bg-blue-500' : 'bg-blue-200'} py-1 mt-4 rounded-xl text-center w-full text-white transition-colors duration-300`}>
                             Gửi
                         </button>
                     </div>
