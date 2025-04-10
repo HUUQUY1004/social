@@ -1,7 +1,9 @@
 package com.social.Social.controller;
 
 import com.social.Social.model.Message;
+import com.social.Social.model.User;
 import com.social.Social.request.MessageRequest;
+import com.social.Social.request.ShareRequest;
 import com.social.Social.responsitory.MessageRepository;
 import com.social.Social.service.FileStorageService;
 import com.social.Social.service.MessageService;
@@ -58,6 +60,14 @@ public class MessageController {
 
         messagingTemplate.convertAndSend("/topic/messages/" + toUserId, savedMessage);
         return ResponseEntity.ok(savedMessage);
+    }
+
+    @PostMapping("/share")
+    public ResponseEntity<List<Message>> sharePost(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ShareRequest shareRequest
+    ) throws Exception {
+        return  ResponseEntity.ok(messageService.sharePost(jwt,shareRequest));
     }
 
 

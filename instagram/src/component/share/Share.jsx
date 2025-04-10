@@ -31,8 +31,8 @@ function Share({onClose, postId}) {
             content:value +"," +url,
             selectedFriends
         }
-        // const data = await sharePost(dataSend);
-        console.log(dataSend);
+        const data = await sharePost(dataSend);
+        console.log(data);
         
       }
       
