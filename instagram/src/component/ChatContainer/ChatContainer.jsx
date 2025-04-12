@@ -24,7 +24,7 @@ function ChatContainer({ currentChat, socket }) {
         getMessages();
     }, [currentChat]);
 
-    // 🔥 Kết nối WebSocket
+    //Kết nối WebSocket
     useWebSocket(currentUser.id, (newMessage) => {
         if (newMessage.fromUser === currentChat.id || newMessage.toUserId === currentUser.id) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -82,7 +82,7 @@ function ChatContainer({ currentChat, socket }) {
                 <div className="information-user-chat flex a-center">
                     <div className="avatar">
                         {currentChat.avatar ? (
-                            <img src={currentChat.avatar} alt="avatar" />
+                            <img src={BASE_URL+ currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}

@@ -257,3 +257,10 @@ export const sharePost = async (value) => {
   );
   return data;
 };
+
+// gen Token
+
+export const generateTokenStringee = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/stringee/token`, config);
+  return data;
+};

@@ -1,3 +1,4 @@
+import VideoCall from "../component/Call/call";
 import Friends from "../pages/Friends/Friends";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
@@ -53,5 +54,9 @@ export const router = [
   {
     Component: Friends,
     path: "/friends",
+  },
+  {
+    Component: VideoCall,
+    path: "/call",
   },
 ];
