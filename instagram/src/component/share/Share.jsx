@@ -34,6 +34,7 @@ function Share({onClose, postId}) {
         const data = await sharePost(dataSend);
         console.log(data);
         
+        
       }
       
     return ( 
