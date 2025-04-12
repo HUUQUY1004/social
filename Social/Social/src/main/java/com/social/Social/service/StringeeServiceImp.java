@@ -1,6 +1,7 @@
 package com.social.Social.service;
 
 import com.social.Social.config.JwtConstant;
+import com.social.Social.config.StringeeConfig;
 import com.social.Social.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -14,6 +15,7 @@ public class StringeeServiceImp implements  StringeeService{
     @Autowired
     private UserService userService;
     private SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
+    private SecretKey keyStringee = Keys.hmacShaKeyFor(StringeeConfig.RESET_KEY.getBytes());
     @Override
     public String getToken(String jwt) throws Exception {
         User user = userService.findUserByToken(jwt);
@@ -21,7 +23,7 @@ public class StringeeServiceImp implements  StringeeService{
                 setExpiration(
                         new Date(new Date().getTime() + 86400000)
                 ).claim("userId", user.getId())
-                .signWith(key)
+                .signWith(keyStringee)
                 .compact();
         return token;
     }
