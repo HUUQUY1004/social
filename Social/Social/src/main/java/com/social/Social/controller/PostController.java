@@ -103,6 +103,23 @@ public class PostController {
         response.setMessage("Success");
         return  ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Response> deletePost(
+            @PathVariable("id") Long postId
+    ) throws Exception {
+        Response response = new Response();
+        boolean check = postService.deletePost(postId);
+        System.out.println("=== DELETE CONTROLLER CALLED ===");
+        if(check == true){
+            response.setMessage("Success");
+            response.setStatus(200);
+        }else{
+            response.setMessage("Failure");
+            response.setStatus(500);
+        }
+        return  ResponseEntity.ok(response);
+    }
     @GetMapping()
     public ResponseEntity<Post> getPostById(
             @RequestParam("id") Long id
@@ -121,6 +138,9 @@ public class PostController {
             @RequestHeader("Authorization") String jwt,
             @PathVariable("userId") Long userId
     ) throws Exception {
+        System.out.println("get post for user");
         return  ResponseEntity.ok(postService.getPost(jwt,userId));
     }
+
+
 }

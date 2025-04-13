@@ -264,3 +264,11 @@ export const generateTokenStringee = async () => {
   const { data } = await axios.get(`${BASE_URL}/api/stringee/token`, config);
   return data;
 };
+
+// delete post
+export const deletePost = async (id) => {
+  const { data } = await axios.delete(`${BASE_URL}/api/post/${id}`, config);
+  console.log(data);
+
+  return data;
+};

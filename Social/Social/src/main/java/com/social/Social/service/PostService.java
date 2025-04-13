@@ -14,4 +14,6 @@ public interface PostService {
     boolean likePost(String jwt, Long postId) throws  Exception;
 
     boolean commentPost(String jwt, CommentPost commentPost) throws Exception;
+
+    boolean deletePost(Long postId) throws  Exception;
 }

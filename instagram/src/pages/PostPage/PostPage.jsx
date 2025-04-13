@@ -12,7 +12,7 @@ import Picker from 'emoji-picker-react';
 import axios from 'axios';
 import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
-import { BASE_URL, commentPost, getPostById, likePost } from '../../action/action';
+import { BASE_URL, commentPost, deletePost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 function PostPage() {
@@ -91,8 +91,8 @@ function PostPage() {
     const handleDeletePost = async () => {
         if (liRef.current.innerHTML === 'Xóa') {
             console.log('delete');
-            const { data } = await axios.delete(`http://localhost:5000/post/delete/${post?._id}`);
-            if (data.status) {
+            const data  = await deletePost(post?.id);
+            if (data.status === 200) {
                 setIsCustom(false);
             }
         }
@@ -229,10 +229,11 @@ function PostPage() {
                             {post?.user?.id === currentUser.id ? (
                                 <ul>
                                     <li className="delete" ref={liRef} onClick={() => handleDeletePost()}>
-                                        {post?.deleted ? 'Khôi phục' : 'Xóa'}
+                                        {post?.isDelete ? 'Khôi phục' : 'Xóa'}
                                     </li>
                                     <li>{post?.isComment ? 'Tắt tính năng bình luận' : 'Bật tính năng bình luận'}</li>
                                     <li>{post?.isLike ? 'Ẩn lượt thích' : 'Bật lượt thích'}</li>
+                                    <li>Thay đổi đối tượng xem bài viết</li>
                                 </ul>
                             ) : (
                                 <ul>

@@ -74,4 +74,16 @@ public class PostServiceImp implements  PostService{
         return  true;
 
     }
+
+    @Override
+    public boolean deletePost(Long postId) throws Exception {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new Exception("Post not found"));
+
+        post.setDelete(true);
+        Post newPost =   postRepository.save(post);
+        if(newPost !=null){
+            return  true;
+        }
+        return  false;
+    }
 }

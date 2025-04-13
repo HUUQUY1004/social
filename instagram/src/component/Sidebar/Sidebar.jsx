@@ -154,7 +154,7 @@ function Sidebar() {
     };
     const navigate = useNavigate();
     return (
-        <div className="sidebar__wrapper sm:w-[50px] sm:overflow-hidden lg:w-[244px]">
+        <div className="sidebar__wrapper">
             <div className="logo" onClick={() => navigate('/')}></div>
             <div className="sidebar">
                 {Menu.map((item, index) => {
