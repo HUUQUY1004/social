@@ -249,3 +249,35 @@ export const getUserById = async (userId) => {
   const { data } = await axios.get(`${BASE_URL}/api/user/${userId}`, config);
   return data;
 };
+export const sharePost = async (value) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/api/messages/share`,
+    value,
+    config
+  );
+  return data;
+};
+
+// gen Token
+
+export const generateTokenStringee = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/stringee/token`, config);
+  return data;
+};
+
+// delete post
+export const deletePost = async (id) => {
+  const { data } = await axios.delete(`${BASE_URL}/api/post/${id}`, config);
+  console.log(data);
+
+  return data;
+};
+export const getQuantityPost = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/post/quantity`, config);
+  return data;
+};
+
+export const getPostHome = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/post/for-home`, config);
+  return data;
+};

@@ -1,7 +1,6 @@
 import './posthomeitem.scss';
 import { useEffect, useRef, useState } from 'react';
 import { images } from '../../source';
-import { disLikePost, dislikePost, getCurrentUserByID, likePost } from '../func/commonFunc';
 import { AiOutlineEllipsis, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
 import { IoMdPaperPlane } from 'react-icons/io';
@@ -10,26 +9,18 @@ import { Link } from 'react-router-dom';
 import { CiFaceSmile } from 'react-icons/ci';
 import Picker from 'emoji-picker-react';
 import onClickOutSide from '../../hook/useOnClickOutSide.js';
-import axios from 'axios';
+import { BASE_URL, commentPost, likePost } from '../../action/action.js';
 function PostHomeItem({ currentUser, item, time }) {
-    const userLocal = JSON.parse(localStorage.getItem('instagram-user'));
-
-    const [readMore, setReadMore] = useState(false);
     const [showPicker, setShowPicker] = useState(false);
     const [isLike, setIsLike] = useState(false);
     const [value, setValue] = useState('');
 
     const emojiRef = useRef();
     useEffect(() => {
-        setIsLike(() => item?.like.includes(userLocal._id));
+        setIsLike(() => item?.likedByUsers.includes(currentUser.id));
     }, [item]);
     const handleLike = (idPost) => {
-        if (isLike) {
-            dislikePost(idPost, userLocal._id);
-            console.log('dislike');
-        } else {
-            likePost(idPost, userLocal._id);
-        }
+        likePost(idPost);
     };
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -43,22 +34,19 @@ function PostHomeItem({ currentUser, item, time }) {
     onClickOutSide(emojiRef, () => {
         setShowPicker(false);
     });
-    const handlePostComment = async (idPost, idUser) => {
-        const { data } = await axios.post('http://localhost:5000/post/comment', {
-            idPost,
-            idUser,
-            content: value,
-        });
+    const handlePostComment = async (postId) => {
+       const data = await commentPost({postId, comment: value})
+        console.log("data", data);
         setValue('');
     };
     return (
         <div className="post-home-item">
             <div className="post-header flex a-center j-between">
-                <Link className="post-user flex a-center" to={`/${currentUser?.username}`}>
+                <Link className="post-user flex a-center" to={`/${item.user.id}`}>
                     <div className="img">
-                        {currentUser?.isAvatarImage ? (
+                        {currentUser?.avatar ? (
                             <img
-                                src={currentUser?.avatarImage}
+                                src={BASE_URL +currentUser?.avatar}
                                 alt={currentUser?.username}
                                 style={{ transform: `scale(${item.scaleImage})` }}
                             />
@@ -67,7 +55,7 @@ function PostHomeItem({ currentUser, item, time }) {
                         )}
                     </div>
                     <div className="information flex a-center">
-                        <h3 className="username">{currentUser?.username}</h3>
+                        <h3 className="username">{item?.user.username}</h3>
                         <span>{time}</span>
                     </div>
                 </Link>
@@ -79,7 +67,7 @@ function PostHomeItem({ currentUser, item, time }) {
             </div>
             <div className="post-content">
                 <div className="post-file">
-                    <img src={item.file} alt="" />
+                    <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
                 </div>
                 <div className="interaction flex a-center j-between ">
                     <div className="left ">
@@ -114,7 +102,7 @@ function PostHomeItem({ currentUser, item, time }) {
                     <p className>{item.title}</p>
                 </div>
                 {item.comment.length > 0 && (
-                    <Link to={`/p/${item?._id}`} className="see-comment">
+                    <Link to={`/p/${item?.id}`} className="see-comment">
                         Xem {item.comment.length} bình luận
                     </Link>
                 )}
@@ -129,7 +117,7 @@ function PostHomeItem({ currentUser, item, time }) {
                                 onChange={(e) => handleChange(e)}
                             ></input>
                             {value.length > 0 && (
-                                <span className="post" onClick={() => handlePostComment(item._id, userLocal._id)}>
+                                <span className="post" onClick={() => handlePostComment(item.id)}>
                                     Đăng
                                 </span>
                             )}

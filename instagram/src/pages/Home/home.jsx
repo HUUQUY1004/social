@@ -8,34 +8,30 @@ import { images } from '../../source';
 import PostHome from '../../component/PostHome/PostHome';
 import ConvertAccount from '../../component/CovertAccount/ConvertAccount';
 import {useUser} from '../../store/useStore'
+import { getPostHome } from '../../action/action';
 function Home() {
-    const [suggestUser, setSuggestUser] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [postList, setPostList] = useState(undefined);
     const {currentUser} = useUser()
     // bên phần account
     const [isConvert, setIsConvert] = useState(false);
     const navigate = useNavigate();
-    const dataLocal = JSON.parse(localStorage.getItem('instagram-user'));
-    const getSuggest = async () => {
-        const { data } = await axios.get('http://localhost:5000/api/user/suggest');
-        setSuggestUser(data);
-        setIsLoading(false);
-    };
     const getPost = async () => {
-        const { data } = await axios.get(`http://localhost:5000/post/get-post-home/${dataLocal._id}`);
-        setPostList(data.postList);
+        const data  = await getPostHome();
+        console.log(data);
+        
+        setPostList(data);
         setIsLoading(false);
     };
     useEffect(() => {
         getPost();
-        getSuggest();
+
     }, []);
     return (
         <div className="home__wrapper flex">
             {isLoading ? (
                 <Loading />
-            ) : currentUser?.following.length >= 2 ? (
+            ) : currentUser ? (
                 <div className="home flex j-center">
                     <div className="home-post-list flex j-center">
                         <PostHome postList={postList} currentUser={currentUser} />
@@ -70,7 +66,7 @@ function Home() {
                                     <Link>Xem tất cả</Link>
                                 </div>
                                 <div className="suggest-user">
-                                    {suggestUser.map((item, key) => {
+                                    {null?.map((item, key) => {
                                         return (
                                             <div className="suggest-user-item flex">
                                                 <div className="avatar">
@@ -113,7 +109,8 @@ function Home() {
                 </div>
             ) : (
                 <div className="suggest__wrapper">
-                    <Suggest suggestUser={suggestUser} currentUser={currentUser} />
+                    {/* <Suggest suggestUser={suggestUser} currentUser={currentUser} /> */}
+                    <h1>Hello world</h1>
                 </div>
             )}
         </div>

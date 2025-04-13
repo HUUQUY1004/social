@@ -74,4 +74,30 @@ public class PostServiceImp implements  PostService{
         return  true;
 
     }
+
+    @Override
+    public boolean deletePost(Long postId) throws Exception {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new Exception("Post not found"));
+
+        post.setDelete(true);
+        Post newPost =   postRepository.save(post);
+        if(newPost !=null){
+            return  true;
+        }
+        return  false;
+    }
+
+    @Override
+    public int getQuantityPost(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        int quantity = postRepository.getQuantityPost(user);
+        System.out.println("quantity post" + quantity);
+        return quantity;
+    }
+
+    @Override
+    public List<Post> getPostHome(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        return  postRepository.getPostHome(user.getId());
+    }
 }

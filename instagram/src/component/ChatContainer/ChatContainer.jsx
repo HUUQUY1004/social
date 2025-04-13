@@ -8,10 +8,18 @@ import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../store/useStore';
 import { BASE_URL, getConversation, sendMessage } from '../../action/action';
 import useWebSocket from '../../hook/useWebSocket';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPhone, faVideo } from '@fortawesome/free-solid-svg-icons';
+import VideoCall from '../Call/call';
+import PopupWrapper from '../PopupWrapper/PopupWrapper';
 function ChatContainer({ currentChat, socket }) {
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null);
+
+    const [isCall, setIsCall] = useState(false)
+    const [isCallVideo, setIsCallVideo] = useState(false)
+
     const {currentUser} = useUser()
     
     const getMessages = async () => {
@@ -24,7 +32,7 @@ function ChatContainer({ currentChat, socket }) {
         getMessages();
     }, [currentChat]);
 
-    // 🔥 Kết nối WebSocket
+    //Kết nối WebSocket
     useWebSocket(currentUser.id, (newMessage) => {
         if (newMessage.fromUser === currentChat.id || newMessage.toUserId === currentUser.id) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -73,6 +81,9 @@ function ChatContainer({ currentChat, socket }) {
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+    console.log(isCall);
+    
     return (
         <div
             className="chat-container__wrapper flex 
@@ -82,19 +93,28 @@ function ChatContainer({ currentChat, socket }) {
                 <div className="information-user-chat flex a-center">
                     <div className="avatar">
                         {currentChat.avatar ? (
-                            <img src={currentChat.avatar} alt="avatar" />
+                            <img className='object-cover' src={BASE_URL+ currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}
                     </div>
                     <h3>{currentChat.username}</h3>
                 </div>
+                <div className='flex gap-5 mr-5'>
+                    <span className='cursor-pointer p-2' onClick={()=>setIsCall(true)} >
+                        <FontAwesomeIcon className='text-blue-400' icon={faPhone}/>
+                    </span>
+                    <span className='cursor-pointer p-2' onClick={()=> setIsCallVideo(true)}>
+                        <FontAwesomeIcon className='text-blue-400' icon={faVideo}/>
+                    </span>
+
+                </div>
             </header>
             <div className="chat-container">
                 <div className="detail-account flex flex-column a-center">
                     <div className="avatar">
                         {currentChat.avatar ? (
-                            <img src={currentChat.avatar} alt="avatar" />
+                            <img className='object-cover' src={BASE_URL+ currentChat.avatar} alt="avatar" />
                         ) : (
                             <img src={images.noAvatar} alt="avatar" />
                         )}
@@ -131,6 +151,18 @@ function ChatContainer({ currentChat, socket }) {
                 </div>
                 <ChatInput handleSendMess={handleSendMess} />
             </div>
+            {
+            isCall &&
+            <PopupWrapper>
+                <VideoCall calleeId={currentChat.id}/>
+            </PopupWrapper>
+            }
+            {
+            isCallVideo &&
+            <PopupWrapper>
+                <VideoCall calleeId={currentChat.id} isCallVideo={isCallVideo}/>
+            </PopupWrapper>
+            }
         </div>
     );
 }

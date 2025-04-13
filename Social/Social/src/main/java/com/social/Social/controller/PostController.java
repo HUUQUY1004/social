@@ -103,6 +103,23 @@ public class PostController {
         response.setMessage("Success");
         return  ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Response> deletePost(
+            @PathVariable("id") Long postId
+    ) throws Exception {
+        Response response = new Response();
+        boolean check = postService.deletePost(postId);
+        System.out.println("=== DELETE CONTROLLER CALLED ===");
+        if(check == true){
+            response.setMessage("Success");
+            response.setStatus(200);
+        }else{
+            response.setMessage("Failure");
+            response.setStatus(500);
+        }
+        return  ResponseEntity.ok(response);
+    }
     @GetMapping()
     public ResponseEntity<Post> getPostById(
             @RequestParam("id") Long id
@@ -112,8 +129,8 @@ public class PostController {
     @GetMapping("quantity")
     public ResponseEntity<Integer> getNumberOfArticles(
             @RequestHeader("Authorization") String jwt
-    ){
-        return ResponseEntity.ok(0);
+    ) throws Exception {
+        return ResponseEntity.ok(postService.getQuantityPost(jwt));
     }
 
     @GetMapping("/{userId}")
@@ -121,6 +138,18 @@ public class PostController {
             @RequestHeader("Authorization") String jwt,
             @PathVariable("userId") Long userId
     ) throws Exception {
+        System.out.println("get post for user");
         return  ResponseEntity.ok(postService.getPost(jwt,userId));
     }
+
+    @GetMapping("/for-home")
+    public  ResponseEntity<List<Post>> getPostHome(
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        List<Post> postHome = postService.getPostHome(jwt);
+        System.out.println(postHome.size());
+      return   ResponseEntity.ok(postHome);
+    }
+
+
 }
