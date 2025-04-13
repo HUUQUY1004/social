@@ -276,3 +276,8 @@ export const getQuantityPost = async () => {
   const { data } = await axios.get(`${BASE_URL}/api/post/quantity`, config);
   return data;
 };
+
+export const getPostHome = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/post/for-home`, config);
+  return data;
+};

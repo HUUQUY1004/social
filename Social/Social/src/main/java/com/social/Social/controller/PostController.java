@@ -146,8 +146,9 @@ public class PostController {
     public  ResponseEntity<List<Post>> getPostHome(
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
-
-      return   ResponseEntity.ok(postService.getPostHome(jwt));
+        List<Post> postHome = postService.getPostHome(jwt);
+        System.out.println(postHome.size());
+      return   ResponseEntity.ok(postHome);
     }
 
 

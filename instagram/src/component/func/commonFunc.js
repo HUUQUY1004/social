@@ -17,17 +17,17 @@ export const unFollowing = async (currentUserId, _id) => {
   );
   console.log(data);
 };
-export const getCurrentUserByID = async (id) => {
-  const res = await axios.get(
-    `http://localhost:5000/api/user/get-user-by-id/${id}`
-  );
-  return res.data.user;
-};
-export const likePost = async (idPost, idUser) => {
-  axios.post(`http://localhost:5000/post/like/${idPost}`, {
-    id: idUser,
-  });
-};
+// export const getCurrentUserByID = async (id) => {
+//   const res = await axios.get(
+//     `http://localhost:5000/api/user/get-user-by-id/${id}`
+//   );
+//   return res.data.user;
+// };
+// export const likePost = async (idPost, idUser) => {
+//   axios.post(`http://localhost:5000/post/like/${idPost}`, {
+//     id: idUser,
+//   });
+// };
 export const dislikePost = async (idPost, idUser) => {
   axios.post(`http://localhost:5000/post/dislike/${idPost}`, {
     id: idUser,
