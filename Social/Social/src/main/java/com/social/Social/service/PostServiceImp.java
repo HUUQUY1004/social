@@ -86,4 +86,18 @@ public class PostServiceImp implements  PostService{
         }
         return  false;
     }
+
+    @Override
+    public int getQuantityPost(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        int quantity = postRepository.getQuantityPost(user);
+        System.out.println("quantity post" + quantity);
+        return quantity;
+    }
+
+    @Override
+    public List<Post> getPostHome(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        return  postRepository.getPostHome(user.getId());
+    }
 }

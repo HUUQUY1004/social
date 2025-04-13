@@ -129,8 +129,8 @@ public class PostController {
     @GetMapping("quantity")
     public ResponseEntity<Integer> getNumberOfArticles(
             @RequestHeader("Authorization") String jwt
-    ){
-        return ResponseEntity.ok(0);
+    ) throws Exception {
+        return ResponseEntity.ok(postService.getQuantityPost(jwt));
     }
 
     @GetMapping("/{userId}")
@@ -140,6 +140,14 @@ public class PostController {
     ) throws Exception {
         System.out.println("get post for user");
         return  ResponseEntity.ok(postService.getPost(jwt,userId));
+    }
+
+    @GetMapping("/for-home")
+    public  ResponseEntity<List<Post>> getPostHome(
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+
+      return   ResponseEntity.ok(postService.getPostHome(jwt));
     }
 
 

@@ -229,9 +229,9 @@ function PostPage() {
                             {post?.user?.id === currentUser.id ? (
                                 <ul>
                                     <li className="delete" ref={liRef} onClick={() => handleDeletePost()}>
-                                        {post?.isDelete ? 'Khôi phục' : 'Xóa'}
+                                        {post?.delete ? 'Khôi phục' : 'Xóa'}
                                     </li>
-                                    <li>{post?.isComment ? 'Tắt tính năng bình luận' : 'Bật tính năng bình luận'}</li>
+                                    <li>{post?.delete ? 'Tắt tính năng bình luận' : 'Bật tính năng bình luận'}</li>
                                     <li>{post?.isLike ? 'Ẩn lượt thích' : 'Bật lượt thích'}</li>
                                     <li>Thay đổi đối tượng xem bài viết</li>
                                 </ul>

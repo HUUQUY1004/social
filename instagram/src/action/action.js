@@ -272,3 +272,7 @@ export const deletePost = async (id) => {
 
   return data;
 };
+export const getQuantityPost = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/post/quantity`, config);
+  return data;
+};

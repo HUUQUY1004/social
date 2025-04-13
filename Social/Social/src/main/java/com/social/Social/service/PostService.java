@@ -16,4 +16,6 @@ public interface PostService {
     boolean commentPost(String jwt, CommentPost commentPost) throws Exception;
 
     boolean deletePost(Long postId) throws  Exception;
+    int  getQuantityPost(String jwt) throws  Exception;
+    List<Post> getPostHome(String jwt) throws Exception;
 }
