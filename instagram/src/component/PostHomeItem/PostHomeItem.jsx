@@ -70,8 +70,8 @@ function PostHomeItem({ currentUser, item, time }) {
                     <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
                 </div>
                 <div className="interaction flex a-center j-between ">
-                    <div className="left ">
-                        {item.isShowLike && (
+                    <div className="left flex gap-2">
+                        {item.showLike && (
                             <span
                                 className="like"
                                 title={isLike ? 'Bỏ thích' : 'Thích'}
@@ -96,7 +96,7 @@ function PostHomeItem({ currentUser, item, time }) {
                         </span>
                     </div>
                 </div>
-                {item.isShowLike && <div>{item.like.length > 0 ? `${item.like.length} người thích` : ''}</div>}
+                {item?.showLike && <div>{item?.likedByUsers.length > 0 ? `${item.likedByUsers.length} người thích` : ''}</div>}
                 <div className="description flex a-center">
                     <Link to={`'/${currentUser?.username}`}>{currentUser?.username}</Link>
                     <p className>{item.title}</p>
