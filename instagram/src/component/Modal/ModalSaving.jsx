@@ -3,16 +3,18 @@ import './modal.scss';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { useUser } from '../../store/useStore';
 
-function ModalSaving({ onClose, dataUser }) {
+function ModalSaving({ onClose }) {
     const savingRef = useRef();
+    const {currentUser} = useUser()
     useOnClickOutside(savingRef, () => onClose(false));
     const [value, setValue] = useState('');
     const handleSubmit = async () => {
-        const { data } = await axios.post(`http://localhost:5000/api/user/${dataUser._id}/create-album`, {
-            name: value,
-        });
-        console.log(data);
+        // const { data } = await axios.post(`http://localhost:5000/api/user/${dataUser._id}/create-album`, {
+        //     name: value,
+        // });
+        // console.log(data);
     };
     return (
         <div className="modal__saving flex a-center j-center">

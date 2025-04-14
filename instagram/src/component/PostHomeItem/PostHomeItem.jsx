@@ -106,7 +106,7 @@ function PostHomeItem({ currentUser, item, time }) {
                 </div>
                 {item?.showLike && <div>{item?.likedByUsers.length > 0 ? `${item.likedByUsers.length} người thích` : ''}</div>}
                 <div className="description flex a-center">
-                    <Link to={`'/${currentUser?.username}`}>{currentUser?.username}</Link>
+                    <Link to={`/${item?.user.id}`}>{item?.user.username}</Link>
                     <p className>{item.title}</p>
                 </div>
                 {item.comment.length > 0 && (
