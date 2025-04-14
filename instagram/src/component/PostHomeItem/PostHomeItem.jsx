@@ -39,6 +39,13 @@ function PostHomeItem({ currentUser, item, time }) {
         console.log("data", data);
         setValue('');
     };
+
+    //  check user is this post ?
+    useEffect(()=>{
+        setIsLike(item.likedByUsers.some((item)=> item.id === currentUser.id))
+        console.log(`itemId: ${item.id} like :` , isLike);
+        
+    },[])
     return (
         <div className="post-home-item">
             <div className="post-header flex a-center j-between">
@@ -77,7 +84,7 @@ function PostHomeItem({ currentUser, item, time }) {
                                 className="like"
                                 title={isLike ? 'Bỏ thích' : 'Thích'}
                                 onClick={() => {
-                                    handleLike(item._id);
+                                    handleLike(item.id);
                                     setIsLike(!isLike);
                                 }}
                             >
