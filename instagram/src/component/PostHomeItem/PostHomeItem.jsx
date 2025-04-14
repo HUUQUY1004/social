@@ -44,10 +44,11 @@ function PostHomeItem({ currentUser, item, time }) {
             <div className="post-header flex a-center j-between">
                 <Link className="post-user flex a-center" to={`/${item.user.id}`}>
                     <div className="img">
-                        {currentUser?.avatar ? (
+                        {item.user?.avatar ? (
                             <img
-                                src={BASE_URL +currentUser?.avatar}
-                                alt={currentUser?.username}
+                                src={BASE_URL +item.user?.avatar}
+                                alt={item.user?.username}
+                                className='object-cover'
                                 style={{ transform: `scale(${item.scaleImage})` }}
                             />
                         ) : (
