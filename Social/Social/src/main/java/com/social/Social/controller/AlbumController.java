@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/album")
 public class AlbumController {
@@ -32,5 +34,12 @@ public class AlbumController {
             response.setMessage("Failure");
         }
         return  ResponseEntity.ok(response);
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<Album>> getAllAblum(
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+
+        return  ResponseEntity.ok(albumService.getAllAlbumForUser(jwt));
     }
 }

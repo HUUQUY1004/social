@@ -7,6 +7,8 @@ import com.social.Social.responsitory.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AlbumService implements  AlbumServiceImp{
     @Autowired
@@ -20,5 +22,12 @@ public class AlbumService implements  AlbumServiceImp{
         album.setName(album.getName());
         album.setUser(user);
         return  albumRepository.save(album);
+    }
+
+    @Override
+    public List<Album> getAllAlbumForUser(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        List<Album> albums = albumRepository.getAlbumForUser(user);
+        return  albums;
     }
 }

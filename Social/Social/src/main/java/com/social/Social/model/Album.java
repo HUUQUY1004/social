@@ -19,7 +19,7 @@ public class Album {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
      @JsonManagedReference
     List<Post> posts = new ArrayList<>();

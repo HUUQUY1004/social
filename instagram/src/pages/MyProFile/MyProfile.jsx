@@ -270,7 +270,7 @@ function Profile() {
             )}
             <Footer />
             {showPost ? <Post onClose={setShowPost} user={dataUser} /> : <Fragment />}
-            {showNewSaving ? <ModalSaving onClose={setShowNewSaving} dataUser={currentUser} /> : <Fragment />}
+            {showNewSaving ? <ModalSaving onClose={setShowNewSaving}/> : <Fragment />}
             {
                 showChangeDescription && <ChangeDescription 
                 onCloseChange={setShowChangeDescription}

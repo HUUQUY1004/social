@@ -4,6 +4,7 @@ import useOnClickOutside from '../../hook/useOnClickOutSide';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../../store/useStore';
+import { createAlbum } from '../../action/action';
 
 function ModalSaving({ onClose }) {
     const savingRef = useRef();
@@ -11,10 +12,10 @@ function ModalSaving({ onClose }) {
     useOnClickOutside(savingRef, () => onClose(false));
     const [value, setValue] = useState('');
     const handleSubmit = async () => {
-        // const { data } = await axios.post(`http://localhost:5000/api/user/${dataUser._id}/create-album`, {
-        //     name: value,
-        // });
-        // console.log(data);
+        const data = await createAlbum({name: value})
+        if(data.status ===200){
+            onClose(false)
+        }
     };
     return (
         <div className="modal__saving flex a-center j-center">
