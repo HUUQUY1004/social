@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import useOnClickOutside from "../../hook/useOnClickOutSide";
-import PopupWrapper from "../PopupWrapper/PopupWrapper";
 import { getListFriend, sharePost } from "../../action/action";
 import FriendItem from "../../pages/Friends/FriendItem";
 
@@ -23,7 +22,7 @@ function Share({onClose, postId}) {
         } else {
           setSelectedFriends((prev) => prev.filter((f) => f !== friend.id));
         }
-      };
+    };
       const handleShare = async ()=>{
         const url = `${window.location.origin}/p/${postId}`;
         const dataSend = {

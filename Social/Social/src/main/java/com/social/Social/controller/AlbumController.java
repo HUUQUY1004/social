@@ -2,6 +2,7 @@ package com.social.Social.controller;
 
 
 import com.social.Social.model.Album;
+import com.social.Social.request.AddPostToAlbumRequest;
 import com.social.Social.request.AlbumRequest;
 import com.social.Social.response.Response;
 import com.social.Social.service.AlbumService;
@@ -41,5 +42,17 @@ public class AlbumController {
     ) throws Exception {
 
         return  ResponseEntity.ok(albumService.getAllAlbumForUser(jwt));
+    }
+
+    @PostMapping("/saved")
+    public ResponseEntity<Response> addPost(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody AddPostToAlbumRequest albumRequest
+            ) throws Exception {
+        Response response = new Response();
+        albumService.addPostToAlbum(jwt,albumRequest);
+        response.setMessage("Success");
+        response.setStatus(200);
+        return  ResponseEntity.ok(response);
     }
 }
