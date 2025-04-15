@@ -229,15 +229,15 @@ function Profile() {
                                             </div>
                                         </div>
                                     </div>
-                                    {dataUser?.saving?.length > 0 ? (
+                                    {albums?.length > 0 ? (
                                         <div className=" album flex j-between wrap">
                                             <div className="item-album">
                                                 <h4 className="name">Tất cả bài viết</h4>
                                             </div>
-                                            {dataUser.saving.map((item, index) => {
+                                            {albums?.map((item, index) => {
                                                 return (
                                                     <div className="item-album" key={index}>
-                                                        <h4 className="name">{item.name}</h4>
+                                                        <h4 className="name">{item.name || 'Collection'}</h4>
                                                     </div>
                                                 );
                                             })}
