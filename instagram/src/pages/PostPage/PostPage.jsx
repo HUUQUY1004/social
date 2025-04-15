@@ -15,6 +15,7 @@ import { images } from '../../source';
 import { BASE_URL, commentPost, deletePost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
+import SavedAlbum from '../../component/SaveAlbum/Save';
 function PostPage() {
     const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ function PostPage() {
     const [showPicker, setShowPicker] = useState(false);
 
     const [isShare, setIsShare] = useState(false)
+    const [isSaved,  setIsSaved] = useState(false)
     // custom
     const [isCustom, setIsCustom] = useState(false);
     const customRef = useRef();
@@ -79,7 +81,7 @@ function PostPage() {
 
     const handleLike = (idPost) => {
         setIsLike((prev) => !prev);
-            likePost(idPost);
+        likePost(idPost);
     };
     //handle comment
     const handlePostComment = async (postId,value) => {
@@ -180,7 +182,7 @@ function PostPage() {
                                     
                                 </div>
                                 <div className="right ">
-                                    <span className="save" title="Lưu">
+                                    <span onClick={()=>setIsSaved(true)} className="save" title="Lưu">
                                         <BiBookmark />
                                     </span>
                                 </div>
@@ -245,6 +247,9 @@ function PostPage() {
                 )}
                 {
                     isShare && <Share postId={id} onClose={setIsShare}/>
+                }
+                {
+                    isSaved && <SavedAlbum postId={id} onClose={setIsSaved}/>
                 }
             </div>
         </PopupWrapper>

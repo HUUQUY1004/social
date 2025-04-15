@@ -281,3 +281,25 @@ export const getPostHome = async () => {
   const { data } = await axios.get(`${BASE_URL}/api/post/for-home`, config);
   return data;
 };
+
+export const createAlbum = async (value) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/api/album/create`,
+    value,
+    config
+  );
+  return data;
+};
+export const getAllAlbum = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/album/all`, config);
+  return data;
+};
+
+export const addPostToAlbum = async (value) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/api/album/saved`,
+    value,
+    config
+  );
+  return data;
+};

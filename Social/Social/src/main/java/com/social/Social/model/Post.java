@@ -55,6 +55,11 @@ public class Post {
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private Album album;
+
+
     @PrePersist
     protected  void  onCreated(){
         this.createdAt = LocalDateTime.now();

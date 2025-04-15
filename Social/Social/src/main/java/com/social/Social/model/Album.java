@@ -1,0 +1,31 @@
+package com.social.Social.model;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Album {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+     @JsonManagedReference
+    List<Post> posts = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
+
+}
