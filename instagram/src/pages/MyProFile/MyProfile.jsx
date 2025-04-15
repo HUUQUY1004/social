@@ -17,7 +17,7 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
 import { following, unFollowing } from '../../component/func/commonFunc';
-import { BASE_URL, getMyProfile, getNumberOfFriends, getPostForUserId, getQuantityPost, getUserById } from '../../action/action';
+import { BASE_URL, getAllAlbum, getMyProfile, getNumberOfFriends, getPostForUserId, getQuantityPost, getUserById } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 import { useUser } from '../../store/useStore';
@@ -36,6 +36,7 @@ function Profile() {
     const [postList, setPostList] = useState([]);
     const [quantityFriends, setQuantityFriends] = useState(0);
     const [quantityPost, setQuantityPost] = useState(0)
+    const [albums,setAlbums] = useState([])
     
     // ref flow and unflow
     const flowRef = useRef();
@@ -62,12 +63,20 @@ function Profile() {
         
     }
     const getQuantityPosts =async()=>{
-        const data = getQuantityPost()
+        const data = await getQuantityPost()
         setQuantityPost(data)
-    } 
+    }
+    const getAllAlbums =async ()=>{
+        const data = await getAllAlbum()
+        setAlbums(data)
+        console.log(data);
+        
+    }
+    
     useEffect(()=>{
         getUser()
-        getQuantityPost()
+        getQuantityPosts()
+        getAllAlbums()
     },[])
 
     useEffect(() => {

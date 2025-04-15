@@ -16,6 +16,7 @@ function ModalSaving({ onClose }) {
         if(data.status ===200){
             onClose(false)
         }
+        
     };
     return (
         <div className="modal__saving flex a-center j-center">

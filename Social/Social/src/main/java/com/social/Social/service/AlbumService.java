@@ -19,7 +19,7 @@ public class AlbumService implements  AlbumServiceImp{
     public Album createAlbum(String jwt, AlbumRequest albumRequest) throws Exception {
         User user = userService.findUserByToken(jwt);
         Album album = new Album();
-        album.setName(album.getName());
+        album.setName(albumRequest.getName());
         album.setUser(user);
         return  albumRepository.save(album);
     }

@@ -79,7 +79,7 @@ function PostPage() {
 
     const handleLike = (idPost) => {
         setIsLike((prev) => !prev);
-            likePost(idPost);
+        likePost(idPost);
     };
     //handle comment
     const handlePostComment = async (postId,value) => {
