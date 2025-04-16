@@ -15,5 +15,5 @@ public interface AlbumServiceImp {
 
     Album getAlbumById(Long id) throws  Exception;
     void deleteAlbum(String jwt, Long idAlbum) throws  Exception;
-    void removePostFromAlbum(String jwt,Long albumId, Long postId);
+    void removePostFromAlbum(String jwt,Long albumId, Long postId) throws Exception;
 }
