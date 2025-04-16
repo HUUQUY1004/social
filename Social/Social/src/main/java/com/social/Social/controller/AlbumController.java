@@ -55,4 +55,11 @@ public class AlbumController {
         response.setStatus(200);
         return  ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public  ResponseEntity<Album> getAlbumById(
+            @PathVariable("id") Long id
+    ) throws Exception {
+        return  ResponseEntity.ok(albumService.getAlbumById(id));
+    }
 }

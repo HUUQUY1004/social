@@ -303,3 +303,8 @@ export const addPostToAlbum = async (value) => {
   );
   return data;
 };
+
+export const getAlbumById = async (id) => {
+  const { data } = await axios.get(`${BASE_URL}/api/album/${id}`, config);
+  return data;
+};

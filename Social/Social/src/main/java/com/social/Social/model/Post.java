@@ -1,5 +1,6 @@
 package com.social.Social.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -55,9 +56,10 @@ public class Post {
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "album_id")
-    private Album album;
+    @ManyToMany(mappedBy = "posts")
+    @JsonBackReference
+    @ToString.Exclude
+    private List<Album> albums = new ArrayList<>();
 
 
     @PrePersist

@@ -19,9 +19,14 @@ public class Album {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-     @JsonManagedReference
+    @ManyToMany()
+    @JsonManagedReference
+    @JoinTable(
+            name = "album_posts",
+            joinColumns = @JoinColumn(name = "album_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+            @ToString.Exclude
     List<Post> posts = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
