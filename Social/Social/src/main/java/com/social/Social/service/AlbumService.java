@@ -6,6 +6,7 @@ import com.social.Social.model.User;
 import com.social.Social.request.AddPostToAlbumRequest;
 import com.social.Social.request.AlbumRequest;
 import com.social.Social.responsitory.AlbumRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class AlbumService implements  AlbumServiceImp{
     public boolean addPostToAlbum(String jwt, AddPostToAlbumRequest albumRequest) throws Exception {
         User user = userService.findUserByToken(jwt);
         Post post = postService.getPostById(albumRequest.getPostId());
-
+        System.out.println(post.toString());
         List<Album> albums = albumRepository.findAllById(albumRequest.getSelectedAlbum());
 
         for (Album album : albums) {
@@ -52,4 +53,40 @@ public class AlbumService implements  AlbumServiceImp{
         albumRepository.saveAll(albums);
         return true;
     }
+
+    @Override
+    public Album getAlbumById(Long id) throws Exception {
+        System.out.println(albumRepository.findById(id).orElseThrow(()->new Exception("Album not found")));
+        return  albumRepository.findById(id).orElseThrow(()->new Exception("Album not found"));
+    }
+
+    @Override
+    public void deleteAlbum(String jwt, Long idAlbum) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        Album album = albumRepository.findById(idAlbum).orElseThrow(()-> new Exception("Album not found"));
+        if(!album.getUser().getId().equals(user.getId())){
+            throw new Exception("UnAuthorization");
+        }
+        album.getPosts().clear();
+        albumRepository.save(album);
+
+        // Xoá album
+        albumRepository.delete(album);
+
+    }
+
+    @Override
+    @Transactional
+    public void removePostFromAlbum(String jwt, Long albumId, Long postId) throws Exception {
+        Album album = albumRepository.findById(albumId).orElseThrow(()-> new Exception(" Album not found"));
+        User user = userService.findUserByToken(jwt);
+        if(!album.getUser().equals(user)){
+            throw  new Exception("UnAuthorization");
+
+        }
+        Post post  = postService.getPostById(postId);
+        album.getPosts().remove(post);
+        albumRepository.save(album);
+    }
+
 }

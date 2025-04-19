@@ -55,4 +55,26 @@ public class AlbumController {
         response.setStatus(200);
         return  ResponseEntity.ok(response);
     }
+
+
+
+    @GetMapping("/{id}")
+    public  ResponseEntity<Album> getAlbumById(
+            @PathVariable("id") Long id
+    ) throws Exception {
+        System.out.println("CC bạn");
+        return  ResponseEntity.ok(albumService.getAlbumById(id));
+    }
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Response> deleteAlbum(
+            @PathVariable("id") Long id,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        Response response = new Response();
+
+        albumService.deleteAlbum(jwt,id);
+        response.setStatus(200);
+        response.setMessage("Success");
+        return  ResponseEntity.ok(response);
+    }
 }

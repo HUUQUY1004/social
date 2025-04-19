@@ -76,8 +76,10 @@ function Profile() {
     useEffect(()=>{
         getUser()
         getQuantityPosts()
-        getAllAlbums()
     },[])
+    useEffect(()=>{
+        getAllAlbums()
+    }, [showNewSaving])
 
     useEffect(() => {
         getPost();
@@ -230,14 +232,14 @@ function Profile() {
                                         </div>
                                     </div>
                                     {albums?.length > 0 ? (
-                                        <div className=" album flex j-between wrap">
+                                        <div className=" album flex justify-start gap-4 wrap">
                                             <div className="item-album">
                                                 <h4 className="name">Tất cả bài viết</h4>
                                             </div>
                                             {albums?.map((item, index) => {
                                                 return (
                                                     <div className="item-album" key={index}>
-                                                        <h4 className="name">{item.name || 'Collection'}</h4>
+                                                        <Link to={`/album/${item.id}`} className="name">{item.name || 'Collection'}</Link>
                                                     </div>
                                                 );
                                             })}

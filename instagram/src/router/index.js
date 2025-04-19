@@ -1,4 +1,5 @@
 import VideoCall from "../component/Call/call";
+import AlbumPage from "../pages/Album/album";
 import Friends from "../pages/Friends/Friends";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
@@ -58,5 +59,9 @@ export const router = [
   {
     Component: VideoCall,
     path: "/call",
+  },
+  {
+    Component: AlbumPage,
+    path: "/album/:id",
   },
 ];

@@ -12,4 +12,8 @@ public interface AlbumServiceImp {
     List<Album> getAllAlbumForUser(String jwt) throws  Exception;
 
     boolean addPostToAlbum(String jwr, AddPostToAlbumRequest albumRequest) throws Exception;
+
+    Album getAlbumById(Long id) throws  Exception;
+    void deleteAlbum(String jwt, Long idAlbum) throws  Exception;
+    void removePostFromAlbum(String jwt,Long albumId, Long postId) throws Exception;
 }
