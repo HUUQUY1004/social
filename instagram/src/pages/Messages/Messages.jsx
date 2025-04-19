@@ -65,7 +65,7 @@ function Messages() {
                         </div>
                     </div>
                 ) : (
-                    <ChatContainer currentChat={currentChat} socket={socket} />
+                    <ChatContainer  currentChat={currentChat} socket={socket} />
                 )}
             </div>
         </div>
