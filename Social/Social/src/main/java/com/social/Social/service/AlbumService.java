@@ -56,6 +56,7 @@ public class AlbumService implements  AlbumServiceImp{
 
     @Override
     public Album getAlbumById(Long id) throws Exception {
+        System.out.println(albumRepository.findById(id).orElseThrow(()->new Exception("Album not found")));
         return  albumRepository.findById(id).orElseThrow(()->new Exception("Album not found"));
     }
 

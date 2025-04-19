@@ -232,7 +232,7 @@ function Profile() {
                                         </div>
                                     </div>
                                     {albums?.length > 0 ? (
-                                        <div className=" album flex j-between wrap">
+                                        <div className=" album flex justify-start gap-4 wrap">
                                             <div className="item-album">
                                                 <h4 className="name">Tất cả bài viết</h4>
                                             </div>

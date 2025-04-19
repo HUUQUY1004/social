@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faArrowLeft, faEllipsis, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { BsBookmark } from 'react-icons/bs'
 import PostList from '../../component/PostList/PostList'
+import CustomAlbum from '../../component/Custom/CustomAlbum'
 
 const AlbumPage = () => {
     const {id} = useParams()
     const [album, setAlbum] = useState(null)
+    const [isCustom, setIsCustom] = useState(false)
     const getAlbum = async ()=>{
         const data = await getAlbumById(id)
         setAlbum(data)
@@ -16,7 +18,6 @@ const AlbumPage = () => {
     useEffect(()=>{
         getAlbum()
     },[])
-    console.log(album);
     
   return (
     <div className='p-8 pb-10'>
@@ -25,8 +26,8 @@ const AlbumPage = () => {
                 <FontAwesomeIcon icon={faAngleLeft}/>
                 <span className='font-semibold'>Đã lưu</span>
             </Link>
-            <div>
-                <FontAwesomeIcon icon={faEllipsisVertical} />
+            <div className='p-2' onClick={()=> setIsCustom(true)}>
+                <FontAwesomeIcon icon={faEllipsisVertical}  />
             </div>
         </div>
         <h1 className='my-5'>{album?.name || 'Collection'}</h1>
@@ -40,10 +41,13 @@ const AlbumPage = () => {
                         <p className='mt-5'>Chưa có bài viết nào được lưu</p>
                     </div>
                 ):(
-                    <PostList data={album.posts}/>
+                    <PostList data={album?.posts}/>
                 )
             }
         </div>
+        {
+            isCustom && <CustomAlbum id={album.id} onClose={setIsCustom}/>
+        }
     </div>
   )
 }
