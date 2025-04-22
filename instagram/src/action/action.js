@@ -312,3 +312,15 @@ export const deleteAlbum = async (id) => {
   const { data } = await axios.delete(`${BASE_URL}/api/album/${id}`, config);
   return data;
 };
+
+const getTrash = async () => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/api/post/trash`, config);
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};

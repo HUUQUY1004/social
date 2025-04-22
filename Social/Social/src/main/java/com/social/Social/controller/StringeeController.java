@@ -23,6 +23,7 @@ public class StringeeController {
     public ResponseEntity<String> getToken(
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        System.out.println("run");
         return  ResponseEntity.ok(stringeeService.getToken(jwt));
     }
 
