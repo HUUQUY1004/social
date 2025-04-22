@@ -4,12 +4,16 @@ import PostList from '../../component/PostList/PostList';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { getTrash } from '../../action/action';
 function TrashPost() {
     const [posts, setPosts] = useState([]);
     const [isCustom, setIsCustom] = useState(false)
     const getTrashByUser = async () => {
-        // const { data } = await axios.get(`http://localhost:5000/post/get-trash-post/${userLocal._id}`);
-        // setPosts(data.data);
+        const data = await getTrash();
+        if(data.status){
+            alert(data.message)
+        }
+        setPosts(data);
     };
     useEffect(() => {
         getTrashByUser();

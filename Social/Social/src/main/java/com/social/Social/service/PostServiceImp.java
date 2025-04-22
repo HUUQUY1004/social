@@ -100,4 +100,11 @@ public class PostServiceImp implements  PostService{
         User user = userService.findUserByToken(jwt);
         return  postRepository.getPostHome(user.getId());
     }
+
+    @Override
+    public List<Post> getTrash(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        List<Post> posts = postRepository.getTrash(user);
+        return  posts;
+    }
 }

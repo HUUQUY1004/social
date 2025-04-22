@@ -51,5 +51,7 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
                     ")"
     )
     List<Post> getPostHome(@Param("userId") Long userId);
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images where  p.user = :user and  p.isDelete = true")
+    List<Post> getTrash(User user);
 
 }

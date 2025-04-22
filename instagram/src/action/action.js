@@ -313,7 +313,7 @@ export const deleteAlbum = async (id) => {
   return data;
 };
 
-const getTrash = async () => {
+export const getTrash = async () => {
   try {
     const { data } = await axios.get(`${BASE_URL}/api/post/trash`, config);
     return data;
