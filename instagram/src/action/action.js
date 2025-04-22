@@ -222,10 +222,17 @@ export const getPostForUserId = async (userId) => {
 };
 
 export const getPostById = async (id) => {
-  const { data } = await axios.get(`${BASE_URL}/api/post?id=${id}`, config);
-  console.log(data);
+  try {
+    const { data } = await axios.get(`${BASE_URL}/api/post?id=${id}`, config);
+    console.log(data);
 
-  return data;
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
 };
 export const likePost = async (id) => {
   const { data } = await axios.post(
@@ -266,7 +273,7 @@ export const generateTokenStringee = async () => {
 };
 
 // delete post
-export const deletePost = async (id) => {
+export const deleteAndBackupPost = async (id) => {
   const { data } = await axios.delete(`${BASE_URL}/api/post/${id}`, config);
   console.log(data);
 
@@ -311,4 +318,16 @@ export const getAlbumById = async (id) => {
 export const deleteAlbum = async (id) => {
   const { data } = await axios.delete(`${BASE_URL}/api/album/${id}`, config);
   return data;
+};
+
+export const getTrash = async () => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/api/post/trash`, config);
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
 };

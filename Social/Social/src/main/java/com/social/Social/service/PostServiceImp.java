@@ -76,10 +76,10 @@ public class PostServiceImp implements  PostService{
     }
 
     @Override
-    public boolean deletePost(Long postId) throws Exception {
+    public boolean deleteAndBackupPost(Long postId) throws Exception {
         Post post = postRepository.findById(postId).orElseThrow(()-> new Exception("Post not found"));
 
-        post.setDelete(true);
+        post.setDelete(!post.isDelete());
         Post newPost =   postRepository.save(post);
         if(newPost !=null){
             return  true;
@@ -99,5 +99,12 @@ public class PostServiceImp implements  PostService{
     public List<Post> getPostHome(String jwt) throws Exception {
         User user = userService.findUserByToken(jwt);
         return  postRepository.getPostHome(user.getId());
+    }
+
+    @Override
+    public List<Post> getTrash(String jwt) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        List<Post> posts = postRepository.getTrash(user);
+        return  posts;
     }
 }

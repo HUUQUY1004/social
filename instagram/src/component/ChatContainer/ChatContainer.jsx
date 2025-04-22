@@ -154,13 +154,13 @@ function ChatContainer({ currentChat, socket }) {
             {
             isCall &&
             <PopupWrapper>
-                <VideoCall calleeId={currentChat.id}/>
+                <VideoCall onClose={setIsCall} currentChat={currentChat}/>
             </PopupWrapper>
             }
             {
             isCallVideo &&
             <PopupWrapper>
-                <VideoCall calleeId={currentChat.id} isCallVideo={isCallVideo}/>
+                <VideoCall onClose={setIsCallVideo} currentChat={currentChat} isCallVideo={isCallVideo}/>
             </PopupWrapper>
             }
         </div>

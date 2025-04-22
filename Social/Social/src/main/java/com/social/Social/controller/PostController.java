@@ -109,7 +109,7 @@ public class PostController {
             @PathVariable("id") Long postId
     ) throws Exception {
         Response response = new Response();
-        boolean check = postService.deletePost(postId);
+        boolean check = postService.deleteAndBackupPost(postId);
         System.out.println("=== DELETE CONTROLLER CALLED ===");
         if(check == true){
             response.setMessage("Success");
@@ -140,6 +140,12 @@ public class PostController {
     ) throws Exception {
         System.out.println("get post for user");
         return  ResponseEntity.ok(postService.getPost(jwt,userId));
+    }
+    @GetMapping("/trash")
+    public  ResponseEntity<List<Post>> getTrash(
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        return  ResponseEntity.ok(postService.getTrash(jwt));
     }
 
     @GetMapping("/for-home")
