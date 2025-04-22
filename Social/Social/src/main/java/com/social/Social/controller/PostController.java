@@ -109,7 +109,7 @@ public class PostController {
             @PathVariable("id") Long postId
     ) throws Exception {
         Response response = new Response();
-        boolean check = postService.deletePost(postId);
+        boolean check = postService.deleteAndBackupPost(postId);
         System.out.println("=== DELETE CONTROLLER CALLED ===");
         if(check == true){
             response.setMessage("Success");

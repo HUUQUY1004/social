@@ -12,7 +12,7 @@ import Picker from 'emoji-picker-react';
 import axios from 'axios';
 import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
-import { BASE_URL, commentPost, deletePost, getPostById, likePost } from '../../action/action';
+import { BASE_URL, commentPost, deleteAndBackupPost, deletePost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 import SavedAlbum from '../../component/SaveAlbum/Save';
@@ -44,21 +44,24 @@ function PostPage() {
     });
     const getPost = async () => {
         if (checkURLTrash) {
-            console.log("run 1");
-            
-            const { data } = await axios.get(`http://localhost:5000/post/trash/${id}`);
-            console.log(data);
-            setPost(data.post);
+            const data  = await getPostById(id)
+            if(data.status){
+                alert(data.message)
+            }
+            setPost(data);
         } else {
             console.log("run 2");
             
             const data  = await getPostById(id)
+            if(data.status){
+                alert(data.message)
+            }
             setPost(data);
         }
     };
     useEffect(() => {
         getPost();
-    }, []);
+    }, [isCustom]);
     const emojiRef = useRef();
     useOnClickOutside(emojiRef, () => {
         setShowPicker(false);
@@ -91,20 +94,10 @@ function PostPage() {
     };
     const liRef = useRef();
     const handleDeletePost = async () => {
-        if (liRef.current.innerHTML === 'Xóa') {
-            console.log('delete');
-            const data  = await deletePost(post?.id);
-            if (data.status === 200) {
-                setIsCustom(false);
-            }
+            const data  = await deleteAndBackupPost(post?.id);
+        if (data.status === 200) {
+            setIsCustom(false);
         }
-        if (liRef.current.innerHTML === 'Khôi phục') {
-            const { data } = await axios.patch(`http://localhost:5000/post/restored/${post?._id}`);
-            if (data.status) {
-                setIsCustom(false);
-            }
-        }
-        window.location.reload();
     };
     return (
         <PopupWrapper isClose={true}>
