@@ -64,4 +64,8 @@ export const router = [
     Component: AlbumPage,
     path: "/album/:id",
   },
+  {
+    Component: AdminApp,
+    path: "/admin",
+  },
 ];
