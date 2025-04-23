@@ -44,7 +44,8 @@ public class PostController {
             @RequestParam("isShowLike") boolean isShowLike,
             @RequestParam("postVisibility") String postVisibility,
             @RequestParam("scaleImage") double scaleImage,
-            @RequestPart("images") MultipartFile file
+            @RequestPart("images") MultipartFile file,
+            @RequestParam("video") MultipartFile video
 
             ) throws Exception {
         User user = userService.findUserByToken(jwt);
@@ -53,8 +54,14 @@ public class PostController {
 //        Image
         Image image = new Image();
         if (file != null && !file.isEmpty()) {
+            post.setReel(true);
             String imageUrl = fileStorageService.storeFile(file, "post/");
             image.setImageUrl(imageUrl);
+        }
+
+        if(video !=null || !video.isEmpty()){
+            String videoUrl = fileStorageService.storeFile(video, "post/");
+            image.setImageUrl(videoUrl);
         }
 
 

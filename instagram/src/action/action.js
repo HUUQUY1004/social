@@ -207,6 +207,7 @@ export const createPost = async (value) => {
   formData.append("postVisibility", value.postVisibility);
   formData.append("scaleImage", value.scaleImage);
   formData.append("images", value.images);
+  formData.append("video", value.video);
   const { data } = await axios.post(
     `${BASE_URL}/api/post/create`,
     formData,
