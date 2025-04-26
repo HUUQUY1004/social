@@ -15,8 +15,10 @@ function Reels() {
     },[page])
     const {currentUser}= useUser()
     return ( 
-        <PostHome postList={reels} currentUser={currentUser} />
-
+        <div className="flex justify-center">
+            <PostHome postList={reels} currentUser={currentUser} />
+    
+        </div>
      );
 }
 

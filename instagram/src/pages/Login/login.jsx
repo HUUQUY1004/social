@@ -84,7 +84,7 @@ function Login() {
                             <i class="fa-brands fa-square-facebook"></i>
                             <span>Đăng nhập bằng Facebook</span>
                         </p>
-                        <Link className="forget-link" to={''}>Quên mật khẩu ?</Link>
+                        <Link className="forget-link" to={'/account/find'}>Quên mật khẩu ?</Link>
                     </div>
                 </div>
                 <div className="check-account flex a-center j-center">
