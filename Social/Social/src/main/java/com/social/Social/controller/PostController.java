@@ -13,6 +13,7 @@ import com.social.Social.service.PostService;
 import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -162,6 +163,17 @@ public class PostController {
         List<Post> postHome = postService.getPostHome(jwt);
         System.out.println(postHome.size());
       return   ResponseEntity.ok(postHome);
+    }
+
+
+    @GetMapping("reels")
+    public ResponseEntity<List<Post>> getReel(
+            @Param("page") int page
+    ) throws Exception {
+        System.out.println("page :" +page);
+        List<Post> posts = postService.getReel();
+        System.out.println(posts.size());
+        return  ResponseEntity.ok(posts);
     }
 
 

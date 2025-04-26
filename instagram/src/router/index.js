@@ -6,6 +6,7 @@ import Login from "../pages/Login/login";
 import Messages from "../pages/Messages/Messages";
 import Profile from "../pages/MyProFile/MyProfile";
 import PostPage from "../pages/PostPage/PostPage";
+import Reels from "../pages/Reel/reels";
 import Register from "../pages/Register/register";
 import Suggestion from "../pages/Suggesstion/Suggesstion";
 import TrashPost from "../pages/TrashPost/TrashPost";
@@ -63,5 +64,9 @@ export const router = [
   {
     Component: AlbumPage,
     path: "/album/:id",
+  },
+  {
+    Component: Reels,
+    path: "/reels",
   },
 ];

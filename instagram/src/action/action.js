@@ -332,3 +332,17 @@ export const getTrash = async () => {
     };
   }
 };
+export const getReels = async (page) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/api/post/reels?page=${page}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};
