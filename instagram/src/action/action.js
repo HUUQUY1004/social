@@ -347,8 +347,15 @@ export const getReels = async (page) => {
   }
 };
 export const findUserByEmail = async (email) => {
-  const { data } = await axios.post(`${BASE_URL}/auth/find-email`, {
-    email,
-  });
-  return data;
+  try {
+    const { data } = await axios.post(`${BASE_URL}/auth/find-email`, {
+      email,
+    });
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
 };

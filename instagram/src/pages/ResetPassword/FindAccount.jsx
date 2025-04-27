@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Header from '../../component/header/header'
 import { Link } from 'react-router-dom'
 import { useDebounce } from '../../hook/useDebounce'
@@ -6,13 +6,23 @@ import { findUserByEmail } from '../../action/action'
 
 const FindAccount = () => {
   const [value,setValue] = useState('')
+  const [error, setError] = useState(false)
+  const emailInputRef = useRef()
+  const optInputRef = useRef()
   const handleChange =async (e)=>{
     setValue(e.target.value)
   }
 
   const handleClick = async()=>{
     const data = await findUserByEmail(value)
-    console.log(data);
+    if(data.status === 200){
+      emailInputRef.current.style.display = 'none'
+      optInputRef.current.style.display = 'block'
+      setError(false)
+    }
+    else {
+    setError(true)
+    }
     
   }
 
@@ -28,9 +38,13 @@ const FindAccount = () => {
             <p>Nhập email, số điện thoại hoặc tên người dùng của bạn và chúng tôi sẽ gửi cho bạn một liên kết để truy cập lại vào tài khoản.</p>
 
            <div className='border w-full mt-2'> 
-              <input onChange={(e)=>handleChange(e)} value={value} type="text" placeholder='Email của bạn' className='w-full h-full py-2 px-3'/>
+              <input ref={emailInputRef}  onChange={(e)=>handleChange(e)} value={value} type="text" placeholder='Email của bạn' className='w-full h-full py-2 px-3'/>
+              <input ref={optInputRef}  onChange={(e)=>handleChange(e)}  type="text" placeholder='Nhập mã OTP' className='hidden w-full h-full py-2 px-3'/>
 
             </div>
+            {
+              error &&     <p className='text-sm text-red-600 font-semibold'>Chúng tôi không tìm thấy tài khoản có email này !</p>
+            }
               <button onClick={handleClick} className='text-white font-bold w-full py-2 rounded-md mt-2' style={{backgroundColor: 'var(--blue-color)'}}>Tiếp tục</button>
 
               <p>Hoặc</p>

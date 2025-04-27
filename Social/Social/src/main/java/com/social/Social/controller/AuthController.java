@@ -1,11 +1,14 @@
 package com.social.Social.controller;
 
 import com.social.Social.model.User;
+import com.social.Social.request.FindUserByEmailRequest;
 import com.social.Social.request.LoginRequest;
 import com.social.Social.response.AuthResponse;
+import com.social.Social.response.Response;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.service.CustomerUserDetailsService;
 import com.social.Social.config.JwtProvider;
+import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +37,24 @@ public class AuthController {
 
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
+    @Autowired
+    private UserService userService;
 
-
+    @PostMapping("/find-email")
+    public ResponseEntity<Response> findUserByEmail(@RequestBody FindUserByEmailRequest findUserByEmailRequest) throws Exception {
+        Response response = new Response();
+        System.out.println(findUserByEmailRequest.getEmail());
+        User user = userService.findUserByEmail(findUserByEmailRequest.getEmail());
+        if(user != null){
+            response.setMessage("OK");
+            response.setStatus(200);
+        }
+        else {
+            response.setMessage("User not found");
+            response.setStatus(404);
+        }
+        return  ResponseEntity.ok(response);
+    }
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register (@RequestBody User userReq) throws Exception {
         System.out.println("usser Request");
