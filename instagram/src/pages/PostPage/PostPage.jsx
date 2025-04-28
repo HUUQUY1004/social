@@ -16,6 +16,7 @@ import { BASE_URL, commentPost, deleteAndBackupPost, deletePost, getPostById, li
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 import SavedAlbum from '../../component/SaveAlbum/Save';
+import { data } from 'autoprefixer';
 function PostPage() {
     const navigate = useNavigate();
 
@@ -103,7 +104,9 @@ function PostPage() {
         <PopupWrapper isClose={true}>
             <div className="inner-post-page flex" ref={ref}>
                 <div className="file">
-                    <img style={{transform: `scale(${post?.scaleImage})`}} src={`${BASE_URL + post?.images[0]?.imageUrl}`} alt={post?.title} />
+                    {
+                        post?.reel === true ? <video autoPlay={true} loop  src={`${BASE_URL + post?.images[0]?.imageUrl}`}/> : <img style={{transform: `scale(${post?.scaleImage})`}} src={`${BASE_URL + post?.images[0]?.imageUrl}`} alt={post?.title} />
+                    }
                 </div>
                 <div className="detail flex flex-column ">
                     <header className="flex j-between a-center">

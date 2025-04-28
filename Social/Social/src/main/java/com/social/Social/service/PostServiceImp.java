@@ -107,4 +107,9 @@ public class PostServiceImp implements  PostService{
         List<Post> posts = postRepository.getTrash(user);
         return  posts;
     }
+
+    @Override
+    public List<Post> getReel() throws Exception {
+        return postRepository.getReel();
+    }
 }

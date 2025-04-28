@@ -207,6 +207,7 @@ export const createPost = async (value) => {
   formData.append("postVisibility", value.postVisibility);
   formData.append("scaleImage", value.scaleImage);
   formData.append("images", value.images);
+  formData.append("video", value.video);
   const { data } = await axios.post(
     `${BASE_URL}/api/post/create`,
     formData,
@@ -323,6 +324,44 @@ export const deleteAlbum = async (id) => {
 export const getTrash = async () => {
   try {
     const { data } = await axios.get(`${BASE_URL}/api/post/trash`, config);
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};
+export const getReels = async (page) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/api/post/reels?page=${page}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};
+export const findUserByEmail = async (email) => {
+  try {
+    const { data } = await axios.post(`${BASE_URL}/auth/find-email`, {
+      email,
+    });
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};
+export const verifyOTP = async (value) => {
+  try {
+    const { data } = await axios.post(`${BASE_URL}/auth/verify-otp`, value);
     return data;
   } catch (error) {
     return {

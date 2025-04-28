@@ -40,6 +40,7 @@ function Post({ onClose, user }) {
     const divRef = useRef();
     const [edit, setEdit] = useState(false);
     const [img, setImg] = useState(undefined);
+    const [video, setVideo] = useState(undefined)
     const [show, setShow] = useState(false);
     const [selected, setSelected] = useState(undefined);
     const [showEditSize, setShowEditSize] = useState(false);
@@ -68,25 +69,24 @@ function Post({ onClose, user }) {
         input.click();
     };
 
-    // function imageToBase64(file) {
-    //     return new Promise((resolve, reject) => {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setFileUp(reader.result);
-    //         };
-    //         reader.onerror = reject;
-    //         reader.readAsDataURL(file);
-    //     });
-    // }
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
-        // Xử lý file ảnh tại đây, ví dụ: gửi lên máy chủ hoặc xử lý dữ liệu
-        // imageToBase64(file).then((base64) => {
-        //     // setFileUp(base64);
-        // });
         setFileUp(file)
-        setEdit(true);
-        setImg(URL.createObjectURL(file));
+        if(file.name.endsWith(".mp4")){
+            const reader = new FileReader()
+
+            reader.onload = (e)=>{
+                const url = e.target.result;
+                setEdit(true);
+                setVideo(url)
+                
+            }
+            reader.readAsDataURL(file)
+        }
+        else{
+            setEdit(true);
+            setImg(URL.createObjectURL(file));
+        }
     };
     const divLength = () => {
         const value = divRef.current.innerHTML;
@@ -105,9 +105,12 @@ function Post({ onClose, user }) {
         setContent(msg);
     };
     const handleUpPost = async () => {
+        console.log(fileUp);
+        
        const value= {
             title: content,
             images: fileUp,
+            video: fileUp.type === "video/mp4" ? fileUp : null,
             isComment,
             isShowLike,
             scaleImage: parseFloat(`1.${inputRange}`),
@@ -119,7 +122,7 @@ function Post({ onClose, user }) {
             onClose(false);
         }
     };
-    console.log(typeView);
+    
     
     return (
         <div className="post__wrapper flex a-center j-center">
@@ -127,8 +130,8 @@ function Post({ onClose, user }) {
                 <AiOutlineClose />
             </div>
             <div className={width ? 'inner flex size flex-column' : 'inner flex wrap flex-column none'} ref={innerRef}>
-                <div className={`post-titles flex ${img ? 'j-between' : 'j-center'} a-center`}>
-                    {img && (
+                <div className={`post-titles flex ${(img || video) ? 'j-between' : 'j-center'} a-center`}>
+                    {(img || video) && (
                         <button
                             className="btn-edit"
                             onClick={() => {
@@ -139,8 +142,8 @@ function Post({ onClose, user }) {
                             <AiOutlineArrowLeft />
                         </button>
                     )}
-                    <h3 className="title">{img ? 'Cắt' : 'Tạo bài viết mới '}</h3>
-                    {img && (
+                    <h3 className="title">{img || video ? 'Cắt' : 'Tạo bài viết mới '}</h3>
+                    {(img || video) && (
                         <h4
                             className="continue"
                             onClick={() => {
@@ -159,12 +162,17 @@ function Post({ onClose, user }) {
                     <div className="main-edit">
                         {edit ? (
                             <div className="upload">
-                                <img
+                                {
+                                    img && <img
                                     className={`img-file ${'s' + selected}`}
                                     style={{ transform: `scale(1.${inputRange})` }}
                                     src={img}
                                     alt=""
                                 />
+                                }
+                                {
+                                    video && <video className='w-full h-full' src={video} autoPlay={true} loop />
+                                }
 
                                 <div className="edit flex j-between a-center">
                                     <div className="left flex ">

@@ -15,11 +15,23 @@ function PostItem({ data, type }) {
         <Link
             to={type ? `/p/${type}/${data.id}` : `/p/${data.id}`}
             key={data?._id}
-            className="post-item"
+            className="post-item relative"
             style={{
-                backgroundImage: `url(${BASE_URL + data.images[0].imageUrl.replace(/\\/g, '/')})`,
+                ...(data.reel === false && {
+                  backgroundImage: `url(${BASE_URL + data.images[0].imageUrl.replace(/\\/g, '/')})`
+                })
               }}
         >
+            {data.reel === true && (
+                <video
+                className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
+                src={`${BASE_URL + data.images[0].imageUrl.replace(/\\/g, '/')}`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                />
+            )}
             <div className="post-item-content flex j-center a-center">
                 {showLike && (
                     <div className="like flex">

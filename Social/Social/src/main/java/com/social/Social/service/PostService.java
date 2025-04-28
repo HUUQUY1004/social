@@ -19,4 +19,6 @@ public interface PostService {
     int  getQuantityPost(String jwt) throws  Exception;
     List<Post> getPostHome(String jwt) throws Exception;
     List<Post> getTrash(String jwt) throws  Exception;
+
+    List<Post> getReel() throws  Exception;
 }

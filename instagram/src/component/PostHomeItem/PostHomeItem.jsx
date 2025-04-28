@@ -75,7 +75,12 @@ function PostHomeItem({ currentUser, item, time }) {
             </div>
             <div className="post-content">
                 <div className="post-file">
-                    <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
+                   {
+                    item?.reel ? 
+                    <video src={BASE_URL+ item.images[0].imageUrl} autoPlay={true} loop controls />
+                     :
+                       <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
+                   }
                 </div>
                 <div className="interaction flex a-center j-between ">
                     <div className="left flex gap-2">

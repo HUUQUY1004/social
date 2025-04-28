@@ -29,6 +29,8 @@ public class Post {
     private double scaleImage;
     @Column(nullable = false)
     private boolean isDelete;
+    @Column(nullable = false)
+    private boolean isReel;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     @ToString.Exclude
@@ -161,5 +163,13 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public boolean isReel() {
+        return isReel;
+    }
+
+    public void setReel(boolean reel) {
+        isReel = reel;
     }
 }
