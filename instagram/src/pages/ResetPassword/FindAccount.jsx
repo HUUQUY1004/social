@@ -3,10 +3,13 @@ import Header from '../../component/header/header'
 import { Link } from 'react-router-dom'
 import { useDebounce } from '../../hook/useDebounce'
 import { findUserByEmail } from '../../action/action'
+import { images } from '../../source'
+import LoadingComponent from '../../component/Loading/loadingComponent'
 
 const FindAccount = () => {
   const [value,setValue] = useState('')
   const [error, setError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const emailInputRef = useRef()
   const optInputRef = useRef()
   const handleChange =async (e)=>{
@@ -45,7 +48,11 @@ const FindAccount = () => {
             {
               error &&     <p className='text-sm text-red-600 font-semibold'>Chúng tôi không tìm thấy tài khoản có email này !</p>
             }
-              <button onClick={handleClick} className='text-white font-bold w-full py-2 rounded-md mt-2' style={{backgroundColor: 'var(--blue-color)'}}>Tiếp tục</button>
+              <button onClick={handleClick} className='text-white font-bold w-full py-2 rounded-md mt-2' style={{backgroundColor: 'var(--blue-color)'}}>
+                {
+                  isLoading ? <LoadingComponent/> : "Tiếp tục"
+                }
+              </button>
 
               <p>Hoặc</p>
 

@@ -21,5 +21,5 @@ public class SendMailService {
         mailSender.send(message);
     }
 
-    
+
 }

@@ -8,6 +8,7 @@ import com.social.Social.response.Response;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.service.CustomerUserDetailsService;
 import com.social.Social.config.JwtProvider;
+import com.social.Social.service.SendMailService;
 import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,12 @@ public class AuthController {
 
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SendMailService sendMailService;
 
     @PostMapping("/find-email")
     public ResponseEntity<Response> findUserByEmail(@RequestBody FindUserByEmailRequest findUserByEmailRequest) throws Exception {
@@ -46,6 +51,7 @@ public class AuthController {
         System.out.println(findUserByEmailRequest.getEmail());
         User user = userService.findUserByEmail(findUserByEmailRequest.getEmail());
         if(user != null){
+            sendMailService.sendEmail(user.getEmail(), "Mã để reset mật khẩu", "1234");
             response.setMessage("OK");
             response.setStatus(200);
         }
