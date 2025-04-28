@@ -2,19 +2,20 @@ import React, { useEffect, useRef, useState } from 'react'
 import Header from '../../component/header/header'
 import { Link } from 'react-router-dom'
 import { useDebounce } from '../../hook/useDebounce'
-import { findUserByEmail } from '../../action/action'
+import { findUserByEmail, verifyOTP } from '../../action/action'
 import { images } from '../../source'
 import LoadingComponent from '../../component/Loading/loadingComponent'
 
 const FindAccount = () => {
   const [value,setValue] = useState('')
   const [otp,setOtp] = useState('')
-  const [error, setError] = useState(false)
+  const [error, setError] = useState({status: false, message: ''})
   const [isLoading, setIsLoading] = useState(false)
   const emailInputRef = useRef()
   const optInputRef = useRef()
   const pRef = useRef()
-  const storedEmail = localStorage.getItem('email');
+  const parsedEmail = JSON.parse(localStorage.getItem('email'));
+
   const storedOtp = localStorage.getItem('otp');
   const handleChange =async (e)=>{
     setValue(e.target.value)
@@ -24,30 +25,50 @@ const FindAccount = () => {
   }
 
   const handleClick = async()=>{
+    console.log(parsedEmail);
+    
     setIsLoading(true)
-    const data = await findUserByEmail(value)
-    if(data.status === 200){
-      pRef.current.innerText = `Chúng tôi đã gửi mã OTP qua email ${value}. Vui lòng nhập mã OTP vào bên dưới.`
-      emailInputRef.current.style.display = 'none'
-      optInputRef.current.style.display = 'block'
-      const expireTime = Date.now() + 5 * 60 * 1000;
-      localStorage.setItem('email', JSON.stringify({ email: value, expire: expireTime }));
-
-      setError(false)
+    if(otp.length >0){
+      const data = await verifyOTP({email:parsedEmail.email , otp })
       setIsLoading(false)
+      if(data.status === 200){
+        alert("Chuyênr")
+      }
+      else {
+        setError({
+          status: true,
+          message: ' Vui lòng nhập lại mã OTP.'
+        })
+        
+      }
+      return;
     }
-    else {
-    setError(true)
-    setIsLoading(false)
+    else{
+      const data = await findUserByEmail(value)
+      if(data.status === 200){
+        pRef.current.innerText = `Chúng tôi đã gửi mã OTP qua email ${value}. Vui lòng nhập mã OTP vào bên dưới.`
+        emailInputRef.current.style.display = 'none'
+        optInputRef.current.style.display = 'block'
+        const expireTime = Date.now() + 5 * 60 * 1000;
+        localStorage.setItem('email', JSON.stringify({ email: value, expire: expireTime }));
+        setIsLoading(false)
+      }
+      else {
+        
+      setError({
+        status: true,
+        message: 'Chúng tôi không tìm thấy tài khoản có email này !'
+      })
+      setIsLoading(false)
+      }
     }
+   
     
   }
   useEffect(() => {
-    const storedEmail = localStorage.getItem('email');
-    const storedOtp = localStorage.getItem('otp');
+    
   
-    if (storedEmail) {
-      const parsedEmail = JSON.parse(storedEmail);
+    if (parsedEmail) {
       if (parsedEmail.expire > Date.now()) {
         setValue(parsedEmail.value);
         emailInputRef.current.style.display = 'none';
@@ -87,7 +108,7 @@ const FindAccount = () => {
 
             </div>
             {
-              error &&     <p className='text-sm text-red-600 font-semibold'>Chúng tôi không tìm thấy tài khoản có email này !</p>
+              error.status &&     <p className='text-sm text-red-600 font-semibold'>{error.message}</p>
             }
               <button onClick={handleClick} className='text-white font-bold w-full py-2 rounded-md mt-2' style={{backgroundColor: 'var(--blue-color)'}}>
                 {

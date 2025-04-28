@@ -18,6 +18,7 @@ public class OTPService  implements  OTPServiceImp{
     @Override
     public boolean verifyOTP(String email, String input) {
         Object o = redisService.getData(email);
+        System.out.println("Object: " + o);
         if (o == null || !o.toString().equals(o)) {
             return  false;
         }

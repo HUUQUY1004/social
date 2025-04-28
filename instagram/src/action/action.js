@@ -359,3 +359,14 @@ export const findUserByEmail = async (email) => {
     };
   }
 };
+export const verifyOTP = async (value) => {
+  try {
+    const { data } = await axios.post(`${BASE_URL}/auth/verify-otp`, value);
+    return data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};

@@ -70,14 +70,16 @@ public class AuthController {
     }
     @PostMapping("/verify-otp")
     public  ResponseEntity<Response> verifyOTP(@RequestBody VerifyOTPRequest verifyOTPRequest){
+        System.out.println(verifyOTPRequest.toString());
         Response response = new Response();
         boolean check = otpService.verifyOTP(verifyOTPRequest.getEmail(), verifyOTPRequest.getOtp());
+        System.out.println("check: " + check);
         if(check == true){
             response.setStatus(200);
             response.setMessage("Verify Success");
         }
         else {
-            response.setStatus(200);
+            response.setStatus(400);
             response.setMessage("Verify Success");
         }
         return  ResponseEntity.ok(response);
