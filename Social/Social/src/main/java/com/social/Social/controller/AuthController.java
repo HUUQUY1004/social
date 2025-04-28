@@ -3,11 +3,13 @@ package com.social.Social.controller;
 import com.social.Social.model.User;
 import com.social.Social.request.FindUserByEmailRequest;
 import com.social.Social.request.LoginRequest;
+import com.social.Social.request.VerifyOTPRequest;
 import com.social.Social.response.AuthResponse;
 import com.social.Social.response.Response;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.service.CustomerUserDetailsService;
 import com.social.Social.config.JwtProvider;
+import com.social.Social.service.OTPService;
 import com.social.Social.service.SendMailService;
 import com.social.Social.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +47,38 @@ public class AuthController {
     @Autowired
     private SendMailService sendMailService;
 
+    @Autowired
+    private OTPService otpService;
+
     @PostMapping("/find-email")
     public ResponseEntity<Response> findUserByEmail(@RequestBody FindUserByEmailRequest findUserByEmailRequest) throws Exception {
         Response response = new Response();
         System.out.println(findUserByEmailRequest.getEmail());
         User user = userService.findUserByEmail(findUserByEmailRequest.getEmail());
         if(user != null){
-            sendMailService.sendEmail(user.getEmail(), "Mã để reset mật khẩu", "1234");
+            sendMailService.sendEmail(user.getEmail(), "Mã để reset mật khẩu",
+                   "Mã xác thực của bạn là: " + otpService.generateOTP(user.getEmail()
+                    ));
             response.setMessage("OK");
             response.setStatus(200);
         }
         else {
             response.setMessage("User not found");
             response.setStatus(404);
+        }
+        return  ResponseEntity.ok(response);
+    }
+    @PostMapping("/verify-otp")
+    public  ResponseEntity<Response> verifyOTP(@RequestBody VerifyOTPRequest verifyOTPRequest){
+        Response response = new Response();
+        boolean check = otpService.verifyOTP(verifyOTPRequest.getEmail(), verifyOTPRequest.getOtp());
+        if(check == true){
+            response.setStatus(200);
+            response.setMessage("Verify Success");
+        }
+        else {
+            response.setStatus(200);
+            response.setMessage("Verify Success");
         }
         return  ResponseEntity.ok(response);
     }
