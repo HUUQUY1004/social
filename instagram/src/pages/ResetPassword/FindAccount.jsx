@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Header from '../../component/header/header'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDebounce } from '../../hook/useDebounce'
 import { findUserByEmail, verifyOTP } from '../../action/action'
 import { images } from '../../source'
@@ -14,6 +14,7 @@ const FindAccount = () => {
   const emailInputRef = useRef()
   const optInputRef = useRef()
   const pRef = useRef()
+  const navigate = useNavigate()
   const parsedEmail = JSON.parse(localStorage.getItem('email'));
 
   const storedOtp = localStorage.getItem('otp');
@@ -32,7 +33,7 @@ const FindAccount = () => {
       const data = await verifyOTP({email:parsedEmail.email , otp })
       setIsLoading(false)
       if(data.status === 200){
-        alert("Chuyênr")
+        navigate('/account/changePassword')
       }
       else {
         setError({
@@ -104,7 +105,7 @@ const FindAccount = () => {
 
            <div className='border w-full mt-2'> 
               <input ref={emailInputRef}  onChange={(e)=>handleChange(e)} value={value} type="text" placeholder='Email của bạn' className='w-full h-full py-2 px-3'/>
-              <input ref={optInputRef}  onChange={(e)=>handleChangeOTP(e)}  type="text" placeholder='Nhập mã OTP' className='hidden w-full h-full py-2 px-3'/>
+              <input ref={optInputRef}  onChange={(e)=>handleChangeOTP(e)}  value={otp} type="text" placeholder='Nhập mã OTP' className='hidden w-full h-full py-2 px-3'/>
 
             </div>
             {
@@ -121,7 +122,7 @@ const FindAccount = () => {
               <Link style={{color:'var(--blue-color)'}} className='font-bold' to={'/register'}>Tạo tài khoản mới</Link>
               <Link style={{color:'var(--blue-color)'}} className='font-bold' to={'/login'}>Quay lại đăng nhập</Link>
           </div>
-        </div>
+      </div>
     </div>
   )
 }

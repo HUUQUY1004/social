@@ -1,5 +1,6 @@
 import VideoCall from "../component/Call/call";
 import AlbumPage from "../pages/Album/album";
+import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Friends from "../pages/Friends/Friends";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
@@ -73,6 +74,11 @@ export const router = [
   {
     Component: FindAccount,
     path: "/account/find",
+    layout: null,
+  },
+  {
+    Component: ChangePassword,
+    path: "/account/changePassword",
     layout: null,
   },
 ];
