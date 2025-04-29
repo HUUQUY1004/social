@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../../component/header/header'
 import LoadingComponent from '../../component/Loading/loadingComponent'
 import { Link, useNavigate } from 'react-router-dom'
+import { changePassword } from '../../action/action'
 
 const ChangePassword = () => {
     const [error, setError] = useState({status: false, message:''})
@@ -9,6 +10,7 @@ const ChangePassword = () => {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
+    const parsedEmail = JSON.parse(localStorage.getItem('email'));
     const handleChangePass = (e)=>{
         setPassword(e.target.value)
     }
@@ -38,11 +40,22 @@ const ChangePassword = () => {
             return;
         }
         else {
-            alert('ok')
+            const data = await changePassword({email: parsedEmail.email, password, confirmPassword })
+            console.log(data);
+            
+            if(data.status === 200){
+                navigate("/login")
+            }
+            else {
+                setError({
+                    status: true,
+                    message: data.message
+                })
+            }
         }
     }
     useEffect(()=>{
-        const parsedEmail = JSON.parse(localStorage.getItem('email'));
+        
         if( parsedEmail ==null ||parsedEmail.expire < Date.now()){
             navigate("/account/find")
         }

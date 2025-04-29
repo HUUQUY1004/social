@@ -1,11 +1,13 @@
 package com.social.Social.service;
 
 import com.social.Social.model.User;
+import com.social.Social.request.ChangePassword;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.config.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,10 @@ import java.util.List;
 public class UserServiceImp  implements  UserService{
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private JwtProvider jwtProvider;
     @Override
@@ -65,5 +71,15 @@ public class UserServiceImp  implements  UserService{
     public User getUserById(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(()-> new Exception("User not found"));
         return  user;
+    }
+
+    @Override
+    public void changePassword(ChangePassword changePassword) throws Exception {
+        User user = userRepository.findByEmail(changePassword.getEmail());
+        if(!changePassword.getPassword().equals(changePassword.getConfirmPassword())){
+            throw  new Exception("No match");
+        }
+        user.setPassword(passwordEncoder.encode(changePassword.getPassword()));
+        userRepository.save(user);
     }
 }

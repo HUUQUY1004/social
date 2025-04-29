@@ -1,6 +1,7 @@
 package com.social.Social.controller;
 
 import com.social.Social.model.User;
+import com.social.Social.request.ChangePassword;
 import com.social.Social.request.FindUserByEmailRequest;
 import com.social.Social.request.LoginRequest;
 import com.social.Social.request.VerifyOTPRequest;
@@ -84,9 +85,24 @@ public class AuthController {
         }
         return  ResponseEntity.ok(response);
     }
+    @PostMapping("change-password")
+    public  ResponseEntity<Response> changePassword(@RequestBody ChangePassword changePassword) throws Exception {
+        System.out.println(changePassword.toString());
+        Response response = new Response();
+        if(!changePassword.getPassword().equals(changePassword.getConfirmPassword())){
+            response.setStatus(404);
+            response.setMessage("No match");
+        }
+        else {
+            userService.changePassword(changePassword);
+            response.setStatus(200);
+            response.setMessage("Success");
+        }
+        return  ResponseEntity.ok(response);
+    }
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register (@RequestBody User userReq) throws Exception {
-        System.out.println("usser Request");
+        System.out.println("user Request");
 //        check user
         User userWithEmail =  userRepository.findByEmail(userReq.getEmail());
         if(userWithEmail !=null) {
