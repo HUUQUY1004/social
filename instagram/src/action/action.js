@@ -2,6 +2,17 @@ import axios from "axios";
 
 export const BASE_URL = "http://localhost:5000";
 
+const handleError = (error) => {
+  if (error.response.status === 403) {
+    window.location.href = "/login";
+  } else {
+    return {
+      status: error.response.status,
+      message: error.response.message,
+    };
+  }
+};
+
 export const token = localStorage.getItem("access_token");
 const config = {
   headers: {
@@ -368,5 +379,18 @@ export const verifyOTP = async (value) => {
       status: error.response.status,
       message: error.response.message,
     };
+  }
+};
+export const changePassword = async (value) => {
+  try {
+    const { data } = await axios.post(
+      `${BASE_URL}/auth/change-password`,
+      value
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    handleError(error);
   }
 };
