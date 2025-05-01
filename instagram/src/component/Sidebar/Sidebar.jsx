@@ -32,7 +32,7 @@ import NotifyComponent from '../Notify/Notify.compoment';
 import { BASE_URL } from '../../action/action';
 import { useUser } from '../../store/useStore';
 
-function Sidebar() {
+function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
     const {currentUser} = useUser()
     
     const Menu = [
@@ -138,19 +138,13 @@ function Sidebar() {
             window.location.reload(false);
         }
         if (item.type === 'Convert') {
-            setIsConvert(true);
+            onConvertAccount();
         }
     };
     const handleClick = (name) => {
-        if (name === 'Tạo') {
-            setCreatePost(true);
-        }
-        if (name === 'Explore') {
-            setIsSearch(true);
-        }
-        if(name === "Thông báo"){
-            setIsNotify(true);
-        }
+        if (name === 'Tạo') onCreatePost(currentUser);
+        if (name === 'Explore') onSearch();
+        if (name === 'Thông báo') onNotify();
     };
     const navigate = useNavigate();
     return (
@@ -198,7 +192,7 @@ function Sidebar() {
                 <h4 onClick={() => setIsShowPopup((prev) => !prev)}>Xem thêm</h4>
                 {isShowPopup && <Popup popup={popUp} onClick={handleClinkPopup} />}
             </div>
-            {createPost && <Post onClose={setCreatePost} user={currentUser} />}
+            {/* {createPost && <Post onClose={setCreatePost} user={currentUser} />}
             {isSearch && (
                 <div ref={searchRef}>
                     <Search />
@@ -211,7 +205,7 @@ function Sidebar() {
                     </div>
                 )
             }
-            {isConvert && <ConvertAccount onClose={setIsConvert} />}
+            {isConvert && <ConvertAccount onClose={setIsConvert} />} */}
         </div>
     );
 }

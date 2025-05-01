@@ -1,5 +1,6 @@
 .postList__wrapper {
     width: var(--width-content-ui);
+    z-index: -1;
     .virtual {
         height: 293px;
         width: 300px;
