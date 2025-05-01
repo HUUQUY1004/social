@@ -11,12 +11,14 @@ import Picker from 'emoji-picker-react';
 import onClickOutSide from '../../hook/useOnClickOutSide.js';
 import { BASE_URL, commentPost, likePost } from '../../action/action.js';
 import SavedAlbum from '../SaveAlbum/Save.jsx';
+import Share from '../share/Share.jsx';
 
 function PostHomeItem({ currentUser, item, time }) {
     const [showPicker, setShowPicker] = useState(false);
     const [isLike, setIsLike] = useState(false);
     const [value, setValue] = useState('');
     const [isSaved, setIsSaved] = useState(false)
+    const [isShare, setIsShare] = useState(false)
 
     const emojiRef = useRef();
     useEffect(() => {
@@ -86,7 +88,7 @@ function PostHomeItem({ currentUser, item, time }) {
                    }
                 </div>
                 <div className="interaction flex a-center j-between ">
-                    <div className="left flex gap-2">
+                    <div className="left flex gap-2 items-center">
                         {item.showLike && (
                             <span
                                 className="like"
@@ -99,10 +101,12 @@ function PostHomeItem({ currentUser, item, time }) {
                                 {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
                             </span>
                         )}
-                        <span className="comment" title="Bình luận">
-                            <FaRegComment />
-                        </span>
-                        <span className="share" title="Chia sẻ">
+                        <Link to={`/p/${item.id}`}>
+                            <span className="comment" title="Bình luận">
+                                <FaRegComment />
+                            </span>
+                        </Link>
+                        <span className="share" title="Chia sẻ" onClick={()=>setIsShare(true)}>
                             <IoMdPaperPlane />
                         </span>
                     </div>
@@ -154,6 +158,9 @@ function PostHomeItem({ currentUser, item, time }) {
             <div className="separator"></div>
             {
                 isSaved && <SavedAlbum postId={item.id} onClose={setIsSaved}/>
+            }
+            {
+                isShare && <Share postId={item.id} onClose={setIsShare}/>
             }
         </div>
     );
