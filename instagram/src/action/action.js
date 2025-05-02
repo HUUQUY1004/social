@@ -1,15 +1,18 @@
 import axios from "axios";
-
 export const BASE_URL = "http://localhost:5000";
 
 const handleError = (error) => {
-  if (error.response.status === 403) {
-    window.location.href = "/login";
+  if (error.response) {
+    if (error.response.status === 403) {
+      window.location.href = "/login";
+    } else {
+      return {
+        status: error.response.status,
+        message: error.response.data?.message || "Unknown error",
+      };
+    }
   } else {
-    return {
-      status: error.response.status,
-      message: error.response.message,
-    };
+    return { message: "No response from server" };
   }
 };
 
@@ -29,7 +32,14 @@ export const login = async (email, password) => {
     });
     return data;
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 403) {
+      window.location.href = "/login";
+      return;
+    }
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { jwt: null, message: "No response from server" };
   }
 };
 export const register = async (value) => {
