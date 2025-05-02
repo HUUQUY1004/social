@@ -102,7 +102,7 @@ public class AuthController {
     }
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register (@RequestBody User userReq) throws Exception {
-        System.out.println("user Request");
+        System.out.println("user Request" + userReq.toString());
 //        check user
         User userWithEmail =  userRepository.findByEmail(userReq.getEmail());
         if(userWithEmail !=null) {
@@ -112,6 +112,7 @@ public class AuthController {
         newUser.setEmail(userReq.getEmail());
         newUser.setNickname(userReq.getNickname());
         newUser.setPassword(passwordEncoder.encode(userReq.getPassword()));
+        newUser.setUsername(userReq.getUsername());
 
         User savedUser = userRepository.save(newUser);
 

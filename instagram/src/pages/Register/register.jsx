@@ -7,15 +7,19 @@ import './register.scss'
 import Footer from '../../component/Footer/Footer';
 import axios from 'axios'
 import Intro from '../../component/Intro/Intro';
+import { useDebounce } from '../../hook/useDebounce';
+import { register } from '../../action/action';
+import { toast } from 'react-toastify';
 function Register() {
     const [value, setValue] = useState({
         email:'',
-        name:'',
+        nickname:'',
         username:'',
         password:''
     })
     const navigate = useNavigate()
     const handlChange = (e)=>{
+        
         setValue({...value,[e.target.name]: e.target.value})
     }
     const handInvalid = ()=>{
@@ -36,23 +40,22 @@ function Register() {
     const handSubmit = async (e)=>{
         e.preventDefault()
         if(handInvalid()){
-            const {email, name,username, password} = value
-            const {data} = await axios.post('http://localhost:5000/api/user/register', {
-                email,
-                name,
-                username,
-                password
-            })
-            if(data.status === 400){
-                alert(data.msg)
+            console.log(value);
+            
+            const data = await register(value)
+            console.log(data);
+            if(data.jwt){
+                navigate("/")
             }
-            if(data.status ===200){
-                localStorage.setItem('instagram-user',JSON.stringify(data.user))
-                navigate('/login')
+            else if(data.status === 500){
+                toast.error("Có lỗi từ máy chủ vui lòng thử lại !",{
+                    delay: 1000
+                })
             }
+            
         }
     }
-
+    
     return ( 
        <div>
             <div className="register__wrapper flex j-center a-center">
@@ -76,19 +79,19 @@ function Register() {
                         </div>
                         <form className='flex flex-column j-center a-center form' onSubmit={(e)=>handSubmit(e)}>
                             <div className="input-wrapper ">
-                                <input className='br-2' type="email" name='email' value={value.email} onChange={(e)=>handlChange(e)} />
+                                <input className='br-2' placeholder='' type="email" name='email' value={value.email} onChange={(e)=>handlChange(e)} />
                                 <span>Email</span>
                             </div>
                             <div className="input-wrapper">
-                                <input className='br-2' type="text" name='name' value={value.name} onChange={(e)=>handlChange(e)}  />
+                                <input  className='br-2' placeholder='' type="text" name='nickname' value={value.name} onChange={(e)=>handlChange(e)}  />
                                 <span>Tên dầy đủ</span>
                             </div>
                             <div className="input-wrapper">
-                                <input className='br-2' type="text" name='username' value={value.username} onChange={(e)=>handlChange(e)}  />
+                                <input className='br-2' placeholder='' type="text" name='username' value={value.username} onChange={(e)=>handlChange(e)}  />
                                 <span>Tên người dùng</span>
                             </div>
                             <div className="input-wrapper">
-                                <input className='br-2' type="text" name='password' value={value.password} onChange={(e)=>handlChange(e)}/>
+                                <input className='br-2' placeholder='' type="text" name='password' value={value.password} onChange={(e)=>handlChange(e)}/>
                                 <span>Mật khẩu</span>
                             </div>
                             <div className="policy flex flex-column">

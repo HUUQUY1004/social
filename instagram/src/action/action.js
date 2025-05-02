@@ -32,6 +32,14 @@ export const login = async (email, password) => {
     console.log(error);
   }
 };
+export const register = async (value) => {
+  try {
+    const { data } = await axios.post(`${BASE_URL}/auth/register`, value);
+    return data;
+  } catch (error) {
+    return handleError(error);
+  }
+};
 
 export const getMyProfile = async () => {
   const { data } = await axios.get(

@@ -4,7 +4,6 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 import { BiLoader } from 'react-icons/bi';
 import './search.scss';
 import AccountItem from '../AccountItem/AccountItem';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { searchUser } from '../../action/action';
 function Search() {

@@ -134,8 +134,8 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
     useOnClickOutside(moreRef, handleClickOutside);
     const handleClinkPopup = (item) => {
         if (item.type === 'Logout') {
-            localStorage.removeItem('instagram-user');
-            window.location.reload(false);
+            localStorage.removeItem('access_token');
+            navigate("/login")
         }
         if (item.type === 'Convert') {
             onConvertAccount();
@@ -143,7 +143,9 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
     };
     const handleClick = (name) => {
         if (name === 'Tạo') onCreatePost(currentUser);
-        if (name === 'Explore') onSearch();
+        if (name === 'Explore') {
+            onSearch()
+        };
         if (name === 'Thông báo') onNotify();
     };
     const navigate = useNavigate();
