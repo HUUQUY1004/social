@@ -83,7 +83,7 @@
                     background-color: var(--second-background);
                     width: 258px;
                     padding: 10px 5px;
-                    &:focus ~ span, &:invalid ~ span {
+                    &:focus ~ span, &:invalid ~ span, &:not(:placeholder-shown) ~ span {
                         top: -10px;
                         left: 0;
                         font-size: 8px;
