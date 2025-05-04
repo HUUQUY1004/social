@@ -21,11 +21,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -56,6 +59,7 @@ public class AuthController {
         Response response = new Response();
         System.out.println(findUserByEmailRequest.getEmail());
         User user = userService.findUserByEmail(findUserByEmailRequest.getEmail());
+        System.out.println("User with email " + user.toString());
         if(user != null){
             sendMailService.sendEmail(user.getEmail(), "Mã để reset mật khẩu",
                    "Mã xác thực của bạn là: " + otpService.generateOTP(user.getEmail()
@@ -129,23 +133,34 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest loginRequest) {
-        System.out.println("run");
-        Authentication authentication = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-        String jwt = jwtProvider.generateToken(authentication);
         AuthResponse authResponse = new AuthResponse();
-        authResponse.setJwt(jwt);
-        authResponse.setMessage("Login success");
-        return  new ResponseEntity<>(authResponse, HttpStatus.OK);
+       try{
+           Authentication authentication = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+           String jwt = jwtProvider.generateToken(authentication);
+//           AuthResponse authResponse = new AuthResponse();
+           authResponse.setJwt(jwt);
+           authResponse.setMessage("Login success");
+           return  new ResponseEntity<>(authResponse, HttpStatus.OK);
+       }
+       catch (UsernameNotFoundException e) {
+
+           authResponse.setMessage("Email không tồn tại");
+           return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+       } catch (BadCredentialsException e) {
+           authResponse.setMessage(e.getMessage());
+           return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+       }
+
+
     }
     private Authentication authenticate(String email, String password) {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
-        System.out.println("user detail:" + userDetails.getPassword());
         if(userDetails == null) {
             throw  new BadCredentialsException("Invalid email...");
         }
-        System.out.println("match"+ passwordEncoder.matches(password,userDetails.getPassword()));
+
         if(!passwordEncoder.matches(password,userDetails.getPassword())){
-            throw  new BadCredentialsException("Invalid password");
+            throw  new BadCredentialsException("Vui lòng kiểm tra lại mật khẩu");
         }
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }

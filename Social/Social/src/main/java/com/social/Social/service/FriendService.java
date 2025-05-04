@@ -14,6 +14,8 @@ public interface FriendService {
     void rejectFriendRequest(Long requestId) throws  Exception;
 
     void deleteInvitation(Long requestId) throws  Exception;
+
+    void deleteFriend(String jwt,Long userId) throws  Exception;
     List<FriendRequestDTO> getListInvitation(String jwt) throws  Exception;
     List<User> getListFriend(String jwt, int offset) throws Exception;
 

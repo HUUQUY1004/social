@@ -5,6 +5,7 @@ import com.social.Social.model.FriendRequest;
 import com.social.Social.model.User;
 import com.social.Social.response.FriendResponse;
 import com.social.Social.response.Invitation;
+import com.social.Social.response.Response;
 import com.social.Social.responsitory.FriendRequestRepository;
 import com.social.Social.service.FriendService;
 import com.social.Social.service.NotifyService;
@@ -101,6 +102,25 @@ public class FriendController {
         invitation.setStatus(200);
         return  new ResponseEntity<>(invitation, HttpStatus.OK);
     }
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Response> deleteFriend(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable("userId") Long userId
+    ){
+        try{
+            System.out.println("HAHAHA");
+            friendService.deleteFriend(jwt,userId);
+            Response response = new Response();
+            response.setStatus(200);
+            response.setMessage("Success");
+            return  ResponseEntity.ok(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setStatus(400);
+            response.setMessage(e.getMessage());
+            return  ResponseEntity.ok(response);
+        }
+    }
     @GetMapping("/quantity")
     public ResponseEntity<Integer> getNumberOfFriend(
             @RequestHeader("Authorization") String jwt
@@ -121,6 +141,7 @@ public class FriendController {
 
         return  ResponseEntity.ok(friendService.getListFriend(jwt, offsetInt));
     }
+
 
 
 

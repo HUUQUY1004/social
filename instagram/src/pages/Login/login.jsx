@@ -8,6 +8,7 @@ import Footer from "../../component/Footer/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { login } from "../../action/action";
+import { toast } from "react-toastify";
 export const isValidEmail = (email) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
@@ -39,12 +40,12 @@ function Login() {
             const data = await login(email, password)
             console.log(data);
             
-            if(data.message === 'Login success'){
+            if(data?.message === 'Login success'){
                 localStorage.setItem('access_token', data.jwt)
                 navigate('/')
             }
-            else {
-                console.log(data);
+            else if(data?.jwt === null) {
+                toast.error(data.message);
                 
             }
         
@@ -65,11 +66,11 @@ function Login() {
                     </div>
                     <form className='flex flex-column j-center a-center form' onSubmit={(e)=>handleSubmit(e)}>
                         <div className="input-wrapper">
-                            <input type="text" name="email" onChange={(e)=>handleChange(e)} />
+                            <input placeholder="" type="text" name="email" onChange={(e)=>handleChange(e)} />
                             <span>Số điện thoại, tên người dùng hoặc email</span>
                         </div>
                         <div className="input-wrapper">
-                            <input type="text" name="password" onChange={(e)=>handleChange(e)}/>
+                            <input placeholder="" type="text" name="password" onChange={(e)=>handleChange(e)}/>
                             <span>Mật khẩu</span>
                         </div>
                         <button type="submit " className='br-8 btn-w268 btn-submit'>Đăng nhập</button>
