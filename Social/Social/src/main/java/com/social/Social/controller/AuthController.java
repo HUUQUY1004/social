@@ -59,6 +59,7 @@ public class AuthController {
         Response response = new Response();
         System.out.println(findUserByEmailRequest.getEmail());
         User user = userService.findUserByEmail(findUserByEmailRequest.getEmail());
+        System.out.println("User with email " + user.toString());
         if(user != null){
             sendMailService.sendEmail(user.getEmail(), "Mã để reset mật khẩu",
                    "Mã xác thực của bạn là: " + otpService.generateOTP(user.getEmail()

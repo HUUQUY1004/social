@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -87,6 +88,29 @@ public class FriendRequestImp implements  FriendService{
         FriendRequest request = friendRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu kết bạn"));
         friendRequestRepository.delete(request);
+    }
+
+    @Override
+    public void deleteFriend(String jwt, Long userId) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        User deleteUser = userRepository.findById(userId).orElseThrow(()-> new Exception("Không tìm thấy"));
+        if(user.getId().equals(userId)){
+            throw  new Exception("Không thể xóa chính mình!");
+        }
+        Optional<User> userOptional = user.getFriends().stream()
+                .filter(u -> u.getId().equals(userId))
+                .findFirst();
+
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+        } else {
+            throw new Exception("Không tìm thấy user với id: " + userId);
+        }
+        user.getFriends().remove(deleteUser);
+        deleteUser.getFriends().remove(user);
+        userRepository.save(user);
+        userRepository.save(deleteUser);
+
     }
 
     @Override

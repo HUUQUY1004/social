@@ -85,6 +85,11 @@ function Profile() {
         getPost();
         getNumberOfFriend();
     }, [dataUser]);
+
+    const handleContextMenu = (e)=>{
+        e.preventDefault(0)
+        setShowChangeAvatar(currentUser.id === dataUser.id)
+    }
     const nav = [
         {
             name: 'BÀI VIẾT',
@@ -106,7 +111,7 @@ function Profile() {
             ) : (
                 <div className="profile flex j-center a-center flex-column">
                     <div className="information flex">
-                        <div className="img" onClick={()=>setShowChangeAvatar(currentUser.id === dataUser.id)}>
+                        <div className="img" onContextMenu={(e)=>handleContextMenu(e)}>
                             <img src={dataUser?.avatar ? `${BASE_URL +dataUser?.avatar}` : 
                                 images.noAvatar} alt="avatar" />
                         </div>

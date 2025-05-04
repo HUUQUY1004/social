@@ -155,6 +155,18 @@ export const rejectFriend = async (requestId) => {
     return null;
   }
 };
+export const deleteFriend = async (userId) => {
+  try {
+    const { data } = await axios.delete(
+      `${BASE_URL}/api/friend/${userId}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    // handleError(error);
+    console.log(error);
+  }
+};
 export const getNotify = async (value) => {
   const page = value === null ? "" : value;
   try {
