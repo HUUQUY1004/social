@@ -68,8 +68,18 @@ function Post({ onClose, user }) {
         const input = e.target.parentNode.querySelector('input[type=file]');
         input.click();
     };
+    const toBase64 =  (file) =>
+        new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = (error) => reject(error);
+    });
+    const sendImageToBLIP = async ()=>{
 
-    const handleImageUpload = (event) => {
+    }
+
+    const handleImageUpload =async (event) => {
         const file = event.target.files[0];
         setFileUp(file)
         if(file.name.endsWith(".mp4")){
@@ -84,6 +94,9 @@ function Post({ onClose, user }) {
             reader.readAsDataURL(file)
         }
         else{
+            const base64 = await toBase64(file)
+            console.log(base64);
+            
             setEdit(true);
             setImg(URL.createObjectURL(file));
         }
