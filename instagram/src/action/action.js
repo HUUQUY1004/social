@@ -424,3 +424,18 @@ export const changePassword = async (value) => {
     handleError(error);
   }
 };
+
+export const sendImageToBLIP = async (base64Image) => {
+  const { data } = await axios.post(
+    "http://localhost:8080/generate-caption",
+    {
+      image_base64: base64Image,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};

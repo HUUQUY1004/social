@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import TranSlate from '../Translate/Translate';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { BiLoader } from 'react-icons/bi';
@@ -10,6 +10,7 @@ function Search() {
     const [isLoading, setIsLoading] = useState(false);
     const [userList, setUserList] = useState([]);
     const [value, setValue] = useState('');
+    const ref = useRef()
     useEffect(() => {
         if (!value || typeof value !== 'string' || value.trim() === '') return;
     
@@ -30,9 +31,10 @@ function Search() {
     
     }, [value]);
     
+    
     return (
         <TranSlate minWidth={0} maxWidth={'400px'}>
-            <div className="search__wrapper bg-white z-50">
+            <div ref={ref} className="search__wrapper bg-white z-50">
                 <div className="search-header-wrapper">
                     <h2 className="search-header">Tìm kiếm</h2>
                     <div className="input-search br-8">

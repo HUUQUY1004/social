@@ -1,6 +1,6 @@
 import Sidebar from "../Sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import './layout.scss'
 import Loading from "../Loading/loading";
 import { getMyProfile } from "../../action/action";
@@ -9,6 +9,7 @@ import Post from "../Post/Post";
 import Search from "../Search/Search";
 import NotifyComponent from "../Notify/Notify.compoment";
 import ConvertAccount from "../CovertAccount/ConvertAccount";
+import useOnClickOutside from "../../hook/useOnClickOutSide";
 function DefaultLayout({children}) {
     const navigate = useNavigate()
     const {currentUser,setCurrentUser} = useUser()
@@ -17,6 +18,10 @@ function DefaultLayout({children}) {
     const [isSearch, setIsSearch] = useState(false);
     const [isNotify, setIsNotify] = useState(false);
     const [isConvert, setIsConvert] = useState(false);
+    const searchRef = useRef();
+    const notifyRef = useRef()
+    useOnClickOutside(searchRef, ()=> setIsSearch(false))
+    useOnClickOutside(notifyRef, ()=> setIsNotify(false))
     const getUser = async ()=>{
         try {
             if(!localStorage.getItem('access_token')){
@@ -53,8 +58,8 @@ function DefaultLayout({children}) {
             )
           }
           {createPost && <Post onClose={setCreatePost} user={currentUser} />}
-            {isSearch && <Search onClose={() => setIsSearch(false)} />}
-            {isNotify && <NotifyComponent onClose={() => setIsNotify(false)} />}
+            {isSearch && <div ref={searchRef}><Search onClose={() => setIsSearch(false)} /></div>}
+            {isNotify && <div ref={notifyRef}><NotifyComponent onClose={() => setIsNotify(false)} /></div>}
             {isConvert && <ConvertAccount onClose={() => setIsConvert(false)} />}
       </div>
      );
