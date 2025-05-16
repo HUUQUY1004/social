@@ -15,7 +15,7 @@ import { images } from '../../source';
 import Picker from 'emoji-picker-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons';
-import { createPost } from '../../action/action';
+import { createPost, sendImageToBLIP } from '../../action/action';
 const editSize = [
     {
         name: 'Gốc',
@@ -56,6 +56,8 @@ function Post({ onClose, user }) {
     const [isComment, setIsComment] = useState(true);
     const [isShowLike, setIsShowLike] = useState(true);
     const [typeView, setTypeView] = useState("PUBLIC")
+    const [caption, setCaption] = useState()
+    const [showSuggestion, setShowSuggestion] = useState(false)
     // UP Post
 
     useOnClickOutside(innerRef, () => {
@@ -75,9 +77,7 @@ function Post({ onClose, user }) {
         reader.onload = () => resolve(reader.result.split(',')[1]);
         reader.onerror = (error) => reject(error);
     });
-    const sendImageToBLIP = async ()=>{
-
-    }
+  
 
     const handleImageUpload =async (event) => {
         const file = event.target.files[0];
@@ -95,10 +95,24 @@ function Post({ onClose, user }) {
         }
         else{
             const base64 = await toBase64(file)
-            console.log(base64);
             
             setEdit(true);
             setImg(URL.createObjectURL(file));
+            const data = await sendImageToBLIP(base64)
+    
+            if(data.caption){
+                setCaption(data.caption)
+                setShowSuggestion(true)
+            }
+        }
+    };
+    const handleKeyDown = (e) => {
+        if (e.key === 'Tab' && showSuggestion) {
+            e.preventDefault();
+            setContent(caption);
+            divRef.current.innerText = caption;
+            setCount(caption.length);
+            setShowSuggestion(false);
         }
     };
     const divLength = () => {
@@ -130,6 +144,7 @@ function Post({ onClose, user }) {
             postVisibility: typeView
         };
         const data = await createPost(value)
+        console.log(data);
         
         if (data) {
             onClose(false);
@@ -265,14 +280,42 @@ function Post({ onClose, user }) {
                             </div>
                             <p className="username-post">{user?.username}</p>
                         </div>
-                        <div
-                            className="post-value-area"
-                            contentEditable={true}
-                            aria-label="Viết chú thích..."
-                            ref={divRef}
-                            defaultValue={content}
-                            onInput={divLength}
-                        ></div>
+                        <div className='relative'>
+                            <div
+                                className="post-value-area"
+                                contentEditable={true}
+                                ref={divRef}
+                                onInput={divLength}
+                                onKeyDown={handleKeyDown}
+                                suppressContentEditableWarning={true}
+                                aria-label= 'Viết chú thích'
+                            ></div>
+    
+                            {showSuggestion && caption && (
+                                <div
+                                    className="caption-suggestion"
+                                    style={{
+                                        position: 'absolute',
+                                        top: '25%',
+                                        left: 0,
+                                        background: '#f0f0f0',
+                                        border: '1px solid #ddd',
+                                        padding: '8px',
+                                        marginTop: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={() => {
+                                        setContent(caption);
+                                        divRef.current.innerText = caption;
+                                        setCount(caption.length);
+                                        setShowSuggestion(false);
+                                    }}
+                                >
+                                    💡 Gợi ý caption: <em>{caption}</em> <br />
+                                    <small>Nhấn Enter để chấp nhận</small>
+                                </div>
+                            )}
+                        </div>
                         <div className="icon flex a-center j-between">
                             <span style={{ cursor: 'pointer' }} onClick={() => setShowPicker(!showPicker)}>
                                 <CiFaceSmile />

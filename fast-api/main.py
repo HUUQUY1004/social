@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from PIL import Image
+from starlette.middleware.cors import CORSMiddleware
 from transformers import BlipProcessor, BlipForConditionalGeneration
 import gradio as gr
 import httpx
@@ -27,10 +28,17 @@ model = BlipForConditionalGeneration.from_pretrained('Salesforce/blip-image-capt
 
 app = FastAPI()
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 @app.post("/generate-caption")
 async def generate_caption(data: ImageBase64Request):
     try:
+        print("Hi lo")
         # Decode the base64 string to image
         image_data = base64.b64decode(data.image_base64)
         img = Image.open(io.BytesIO(image_data))
@@ -46,7 +54,7 @@ async def generate_caption(data: ImageBase64Request):
             inputs = processor(img, return_tensors="pt")
             out = model.generate(**inputs)
             caption = processor.decode(out[0], skip_special_tokens=True)
-
+        print(caption)
         return {"caption": caption}
 
     except Exception as e:
