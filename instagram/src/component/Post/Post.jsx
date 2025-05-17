@@ -13,8 +13,6 @@ import Notify from '../Notify/Notify';
 // Content
 import { images } from '../../source';
 import Picker from 'emoji-picker-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons';
 import { createPost, sendImageToBLIP } from '../../action/action';
 const editSize = [
     {

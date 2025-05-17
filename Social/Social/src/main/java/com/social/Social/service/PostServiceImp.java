@@ -7,6 +7,7 @@ import com.social.Social.request.CommentPost;
 import com.social.Social.responsitory.CommentRepository;
 import com.social.Social.responsitory.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -96,12 +97,14 @@ public class PostServiceImp implements  PostService{
     }
 
     @Override
+    @Cacheable(value = "postsHome",unless = "#result == null || #result.isEmpty()")
     public List<Post> getPostHome(String jwt) throws Exception {
         User user = userService.findUserByToken(jwt);
         return  postRepository.getPostHome(user.getId());
     }
 
     @Override
+    @Cacheable(value = "trashs",unless = "#result == null || #result.isEmpty()")
     public List<Post> getTrash(String jwt) throws Exception {
         User user = userService.findUserByToken(jwt);
         List<Post> posts = postRepository.getTrash(user);
@@ -109,7 +112,9 @@ public class PostServiceImp implements  PostService{
     }
 
     @Override
+    @Cacheable(value = "reels",unless = "#result == null || #result.isEmpty()")
     public List<Post> getReel() throws Exception {
+        System.out.println("Truy vấn DB lấy reels");
         return postRepository.getReel();
     }
 }
