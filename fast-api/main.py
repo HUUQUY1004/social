@@ -11,6 +11,10 @@ import os
 import io
 import base64
 import numpy as np
+import replicate
+import  tempfile
+
+from request.AvatarRequest import AvatarRequest
 
 # Load environment variables
 load_dotenv(dotenv_path='.env')
@@ -89,6 +93,28 @@ with gr.Blocks() as demo:
         inputs=[img_input, prompt_input],
         outputs=caption_output
     )
+
+@app.post("/recommend-avatar")
+async def recommend_avatar(data: AvatarRequest):
+    try:
+        image_decode = base64.decode(data.base)
+        img = Image.open(io.BytesIO(image_decode))
+
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            img.save(tmp.name)
+            image_path = tmp.name
+
+    #      replicate api https://replicate.com/
+        output = replicate.run(
+            "stability-ai/stable-diffusion",
+            input={
+                "image": open(image_path, "rb"),
+                "prompt": f"portrait of person in {data.style} style"
+            }
+        )
+        return {"avatar_url": output}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
 
 # Mount the Gradio app at a specific route
 app = gr.mount_gradio_app(app, demo, path="/ui")

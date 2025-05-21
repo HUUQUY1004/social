@@ -20,15 +20,14 @@ public class StringeeServiceImp implements StringeeService {
 
     @Autowired
     private UserService userService;
-    private StringeeConfig stringeeConfig;
 
     @Override
     public String getToken(String jwt) throws Exception {
         User user = userService.findUserByToken(jwt);
-        System.out.println("userId "+ user.getId());
+        System.out.println("userId caller: "+ user.getId());
         return createAccessToken(
-                stringeeConfig.getSidKey(),
-                stringeeConfig.getResetKey(),
+                StringeeConfig.SID_KEY,
+                StringeeConfig.RESET_KEY,
                 String.valueOf(user.getId())
         );
     }

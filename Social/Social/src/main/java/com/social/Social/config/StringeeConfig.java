@@ -1,18 +1,6 @@
 package com.social.Social.config;
 
-
-import lombok.Data;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-@Component
-@Getter
 public class StringeeConfig {
-
-    @Value("${stringee.sid-key}")
-    private String sidKey;
-
-    @Value("${stringee.reset-key}")
-    private String resetKey;
+    public static   final String SID_KEY = "SK.0.8fjKO4Dmm0co5HPjiVnXHgtaiF5XwMj";
+    public static final  String RESET_KEY = "T3VjVno3cjBraU5SdzY3N0EyQmxiTXNpUE5vQ1JmOWo=";
 }

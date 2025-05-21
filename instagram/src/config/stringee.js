@@ -4,6 +4,6 @@ const STRINGEE_SERVER_ADDRS = [
   "wss://v2.stringee.com:6899/",
 ];
 
-const stringeeClient = new StringeeClient(STRINGEE_SERVER_ADDRS);
-
-export default stringeeClient;
+// export function createStringeeClient() {
+//   return new StringeeClient(STRINGEE_SERVER_ADDRS);
+// }
