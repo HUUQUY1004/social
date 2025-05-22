@@ -28,7 +28,7 @@ public class StringeeServiceImp implements StringeeService {
         return createAccessToken(
                 StringeeConfig.SID_KEY,
                 StringeeConfig.RESET_KEY,
-                String.valueOf(user.getId())
+                String.valueOf(user.getStringeeId().substring(0,9))
         );
     }
 
