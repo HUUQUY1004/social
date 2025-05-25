@@ -48,7 +48,6 @@ function PostHomeItem({ currentUser, item, time }) {
     //  check user is this post ?
     useEffect(()=>{
         setIsLike(item.likedByUsers.some((item)=> item.id === currentUser.id))
-        console.log(`itemId: ${item.id} like :` , isLike);
         
     },[])
     return (

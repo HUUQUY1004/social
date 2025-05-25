@@ -44,6 +44,8 @@ function App() {
       }
     });
     callInstance.on("addlocalstream", (stream) => {
+      console.log("local Stream hehhe: " + stream);
+
       if (localVideo.current) {
         localVideo.current.srcObject = null;
         localVideo.current.srcObject = stream;
@@ -106,7 +108,6 @@ function App() {
 
           console.log("Incoming call received:", incomingCall);
           callRef.current = incomingCall;
-
           setHasInComingCall(true);
           setCallerInfo({
             fromNumber: incomingCall.fromNumber,
@@ -136,8 +137,8 @@ function App() {
   const acceptCall = () => {
     stopRingtone();
     if (callRef.current) {
+      settingCallEvent(callRef.current);
       callRef.current.answer((res) => {
-        settingCallEvent(callRef.current);
         console.log("answer call callback:", JSON.stringify(res));
         if (res.r === 0) {
           setHasInComingCall(false);
