@@ -23,6 +23,7 @@ function PostHomeItem({ currentUser, item, time,  }) {
 
     const className = useContext(ReelContext)
     const emojiRef = useRef();
+    const videoRef = useRef()
     useEffect(() => {
         setIsLike(() => item?.likedByUsers.includes(currentUser.id));
     }, [item]);
@@ -51,7 +52,32 @@ function PostHomeItem({ currentUser, item, time,  }) {
     useEffect(()=>{
         setIsLike(item.likedByUsers.some((item)=> item.id === currentUser.id))
         
+        // IntersectionObserver
+        const observer = new IntersectionObserver(
+            ([entry])=>{
+                if(entry.isIntersecting){
+                    videoRef.current?.play()
+                }
+                else{
+                     videoRef.current?.pause()
+                }
+            },{
+                threshold: 0.6
+            }
+        )
+        const currentVideo = videoRef.current;
+        if(currentVideo){
+            observer.observe(currentVideo)
+        }
+        return ()=>{
+            if(currentVideo){
+                observer.unobserve(currentVideo)
+            }
+        }
+
     },[])
+
+
     return (
         <div className="post-home-item">
             <div className="post-header flex a-center j-between">
@@ -83,7 +109,7 @@ function PostHomeItem({ currentUser, item, time,  }) {
                 <div className={`${className} post-file`}>
                    {
                     item?.reel ? 
-                    <video className='h-full' src={BASE_URL+ item.images[0].imageUrl} autoPlay={true} loop controls />
+                    <video ref={videoRef} className='h-full' src={BASE_URL+ item.images[0].imageUrl}  loop controls />
                      :
                        <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
                    }
