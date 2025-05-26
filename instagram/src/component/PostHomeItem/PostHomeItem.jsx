@@ -1,5 +1,5 @@
 import './posthomeitem.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { images } from '../../source';
 import { AiOutlineEllipsis, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
@@ -12,14 +12,16 @@ import onClickOutSide from '../../hook/useOnClickOutSide.js';
 import { BASE_URL, commentPost, likePost } from '../../action/action.js';
 import SavedAlbum from '../SaveAlbum/Save.jsx';
 import Share from '../share/Share.jsx';
+import { ReelContext } from '../../context/ReelContext.js';
 
-function PostHomeItem({ currentUser, item, time }) {
+function PostHomeItem({ currentUser, item, time,  }) {
     const [showPicker, setShowPicker] = useState(false);
     const [isLike, setIsLike] = useState(false);
     const [value, setValue] = useState('');
     const [isSaved, setIsSaved] = useState(false)
     const [isShare, setIsShare] = useState(false)
 
+    const className = useContext(ReelContext)
     const emojiRef = useRef();
     useEffect(() => {
         setIsLike(() => item?.likedByUsers.includes(currentUser.id));
@@ -78,10 +80,10 @@ function PostHomeItem({ currentUser, item, time }) {
                 </div>
             </div>
             <div className="post-content">
-                <div className="post-file">
+                <div className={`${className} post-file`}>
                    {
                     item?.reel ? 
-                    <video src={BASE_URL+ item.images[0].imageUrl} autoPlay={true} loop controls />
+                    <video className='h-full' src={BASE_URL+ item.images[0].imageUrl} autoPlay={true} loop controls />
                      :
                        <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
                    }

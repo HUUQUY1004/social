@@ -108,6 +108,7 @@ function App() {
 
           console.log("Incoming call received:", incomingCall);
           callRef.current = incomingCall;
+          settingCallEvent(incomingCall);
           setHasInComingCall(true);
           setCallerInfo({
             fromNumber: incomingCall.fromNumber,

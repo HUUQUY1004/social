@@ -101,7 +101,7 @@ const VideoCall = ({ currentChat, isCallVideo = false, onClose }) => {
   const setupCallEventListeners = (callInstance) => {
     // Handle local video stream
     callInstance.on('addlocalstream', (stream) => {
-      console.log('Local stream added');
+      console.log('Local stream added' , stream);
       if (localVideoRef.current && isCallVideo) {
         localVideoRef.current.srcObject = stream;
         localVideoRef.current.muted = true; // Mute local video to prevent echo
