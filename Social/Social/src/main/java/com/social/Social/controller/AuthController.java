@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -117,6 +118,7 @@ public class AuthController {
         newUser.setNickname(userReq.getNickname());
         newUser.setPassword(passwordEncoder.encode(userReq.getPassword()));
         newUser.setUsername(userReq.getUsername());
+        newUser.setStringeeId(UUID.randomUUID().toString());
 
         User savedUser = userRepository.save(newUser);
 

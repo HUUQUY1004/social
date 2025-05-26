@@ -1,8 +1,6 @@
-import { faFaceAngry, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { images } from "../../source";
 import Intro from "../../component/Intro/Intro";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './login.scss'
 import Footer from "../../component/Footer/Footer";
 import { useEffect, useState } from "react";

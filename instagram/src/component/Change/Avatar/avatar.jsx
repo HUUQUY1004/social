@@ -35,7 +35,19 @@ function ChangeAvatar({onOpen}) {
                 <p className="description-content text-center">Chọn ảnh để làm ảnh đại diện mới của mình.</p>
 
                 { 
-                    image && <img src={image} className="h-[300px] w-auto object-contain mt-5 "/>
+                    image && 
+                    (
+                        <>
+                            <img src={image} className="h-[300px] w-auto object-contain mt-5 "/>
+    
+                            {/* More option */}
+                            <div className="mt-5">
+                                <p className="text-xs">Lựa chọn khác dựa vào ảnh của bạn</p>
+                                
+                            </div>
+                        </>
+                    )
+                    
                 }
                 <div className="description-input flex flex-col gap-4 mt-5">
                     {

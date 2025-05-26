@@ -9,4 +9,5 @@ export const images = {
   noAvatar: require("./no-avatar.jpg"),
   logoLoading: require("./logoLoading.png"),
   loading: require("./loading.png"),
+  coming: require("./coming.mp3"),
 };

@@ -1,5 +1,5 @@
 import './posthomeitem.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { images } from '../../source';
 import { AiOutlineEllipsis, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
@@ -12,15 +12,18 @@ import onClickOutSide from '../../hook/useOnClickOutSide.js';
 import { BASE_URL, commentPost, likePost } from '../../action/action.js';
 import SavedAlbum from '../SaveAlbum/Save.jsx';
 import Share from '../share/Share.jsx';
+import { ReelContext } from '../../context/ReelContext.js';
 
-function PostHomeItem({ currentUser, item, time }) {
+function PostHomeItem({ currentUser, item, time,  }) {
     const [showPicker, setShowPicker] = useState(false);
     const [isLike, setIsLike] = useState(false);
     const [value, setValue] = useState('');
     const [isSaved, setIsSaved] = useState(false)
     const [isShare, setIsShare] = useState(false)
 
+    const className = useContext(ReelContext)
     const emojiRef = useRef();
+    const videoRef = useRef()
     useEffect(() => {
         setIsLike(() => item?.likedByUsers.includes(currentUser.id));
     }, [item]);
@@ -48,9 +51,33 @@ function PostHomeItem({ currentUser, item, time }) {
     //  check user is this post ?
     useEffect(()=>{
         setIsLike(item.likedByUsers.some((item)=> item.id === currentUser.id))
-        console.log(`itemId: ${item.id} like :` , isLike);
         
+        // IntersectionObserver
+        const observer = new IntersectionObserver(
+            ([entry])=>{
+                if(entry.isIntersecting){
+                    videoRef.current?.play()
+                }
+                else{
+                     videoRef.current?.pause()
+                }
+            },{
+                threshold: 0.6
+            }
+        )
+        const currentVideo = videoRef.current;
+        if(currentVideo){
+            observer.observe(currentVideo)
+        }
+        return ()=>{
+            if(currentVideo){
+                observer.unobserve(currentVideo)
+            }
+        }
+
     },[])
+
+
     return (
         <div className="post-home-item">
             <div className="post-header flex a-center j-between">
@@ -79,10 +106,10 @@ function PostHomeItem({ currentUser, item, time }) {
                 </div>
             </div>
             <div className="post-content">
-                <div className="post-file">
+                <div className={`${className} post-file`}>
                    {
                     item?.reel ? 
-                    <video src={BASE_URL+ item.images[0].imageUrl} autoPlay={true} loop controls />
+                    <video ref={videoRef} className='h-full' src={BASE_URL+ item.images[0].imageUrl}  loop controls />
                      :
                        <img src={BASE_URL+ item.images[0].imageUrl} alt="no" />
                    }
