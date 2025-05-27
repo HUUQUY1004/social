@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import './home.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../component/Loading/loading';
-import Suggest from '../../component/Suggest/Suggest';
-import axios from 'axios';
 import { images } from '../../source';
 import PostHome from '../../component/PostHome/PostHome';
 import ConvertAccount from '../../component/CovertAccount/ConvertAccount';

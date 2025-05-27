@@ -25,16 +25,11 @@ import { useRef, useState } from 'react';
 import { images } from '../../source';
 import Popup from '../Popup/Popup';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
-import Post from '../Post/Post';
-import Search from '../Search/Search';
-import ConvertAccount from '../CovertAccount/ConvertAccount';
-import NotifyComponent from '../Notify/Notify.compoment';
 import { BASE_URL } from '../../action/action';
 import { useUser } from '../../store/useStore';
 
 function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
     const {currentUser} = useUser()
-    
     const Menu = [
         {
             name: 'Trang chủ',
@@ -194,20 +189,7 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
                 <h4 onClick={() => setIsShowPopup((prev) => !prev)}>Xem thêm</h4>
                 {isShowPopup && <Popup popup={popUp} onClick={handleClinkPopup} />}
             </div>
-            {/* {createPost && <Post onClose={setCreatePost} user={currentUser} />}
-            {isSearch && (
-                <div ref={searchRef}>
-                    <Search />
-                </div>
-            )}
-            {
-                isNotify && (
-                    <div ref={notifyRef}>
-                        <NotifyComponent/>
-                    </div>
-                )
-            }
-            {isConvert && <ConvertAccount onClose={setIsConvert} />} */}
+            
         </div>
     );
 }
