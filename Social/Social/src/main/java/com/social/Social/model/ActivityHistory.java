@@ -23,7 +23,9 @@ public class ActivityHistory {
 
     private String content;
 
-    private  boolean isDelete;
+    private  boolean isDelete = false;
+
+    private String link;
 
     private LocalDateTime timestamp;
 
