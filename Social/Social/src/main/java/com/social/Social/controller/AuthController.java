@@ -1,5 +1,7 @@
 package com.social.Social.controller;
 
+import com.social.Social.model.ActivityHistory;
+import com.social.Social.model.EnumActivity;
 import com.social.Social.model.User;
 import com.social.Social.request.ChangePassword;
 import com.social.Social.request.FindUserByEmailRequest;
@@ -8,11 +10,10 @@ import com.social.Social.request.VerifyOTPRequest;
 import com.social.Social.response.AuthResponse;
 import com.social.Social.response.Response;
 import com.social.Social.responsitory.UserRepository;
-import com.social.Social.service.CustomerUserDetailsService;
+import com.social.Social.service.*;
 import com.social.Social.config.JwtProvider;
-import com.social.Social.service.OTPService;
-import com.social.Social.service.SendMailService;
-import com.social.Social.service.UserService;
+import com.social.Social.service.implemenent.InforDeviceImplement;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,11 @@ public class AuthController {
 
     @Autowired
     private OTPService otpService;
+    @Autowired
+    private ActivityHistoryService activityHistoryService;
+
+    @Autowired
+    private InforDeviceImplement inforDeviceImplement;
 
     @PostMapping("/find-email")
     public ResponseEntity<Response> findUserByEmail(@RequestBody FindUserByEmailRequest findUserByEmailRequest) throws Exception {
@@ -134,7 +140,7 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest loginRequest, HttpServletRequest request ) {
         AuthResponse authResponse = new AuthResponse();
        try{
            Authentication authentication = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
@@ -142,6 +148,18 @@ public class AuthController {
 //           AuthResponse authResponse = new AuthResponse();
            authResponse.setJwt(jwt);
            authResponse.setMessage("Login success");
+
+
+//           Xác định
+           String device = inforDeviceImplement.getDeviceInfo(request);
+
+           String location = inforDeviceImplement.getLocationInfo(request);
+
+           ActivityHistory activityHistory = new ActivityHistory().builder()
+                   .isDelete(false).
+                   content("Bạn đã đăng nhập vào tại thiết bị " + device +" tại : "+ location).activityType(EnumActivity.LOGIN).
+                   build();
+           activityHistoryService.createActivityHistory(activityHistory);
            return  new ResponseEntity<>(authResponse, HttpStatus.OK);
        }
        catch (UsernameNotFoundException e) {
@@ -151,6 +169,8 @@ public class AuthController {
        } catch (BadCredentialsException e) {
            authResponse.setMessage(e.getMessage());
            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+       } catch (Exception e) {
+           throw new RuntimeException(e);
        }
 
 
