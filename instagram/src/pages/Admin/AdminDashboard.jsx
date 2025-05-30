@@ -24,13 +24,27 @@ function AdminDashboard() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
+        <div
+          className="app"
+          style={{
+            display: "flex",         
+            height: "100vh",         
+            overflow: "auto",      
+          }}
+        >
           <Sidebar isSidebar={isSidebar} />
-          <main className="content">
+          
+          <main
+            className="content"
+            style={{
+              flexGrow: 1,
+              overflow: "auto",
+            }}
+          >
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/team" element={<Team />} />
+              <Route path="/usersManagement" element={<Team />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />
@@ -43,6 +57,7 @@ function AdminDashboard() {
             </Routes>
           </main>
         </div>
+
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

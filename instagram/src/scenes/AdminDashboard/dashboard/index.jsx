@@ -56,7 +56,7 @@ const Dashboard = () => {
         >
           <StatBox
             title="12,361"
-            subtitle="Emails Sent"
+            subtitle="Message Sent"
             progress="0.75"
             increase="+14%"
             icon={
@@ -94,7 +94,7 @@ const Dashboard = () => {
         >
           <StatBox
             title="32,441"
-            subtitle="New Clients"
+            subtitle="New Users"
             progress="0.30"
             increase="+5%"
             icon={

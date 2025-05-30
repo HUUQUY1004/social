@@ -84,6 +84,7 @@ export const router = [
   },
   {
     Component: AdminDashboard,
-    path: "/admin",
+    path: "/admin/*",
+    layout: null,
   },
 ];
