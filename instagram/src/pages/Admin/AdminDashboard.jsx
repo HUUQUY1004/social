@@ -1,0 +1,66 @@
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Topbar from "../../scenes/AdminDashboard/global/Topbar";
+import Sidebar from "../../scenes/AdminDashboard/global/Sidebar";
+import Dashboard from "../../scenes/AdminDashboard/dashboard";
+import Team from "../../scenes/AdminDashboard/team";
+import Invoices from "../../scenes/AdminDashboard/invoices";
+import Contacts from "../../scenes/AdminDashboard/contacts";
+import Bar from "../../scenes/AdminDashboard/bar";
+import Form from "../../scenes/AdminDashboard/form";
+import Line from "../../scenes/AdminDashboard/line";
+import Pie from "../../scenes/AdminDashboard/pie";
+import FAQ from "../../scenes/AdminDashboard/faq";
+import Geography from "../../scenes/AdminDashboard/geography";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ColorModeContext, useMode } from "./theme";
+import Calendar from "../../scenes/AdminDashboard/calendar/calendar";
+
+function AdminDashboard() {
+  const [theme, colorMode] = useMode();
+  const [isSidebar, setIsSidebar] = useState(true);
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div
+          className="app"
+          style={{
+            display: "flex",         
+            height: "100vh",         
+            overflow: "auto",      
+          }}
+        >
+          <Sidebar isSidebar={isSidebar} />
+          
+          <main
+            className="content"
+            style={{
+              flexGrow: 1,
+              overflow: "auto",
+            }}
+          >
+            <Topbar setIsSidebar={setIsSidebar} />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/usersManagement" element={<Team />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="/invoices" element={<Invoices />} />
+              <Route path="/form" element={<Form />} />
+              <Route path="/bar" element={<Bar />} />
+              <Route path="/pie" element={<Pie />} />
+              <Route path="/line" element={<Line />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/geography" element={<Geography />} />
+            </Routes>
+          </main>
+        </div>
+
+      </ThemeProvider>
+    </ColorModeContext.Provider>
+  );
+}
+
+export default AdminDashboard;

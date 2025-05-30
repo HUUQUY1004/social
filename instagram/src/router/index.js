@@ -12,6 +12,7 @@ import Register from "../pages/Register/register";
 import FindAccount from "../pages/ResetPassword/FindAccount";
 import Suggestion from "../pages/Suggesstion/Suggesstion";
 import TrashPost from "../pages/TrashPost/TrashPost";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
 export const router = [
   {
     Component: Home,
@@ -79,6 +80,11 @@ export const router = [
   {
     Component: ChangePassword,
     path: "/account/changePassword",
+    layout: null,
+  },
+  {
+    Component: AdminDashboard,
+    path: "/admin/*",
     layout: null,
   },
 ];
