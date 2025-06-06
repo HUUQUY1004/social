@@ -68,7 +68,7 @@ public class AlbumController {
                 .link("p/" + albumRequest.getPostId()).
                 isDelete(false).
                 build();
-
+        activityHistoryService.createActivityHistory(activityHistory);
         response.setMessage("Success");
         response.setStatus(200);
         return  ResponseEntity.ok(response);
@@ -97,6 +97,7 @@ public class AlbumController {
                 content("Bạn đã xóa một album.").
                 activityType(EnumActivity.PROFILE).
                 build();
+        activityHistoryService.createActivityHistory(activityHistory);
         response.setStatus(200);
         response.setMessage("Success");
         return  ResponseEntity.ok(response);

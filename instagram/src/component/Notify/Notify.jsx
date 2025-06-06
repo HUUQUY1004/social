@@ -1,8 +1,10 @@
 import { useRef } from 'react';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
 import './notify.scss';
+import { useTranslation } from 'react-i18next';
 function Notify({ title, content, onCloseNotify, onClose, setImg }) {
     const myRef = useRef();
+    const {t} = useTranslation()
     useOnClickOutside(myRef, () => onCloseNotify(false));
     return (
         <div className="notify__wrapper flex a-center j-center">
@@ -18,10 +20,10 @@ function Notify({ title, content, onCloseNotify, onClose, setImg }) {
                             onClose(false);
                         }}
                     >
-                        Bỏ
+                        {t("accept")}
                     </button>
                     <button className="refuse" onClick={() => onCloseNotify(false)}>
-                        Hủy
+                        {t("cancel")}
                     </button>
                 </div>
             </div>

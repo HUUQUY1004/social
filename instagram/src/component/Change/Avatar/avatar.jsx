@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import { changeAvatar } from "../../../action/action";
 import useOnClickOutside from "../../../hook/useOnClickOutSide";
+import { useTranslation } from "react-i18next";
 
 function ChangeAvatar({onOpen}) {
+    const {t} = useTranslation()
         const myRef = useRef();
         const [image, setImage] = useState(undefined)
         const [file,setFile] = useState(undefined)
@@ -31,8 +33,8 @@ function ChangeAvatar({onOpen}) {
     return ( 
         <div className="description__wrapper flex a-center j-center fixed top-0 right-0 bottom-0 left-0 z-1 bg-slate-100 bg-opacity-90 ">
             <div className="description-inner flex flex-col  bg-white w-[500px] rounded-md py-5 px-10" ref={myRef}>
-                <h3 className="description-title text font-bold text-center text-xl ">Thay đổi avatar</h3>
-                <p className="description-content text-center">Chọn ảnh để làm ảnh đại diện mới của mình.</p>
+                <h3 className="description-title text font-bold text-center text-xl ">{t("change_avatar")}</h3>
+                <p className="description-content text-center">{t("change_avatar_description")}</p>
 
                 { 
                     image && 
@@ -41,10 +43,10 @@ function ChangeAvatar({onOpen}) {
                             <img src={image} className="h-[300px] w-auto object-contain mt-5 "/>
     
                             {/* More option */}
-                            <div className="mt-5">
+                            {/* <div className="mt-5">
                                 <p className="text-xs">Lựa chọn khác dựa vào ảnh của bạn</p>
                                 
-                            </div>
+                            </div> */}
                         </>
                     )
                     
@@ -52,10 +54,10 @@ function ChangeAvatar({onOpen}) {
                 <div className="description-input flex flex-col gap-4 mt-5">
                     {
                         image ? <button onClick={handleUploadAvatar} className="change w-full bg-blue-500 text-white py-1 rounded-md" >
-                        Cập nhật
+                        {t("update")}
                     </button> :
                     <button onClick={(e) => handleFileUpload(e)} className="change w-full bg-blue-500 text-white py-1 rounded-md" >
-                    Chọn ảnh
+                    {t("choose_image")}
                 </button>
                     }
                     <input

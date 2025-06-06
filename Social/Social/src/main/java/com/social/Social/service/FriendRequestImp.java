@@ -1,9 +1,7 @@
 package com.social.Social.service;
 
 import com.social.Social.DTO.FriendRequestDTO;
-import com.social.Social.model.FriendRequest;
-import com.social.Social.model.RequestStatus;
-import com.social.Social.model.User;
+import com.social.Social.model.*;
 import com.social.Social.responsitory.FriendRequestRepository;
 import com.social.Social.responsitory.UserRepository;
 import jakarta.persistence.Tuple;
@@ -25,6 +23,10 @@ public class FriendRequestImp implements  FriendService{
     private FriendRequestRepository friendRequestRepository;
     @Autowired
     private UserService userService;
+
+
+    @Autowired
+    private ActivityHistoryService activityHistoryService;
     @Override
     public FriendRequest sendFriendRequest(String jwt, Long receiverId) throws Exception {
 
@@ -69,6 +71,14 @@ public class FriendRequestImp implements  FriendService{
             receiver.setFriends(new ArrayList<>());
         }
 
+//         Activity
+        ActivityHistory activityHistory = new ActivityHistory().builder().
+                content("Bạn đã chất nhận lời mời của "+ sender.getUsername())
+                .activityType(EnumActivity.FRIENDS)
+                .isDelete(false)
+                .link(String.valueOf(sender.getId())).
+                build();
+
         sender.getFriends().add(receiver);
         receiver.getFriends().add(sender);
         userRepository.save(sender);
@@ -108,6 +118,15 @@ public class FriendRequestImp implements  FriendService{
         }
         user.getFriends().remove(deleteUser);
         deleteUser.getFriends().remove(user);
+
+//        Activity
+        ActivityHistory activityHistory =  new ActivityHistory().builder().
+        content("Bạn đã xóa " + deleteUser.getUsername() + " ra khỏi danh sách bạn bè.")
+                .activityType(EnumActivity.FRIENDS)
+                        .isDelete(false).
+                link(String.valueOf(deleteUser.getId())).
+                build();
+
         userRepository.save(user);
         userRepository.save(deleteUser);
 

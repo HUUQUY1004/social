@@ -14,15 +14,15 @@ import Post from '../../component/Post/Post';
 import ModalSaving from '../../component/Modal/ModalSaving';
 import PostList from '../../component/PostList/PostList';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import PopupWrapper from '../../component/PopupWrapper/PopupWrapper';
 import { useParams } from 'react-router-dom';
-import { following, unFollowing } from '../../component/func/commonFunc';
-import { BASE_URL, getAllAlbum, getMyProfile, getNumberOfFriends, getPostForUserId, getQuantityPost, getUserById } from '../../action/action';
+import { BASE_URL, getAllAlbum, getNumberOfFriends, getPostForUserId, getQuantityPost, getUserById } from '../../action/action';
 import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 import { useUser } from '../../store/useStore';
 import Story from '../../component/Remarkable/Story';
+import { useTranslation } from 'react-i18next';
 function Profile() {
+    const {t} = useTranslation()
     const {userId} = useParams()
     const [dataUser, setDataUser] = useState(undefined);
     const {currentUser} = useUser();
@@ -37,6 +37,7 @@ function Profile() {
     const [quantityFriends, setQuantityFriends] = useState(0);
     const [quantityPost, setQuantityPost] = useState(0)
     const [albums,setAlbums] = useState([])
+
     
     // ref flow and unflow
     const flowRef = useRef();
@@ -92,15 +93,15 @@ function Profile() {
     }
     const nav = [
         {
-            name: 'BÀI VIẾT',
+            name: t("post"),
             icon: <AiOutlineTable />,
         },
         {
-            name: currentUser?.id === dataUser?.id ? 'ĐÃ LƯU' : 'REELS',
+            name: currentUser?.id === dataUser?.id ? t("saved") : 'REELS',
             icon: <BsBookmark />,
         },
         {
-            name: 'ĐƯỢC GẮN THẺ',
+            name: t("tag"),
             icon: <AiOutlineTags />,
         },
     ];
@@ -120,7 +121,7 @@ function Profile() {
                                 <h3 className="username">{dataUser?.username}</h3>
                                 {currentUser?.id === dataUser?.id ? (
                                     <div className="flex a-center ">
-                                        <button className="br-8 btn">Chỉnh sửa trang cá nhân</button>
+                                        <button className="br-8 btn">{t("edit_profile")}</button>
                                         <Link
                                             to={`/${currentUser?.id}/trash`}
                                             className="icon"
@@ -149,12 +150,14 @@ function Profile() {
                             <div className="center flex">
                                 <h3 className="count-post">
                                     <span>{quantityPost}</span>
-                                    bài viết
+                                    {t('post')}
                                 </h3>
                                 <h3 className="count_followers">
                                     <Link to={"/friends"}>
                                         <span>{quantityFriends}</span>
-                                        người bạn
+                                        {
+                                            t("friend")
+                                        }
                                     </Link>
                                 </h3>
                                 
@@ -192,12 +195,14 @@ function Profile() {
                                                     <div className="icon flex a-center j-center">
                                                         <AiOutlineCamera />
                                                     </div>
-                                                    <h1 className="title">Chia sẻ ảnh</h1>
+                                                    <h1 className="title">{t("share_image")}</h1>
                                                     <p className="description">
-                                                        Khi bạn chia sẻ ảnh, ảnh sẽ xuất hiện trên trang cá nhân của bạn{' '}
+                                                        {t("share_image_description")}{' '}
                                                     </p>
                                                     <p className="share-fist" onClick={() => setShowPost(true)}>
-                                                        Chia sẻ ảnh đầu tiên của bạn
+                                                        {
+                                                            t("first_image")
+                                                        }
                                                     </p>
                                                     <Link
                                                         className="trash flex a-center"
@@ -206,7 +211,7 @@ function Profile() {
                                                         <span>
                                                             <FiTrash2 />
                                                         </span>
-                                                        <p>Thùng rác</p>
+                                                        <p>{t("trash_can")}</p>
                                                     </Link>
                                                 </div>
                                             ) : (
@@ -216,7 +221,7 @@ function Profile() {
                                     ) : (
                                         <div>
                                             {postList?.length === 0 ? (
-                                                <div>Không có bài đăng</div>
+                                                <div>{t("no_post")}</div>
                                             ) : (
                                                 <PostList data={postList} />
                                             )}
@@ -230,16 +235,16 @@ function Profile() {
                                 <div className="content-ui">
                                     <div className="saving-empty flex flex-column">
                                         <div className="add-new-album flex j-between">
-                                            <div className="text">Chỉ mình bạn có thể xem mục mình đã lưu</div>
+                                            <div className="text">{t("collection_description")}</div>
                                             <div className="new-album" onClick={() => setShowNewSaving(true)}>
-                                                + Bộ sưu tập
+                                                + {t("new_collect")}
                                             </div>
                                         </div>
                                     </div>
                                     {albums?.length > 0 ? (
                                         <div className=" album flex justify-start gap-4 wrap">
                                             <div className="item-album">
-                                                <h4 className="name">Tất cả bài viết</h4>
+                                                <h4 className="name">{t("all_post")}</h4>
                                             </div>
                                             {albums?.map((item, index) => {
                                                 return (
@@ -254,10 +259,9 @@ function Profile() {
                                             <div className="icon flex a-center j-center">
                                                 <BsBookmark />
                                             </div>
-                                            <h1 className="title">Lưu</h1>
+                                            <h1 className="title">{t("save")}</h1>
                                             <p className="description">
-                                                Lưu ảnh và video mà bạn muốn xem lại. Sẽ không có ai được thông báo và
-                                                chỉ mình bạn có thể xem những gì mình đã lưu.
+                                            {t("save_description")}
                                             </p>
                                         </div>
                                     )}
@@ -271,9 +275,9 @@ function Profile() {
                                         <div className="icon flex a-center j-center">
                                             <AiOutlineTags />
                                         </div>
-                                        <h1 className="title">Ảnh có mặt bạn</h1>
+                                        <h1 className="title">{t("photo_in_you")}</h1>
                                         <p className="description">
-                                            Khi mọi người gắn thẻ bạn trong ảnh, ảnh sẽ xuất hiện tại đây.
+                                            {t("photo_in_you_description")}
                                         </p>
                                     </div>
                                 </div>

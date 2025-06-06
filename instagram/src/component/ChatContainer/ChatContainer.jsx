@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faVideo } from '@fortawesome/free-solid-svg-icons';
 import VideoCall from '../Call/call';
 import PopupWrapper from '../PopupWrapper/PopupWrapper';
-function ChatContainer({ currentChat, socket }) {
+function ChatContainer({ currentChat, socket, t }) {
     const [messages, setMessages] = useState([]);
     const scrollRef = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -123,7 +123,7 @@ function ChatContainer({ currentChat, socket }) {
                         <h3>{currentChat.name}</h3>
                         <p>{currentChat.username} · Instagram</p>
                         <Link to={`/${currentChat.username}`} className="br-8">
-                            Xem trang cá nhân
+                            {t("view_profile")}
                         </Link>
                     </div>
                 </div>

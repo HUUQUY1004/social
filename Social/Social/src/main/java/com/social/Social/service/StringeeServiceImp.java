@@ -72,7 +72,8 @@ public static String createAccessToken(String sid, String base64Key, String user
             .withClaim("jti", sid + "-" + currentTime)
             .withClaim("iss", sid)
             .withClaim("userId", userId)
-            .withExpiresAt(new Date(expireTime * 1000)) // convert to milliseconds
+            .withExpiresAt(new Date(expireTime
+                    * 1000)) // convert to milliseconds
             .sign(algorithmHS);
 
     return token;

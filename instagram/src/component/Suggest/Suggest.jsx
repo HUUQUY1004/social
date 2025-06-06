@@ -3,7 +3,9 @@ import AccountItem from '../AccountItem/AccountItem';
 import './suggest.scss';
 import { following } from '../func/commonFunc';
 import { addFriend } from '../../action/action';
+import { useTranslation } from 'react-i18next';
 function Suggest({ suggestUser, currentUser }) {
+    const {t} = useTranslation()
     const handlefollowing = async(userId) => {
         console.log("id" , userId);
         
@@ -12,7 +14,7 @@ function Suggest({ suggestUser, currentUser }) {
     return (
         <div className="suggest flex j-center">
             <div className="inner ">
-                <h4 className="suggest-name">Gợi ý cho bạn</h4>
+                <h4 className="suggest-name">{t("suggestion_for_you")}</h4>
                 <div className="suggest-account">
                     {suggestUser?.map((user, index) => (
                         <AccountItem key={index} data={user} following={handlefollowing} isFolowing={true} />

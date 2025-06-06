@@ -23,6 +23,8 @@ public class ActivityHistory {
 
     private String content;
 
+    @Column
+    @Builder.Default
     private  boolean isDelete = false;
 
     private String link;

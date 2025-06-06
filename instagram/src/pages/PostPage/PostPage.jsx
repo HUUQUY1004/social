@@ -17,7 +17,9 @@ import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 import SavedAlbum from '../../component/SaveAlbum/Save';
 import { data } from 'autoprefixer';
+import { useTranslation } from 'react-i18next';
 function PostPage() {
+    const {t} = useTranslation()
     const navigate = useNavigate();
 
     const ref = useRef();
@@ -128,10 +130,10 @@ function PostPage() {
                     <div className="content-comment">
                         {
                             post?.comments.length ===0 ? 
-                            <p className='w-full h-full flex justify-center items-center text-sa'>Hãy là người đầu tiên bình luận</p>: 
+                            <p className='w-full h-full flex justify-center items-center text-sa'>{t("fist_comment")}</p>: 
                             
                        post?.comments.map((item, index) => {
-                            const time = times(item.createdAt);
+                            const time = times(item.createdAt, t);
 
                             return (
                                 <div className="item-comment flex a-center" key={index}>
@@ -163,29 +165,29 @@ function PostPage() {
                                     <div className='flex'>
                                         <span
                                             className="like"
-                                            title={isLike ? 'Bỏ thích' : 'Thích'}
+                                            title={isLike ? t("dislike") : t("like")}
                                             onClick={() => handleLike(post.id)}
                                         >
                                             {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
                                         </span>
-                                        <span className="comment" title="Bình luận" onClick={() => divRef.current.focus()}>
+                                        <span className="comment" title={t("comment")} onClick={() => divRef.current.focus()}>
                                             <FaRegComment />
                                         </span>
-                                        <span onClick={()=> setIsShare(true)} className="share" title="Chia sẻ">
+                                        <span onClick={()=> setIsShare(true)} className="share" title={t("share")}>
                                             <IoMdPaperPlane />
                                         </span>
                                     </div>
                                     
                                 </div>
                                 <div className="right ">
-                                    <span onClick={()=>setIsSaved(true)} className="save" title="Lưu">
+                                    <span onClick={()=>setIsSaved(true)} className="save" title={t("save")}>
                                         <BiBookmark />
                                     </span>
                                 </div>
                             </div>
                             <div className="like-post-and-time">
-                                <h4>{`${post?.likedByUsers?.length} người thích`}</h4>
-                                <p>{times(post?.createdAt)}</p>
+                                <h4>{`${post?.likedByUsers?.length} ${t("person_likes")}`}</h4>
+                                <p>{times(post?.createdAt, t)}</p>
                             </div>
                         </div>
                         <div className="comment-post flex a-center j-between">
@@ -227,11 +229,11 @@ function PostPage() {
                             {post?.user?.id === currentUser.id ? (
                                 <ul>
                                     <li className="delete" ref={liRef} onClick={() => handleDeletePost()}>
-                                        {post?.delete ? 'Khôi phục' : 'Xóa'}
+                                        {post?.delete ? t("restore") : t("delete")}
                                     </li>
-                                    <li>{post?.delete ? 'Tắt tính năng bình luận' : 'Bật tính năng bình luận'}</li>
-                                    <li>{post?.isLike ? 'Ẩn lượt thích' : 'Bật lượt thích'}</li>
-                                    <li>Thay đổi đối tượng xem bài viết</li>
+                                    <li>{post?.delete ? t("turn_off_comment") : t("turn_on_comment") }</li>
+                                    <li>{post?.isLike ? t("turn_off_like") :  t("turn_on_like")}</li>
+                                    <li>{t("change_audience")}</li>
                                 </ul>
                             ) : (
                                 <ul>

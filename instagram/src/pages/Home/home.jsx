@@ -7,7 +7,9 @@ import PostHome from '../../component/PostHome/PostHome';
 import ConvertAccount from '../../component/CovertAccount/ConvertAccount';
 import {useUser} from '../../store/useStore'
 import { getPostHome } from '../../action/action';
+import { useTranslation } from 'react-i18next';
 function Home() {
+    const {t} = useTranslation()
     const [isLoading, setIsLoading] = useState(false);
     const [postList, setPostList] = useState(undefined);
     const {currentUser} = useUser()
@@ -54,14 +56,14 @@ function Home() {
                                         </div>
                                     </div>
                                     <p className="option" onClick={() => setIsConvert(true)}>
-                                        Chuyển
+                                       {t("switch_account")}
                                     </p>
                                 </div>
                             </div>
                             <div className="user-center">
                                 <div className="top flex j-between a-center">
-                                    <h5>Gợi ý cho bạn</h5>
-                                    <Link>Xem tất cả</Link>
+                                    <h5>{t("suggestion_for_you")}</h5>
+                                    <Link>{t("see_all")}</Link>
                                 </div>
                                 <div className="suggest-user">
                                     {null?.map((item, key) => {
@@ -89,16 +91,16 @@ function Home() {
                             </div>
                             <div className="user-bottom">
                                 <div className="link flex wrap">
-                                    <Link to={'/'}>Giới thiệu</Link>
-                                    <Link to={'/'}>Trợ giúp</Link>
-                                    <Link to={'/'}>Báo chí</Link>
+                                    <Link to={'/'}>{t("about")}</Link>
+                                    <Link to={'/'}>{t("help")}</Link>
+                                    <Link to={'/'}>{t("press")}</Link>
                                     <Link to={'/'}>API</Link>
-                                    <Link to={'/'}>Việc làm</Link>
-                                    <Link to={'/'}>Quyền riêng tư</Link>
-                                    <Link to={'/'}>Điều khoản</Link>
-                                    <Link to={'/'}>Vị trí</Link>
-                                    <Link to={'/'}>Ngôn ngữ</Link>
-                                    <Link to={'/'}>Meta đã xác minh</Link>
+                                    <Link to={'/'}>{t('job')}</Link>
+                                    <Link to={'/'}>{t('privacy')}</Link>
+                                    <Link to={'/'}>{t("term")}</Link>
+                                    <Link to={'/'}>{t("location")}</Link>
+                                    <Link to={'/'}>{t('language')}</Link>
+                                    <Link to={'/'}>{t("verified_meta")}</Link>
                                 </div>
                             </div>
                         </div>

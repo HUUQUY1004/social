@@ -3,8 +3,10 @@ import TranSlate from "../Translate/Translate";
 import LoaderComponent from "../Loader/Loader";
 import { getNotify } from "../../action/action";
 import  { Link}from 'react-router-dom'
+import { useTranslation } from "react-i18next";
 
 function NotifyComponent() {
+    const {t} = useTranslation()
     const [notify, setNotify] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
     useEffect(()=>{
@@ -19,7 +21,7 @@ function NotifyComponent() {
     return ( 
         <TranSlate minWidth={0} maxWidth={'400px'}>
             <div className="mt-3 px-3">
-                <h2 className="font-semibold mb-4">Thông báo</h2>
+                <h2 className="font-semibold mb-4">{t("notifications")}</h2>
                 <div>
                     {
                         isLoading ? 

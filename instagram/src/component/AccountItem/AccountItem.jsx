@@ -3,20 +3,22 @@ import { acceptFriend, BASE_URL, rejectFriend } from '../../action/action';
 import { images } from '../../source';
 import './accountItem.scss';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
+import { useTranslation } from 'react-i18next';
 function AccountItem({ idRequest = 0,data, following, isFolowing, popular = true, feedback= false }) {
-    const [titleAcp , setTitleAcp] = useState("Chấp nhận")
-    const [titleReject , setTitleReject] = useState("Từ chối")
+    const {t} = useTranslation()
+    const [titleAcp , setTitleAcp] = useState(t("accept"))
+    const [titleReject , setTitleReject] = useState(t("reject"))
     const acceptInvitation = async (id) => {
         const data = await acceptFriend(id);
         if(data.status === 200){
-        setTitleAcp("Đã chấp nhận ")
+        setTitleAcp(t("accepted"))
         }
         
     }
     const rejectInvitation = async (id) => {
         const data = await rejectFriend(id);
         if(data.status === 200){
-        setTitleReject("Đã từ chối")
+        setTitleReject(t("rejected"))
         }
         
     }
@@ -31,13 +33,15 @@ function AccountItem({ idRequest = 0,data, following, isFolowing, popular = true
                         {data.username} {data?.ticked ? <BsFillPatchCheckFill className="tick" /> : ''}
                     </h4>
                     <p className="name">{data.name}</p>
-                    {popular && <span className="description">Phổ biến</span>}
+                    {popular && <span className="description">{t("popular")}</span>}
                 </div>
             </div>
             {isFolowing && (
                 <div className="right">
                     <button onClick={()=>following(data.id)} className="br-8 btn font-semibold">
-                        Kết bạn
+                        {
+                            t("make_friend")
+                        }
                     </button>
                 </div>
             )}

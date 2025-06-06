@@ -2,14 +2,16 @@ import { Link } from "react-router-dom";
 import './footer.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopyright } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 function Footer() {
+    const {t} = useTranslation()
     const intro = [
         {
             name: 'Meta',
             link:''
         },
         {
-            name: 'Giới thiệu',
+            name: t("about"),
             link:''
         },
         {
@@ -17,11 +19,11 @@ function Footer() {
             link:''
         },
         {
-            name: 'Viêc làm',
+            name: t("job"),
             link:''
         },
         {
-            name:'Trợ giúp',
+            name:t("help"),
             link:''
         },
         {
@@ -29,19 +31,19 @@ function Footer() {
             link:''
         },
         {
-           name: 'Quyền riêng tư',
+           name: t("privacy"),
            link:''
         },
         {
-            name:'Điều khoản',
+            name:t("term"),
             link:''
         },
         {
-            name: 'Tài khoản lien quan nhất',
+            name: t("most_relevant_account"),
             link:''
         },
         {
-            name: 'Vị trí',
+            name: t("location"),
             link:''
         },
         {
@@ -49,11 +51,11 @@ function Footer() {
             link:''
         },
         {
-            name: 'Thông tin người liên hệ & người không phải người dùng',
+            name: t("info_and_no_account"),
             link:''
         },
         {
-            name: 'Meta đã xác minh',
+            name: t("verified_meta"),
             link:''
         }
     ]
