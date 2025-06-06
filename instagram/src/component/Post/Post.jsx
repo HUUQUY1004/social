@@ -14,6 +14,7 @@ import Notify from '../Notify/Notify';
 import { images } from '../../source';
 import Picker from 'emoji-picker-react';
 import { createPost, sendImageToBLIP } from '../../action/action';
+import { useTranslation } from 'react-i18next';
 const editSize = [
     {
         name: 'Gốc',
@@ -33,6 +34,7 @@ const editSize = [
     },
 ];
 function Post({ onClose, user }) {
+    const {t} = useTranslation()
     const innerRef = useRef();
     const inputRef = useRef();
     const divRef = useRef();
@@ -168,7 +170,7 @@ function Post({ onClose, user }) {
                             <AiOutlineArrowLeft />
                         </button>
                     )}
-                    <h3 className="title">{img || video ? 'Cắt' : 'Tạo bài viết mới '}</h3>
+                    <h3 className="title">{img || video ? t("cut") : t("create_new_post")}</h3>
                     {(img || video) && (
                         <h4
                             className="continue"
@@ -179,7 +181,7 @@ function Post({ onClose, user }) {
                                 }
                             }}
                         >
-                            {width ? 'Chia sẻ' : 'Tiếp'}
+                            {width ? t("share") : t("continue")}
                         </h4>
                     )}
                 </div>
@@ -254,9 +256,9 @@ function Post({ onClose, user }) {
                                 <p className="post-icon">
                                     <BiImages />
                                 </p>
-                                <p className="post-description">Kéo ảnh và video vào đây</p>
+                                <p className="post-description">{t("drag")}</p>
                                 <button type="button" className="post-input" onClick={(e) => handleFileUpload(e)}>
-                                    Chọn từ máy tính
+                                    {t("choose_file")}
                                 </button>
                                 <input
                                     type="file"
@@ -309,8 +311,8 @@ function Post({ onClose, user }) {
                                         setShowSuggestion(false);
                                     }}
                                 >
-                                    💡 Gợi ý caption: <em>{caption}</em> <br />
-                                    <small>Nhấn Enter để chấp nhận</small>
+                                    💡 {t("suggest_caption")} : <em>{caption}</em> <br />
+                                    <small>{t("press")}</small>
                                 </div>
                             )}
                         </div>
@@ -331,7 +333,7 @@ function Post({ onClose, user }) {
                                 className=" feature-header flex a-center j-between"
                                 onClick={() => setOpenFeature(!openFeature)}
                             >
-                                <span>Cài đặt nâng cao</span>
+                                <span>{t("adv_settings")}</span>
                                 <span className="icon-feature flex">
                                     {openFeature ? <IoIosArrowUp /> : <MdKeyboardArrowDown />}
                                 </span>
@@ -344,28 +346,26 @@ function Post({ onClose, user }) {
                                     <div className="feature-item">
                                         <div className="flex a-center j-between">
                                             <h4 className="feature-name">
-                                                Người xem bài viết
+                                               {t("post_viewers")}
                                             </h4>
                                             <select className='text-xs' onChange={(e)=>setTypeView(e.target.value)}>
                                                 <option value='PUBLIC'> 
-                                                    Công khai
+                                                    {t("public")}
                                                 </option>
-                                                <option value='FRIENDS_ONLY'>Bạn bè</option>
-                                                <option value='PRIVATE'>Chỉ mình tôi</option>
+                                                <option value='FRIENDS_ONLY'>{t("friends")}</option>
+                                                <option value='PRIVATE'>{t("only_me")}</option>
                                             </select>
                                         </div>
                                         <div className="feature-description">
                                             <p>
-                                               Chọn đối tượng có thể xem bài viết này của bạn.Bạn có thể thay đổi trong phần
-                                               tùy chọn này bằng cách mở menu ··· ở đầu bài
-                                                viết.
+                                              {t("choose_view")}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="feature-item">
                                         <div className="flex a-center j-between">
                                             <h4 className="feature-name">
-                                                Ẩn lượt thích và lượt xem trên bài viết này
+                                                {t("hide_like")}
                                             </h4>
                                             <div
                                                 className="btn-switch"
@@ -390,16 +390,13 @@ function Post({ onClose, user }) {
                                         </div>
                                         <div className="feature-description">
                                             <p>
-                                                Chỉ bạn mới nhìn thấy tổng số lượt thích và lượt xem bài viết này. Về
-                                                sau, bạn có thể thay đổi tùy chọn này bằng cách mở menu ··· ở đầu bài
-                                                viết. Để ẩn số lượt thích trên bài viết của người khác, hãy đi đến phần
-                                                cài đặt tài khoản
+                                                {t("hide_like_description")}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="feature-item">
                                         <div className="flex a-center j-between">
-                                            <h4 className="feature-name">Tắt tính năng bình luận</h4>
+                                            <h4 className="feature-name">{t("turn_off_comment")}</h4>
                                             <div
                                                 className="btn-switch"
                                                 onClick={() => setIsComment(!isComment)}
@@ -423,8 +420,7 @@ function Post({ onClose, user }) {
                                         </div>
                                         <div className="feature-description">
                                             <p>
-                                                Về sau, bạn có thể thay đổi tùy chọn này bằng cách mở menu ··· ở đầu bài
-                                                viết.
+                                               {t("turn_off_comment_description")}
                                             </p>
                                         </div>
                                     </div>
@@ -436,8 +432,8 @@ function Post({ onClose, user }) {
             </div>
             {show ? (
                 <Notify
-                    title={'Bỏ bài viết?'}
-                    content={'Nếu rời đi, bạn sẽ mất những gì vừa chỉnh sửa'}
+                    title={`${t("skip_post")} ?`}
+                    content={t("skip_post_description")}
                     onCloseNotify={setShow}
                     setImg={setImg}
                     onClose={onClose}

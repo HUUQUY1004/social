@@ -13,8 +13,10 @@ import { BASE_URL, commentPost, likePost } from '../../action/action.js';
 import SavedAlbum from '../SaveAlbum/Save.jsx';
 import Share from '../share/Share.jsx';
 import { ReelContext } from '../../context/ReelContext.js';
+import { useTranslation } from 'react-i18next';
 
 function PostHomeItem({ currentUser, item, time,  }) {
+    const {t} = useTranslation()
     const [showPicker, setShowPicker] = useState(false);
     const [isLike, setIsLike] = useState(false);
     const [value, setValue] = useState('');
@@ -49,33 +51,34 @@ function PostHomeItem({ currentUser, item, time,  }) {
     };
 
     //  check user is this post ?
-    useEffect(()=>{
-        setIsLike(item.likedByUsers.some((item)=> item.id === currentUser.id))
-        
-        // IntersectionObserver
-        const observer = new IntersectionObserver(
-            ([entry])=>{
-                if(entry.isIntersecting){
-                    videoRef.current?.play()
-                }
-                else{
-                     videoRef.current?.pause()
-                }
-            },{
-                threshold: 0.6
-            }
-        )
-        const currentVideo = videoRef.current;
-        if(currentVideo){
-            observer.observe(currentVideo)
-        }
-        return ()=>{
-            if(currentVideo){
-                observer.unobserve(currentVideo)
-            }
-        }
+    useEffect(() => {
+    const video = videoRef.current;
+    const handleUserInteraction = () => {
+        observer.observe(video);
+        document.removeEventListener('click', handleUserInteraction);
+    };
 
-    },[])
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting) {
+                video?.play().catch((e) => console.log("Autoplay failed", e));
+            } else {
+                video?.pause();
+            }
+        },
+        { threshold: 0.6 }
+    );
+
+    if (video) {
+        document.addEventListener('click', handleUserInteraction);
+    }
+
+    return () => {
+        if (video) observer.unobserve(video);
+        document.removeEventListener('click', handleUserInteraction);
+    };
+}, []);
+
 
 
     return (
@@ -119,7 +122,7 @@ function PostHomeItem({ currentUser, item, time,  }) {
                         {item.showLike && (
                             <span
                                 className="like"
-                                title={isLike ? 'Bỏ thích' : 'Thích'}
+                                title={isLike ? t("dislike") : t("like")}
                                 onClick={() => {
                                     handleLike(item.id);
                                     setIsLike(!isLike);
@@ -129,21 +132,21 @@ function PostHomeItem({ currentUser, item, time,  }) {
                             </span>
                         )}
                         <Link to={`/p/${item.id}`}>
-                            <span className="comment" title="Bình luận">
+                            <span className="comment" title={t("comment")}>
                                 <FaRegComment />
                             </span>
                         </Link>
-                        <span className="share" title="Chia sẻ" onClick={()=>setIsShare(true)}>
+                        <span className="share" title={t("share")} onClick={()=>setIsShare(true)}>
                             <IoMdPaperPlane />
                         </span>
                     </div>
                     <div className="right ">
-                        <span className="save" title="Lưu" onClick={()=>setIsSaved(true)}>
+                        <span className="save" title={t("save")} onClick={()=>setIsSaved(true)}>
                             <BiBookmark />
                         </span>
                     </div>
                 </div>
-                {item?.showLike && <div>{item?.likedByUsers.length > 0 ? `${item.likedByUsers.length} người thích` : ''}</div>}
+                {item?.showLike && <div>{item?.likedByUsers.length > 0 ? `${item.likedByUsers.length} ${t("person_likes")}` : ''}</div>}
                 <div className="description flex a-center">
                     <Link to={`/${item?.user.id}`}>{item?.user.username}</Link>
                     <p className>{item.title}</p>

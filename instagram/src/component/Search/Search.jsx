@@ -6,7 +6,9 @@ import './search.scss';
 import AccountItem from '../AccountItem/AccountItem';
 import { Link } from 'react-router-dom';
 import { searchUser } from '../../action/action';
+import { useTranslation } from 'react-i18next';
 function Search() {
+    const {t} = useTranslation()
     const [isLoading, setIsLoading] = useState(false);
     const [userList, setUserList] = useState([]);
     const [value, setValue] = useState('');
@@ -36,11 +38,11 @@ function Search() {
         <TranSlate minWidth={0} maxWidth={'400px'}>
             <div ref={ref} className="search__wrapper bg-white z-50">
                 <div className="search-header-wrapper">
-                    <h2 className="search-header">Tìm kiếm</h2>
+                    <h2 className="search-header">{t('search')}</h2>
                     <div className="input-search br-8">
                         <input
                             type="text"
-                            placeholder="Tìm kiếm"
+                            placeholder={t("search")}
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
                         />
@@ -49,10 +51,10 @@ function Search() {
                 </div>
                 <div className="search-body">
                     <div className="recently flex a-center j-between">
-                        <h4>Gần đây</h4>
+                        <h4>{t("recent")}</h4>
                         {userList?.length > 0 ? (
                             <p className="delete-all" onClick={() => setUserList([])}>
-                                Xóa tất cả
+                               {t("delete_all")}
                             </p>
                         ) : (
                             <Fragment />
@@ -69,7 +71,7 @@ function Search() {
                             ))
                         ) : (
                             <div className="recent-nothing flex a-center j-center">
-                                <p>Không có nội dung tìm kiếm mới đây</p>
+                                <p>{t("no_recent")}</p>
                             </div>
                         )}
                     </div>

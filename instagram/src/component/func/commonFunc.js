@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 export const following = async (currentUserId, _id) => {
   const { data } = await axios.post(
     `http://localhost:5000/api/user/suggested/${currentUserId}`,
@@ -33,20 +34,21 @@ export const dislikePost = async (idPost, idUser) => {
     id: idUser,
   });
 };
-export const times = (createAtItem) => {
+export const times = (createAtItem, t) => {
   const createdAt = new Date(createAtItem);
   const currentDate = new Date();
-  const timeElapsedInSeconds = Math.floor((currentDate - createdAt) / 1000); //1S = 1000 MILI
+  const timeElapsedInSeconds = Math.floor((currentDate - createdAt) / 1000);
+
   if (timeElapsedInSeconds < 60) {
-    return `${timeElapsedInSeconds} giây trước`;
+    return t("second_ago", { count: timeElapsedInSeconds });
   } else if (timeElapsedInSeconds < 3600) {
     const minutes = Math.floor(timeElapsedInSeconds / 60);
-    return `${minutes} phút trước`;
+    return t("minute_ago", { count: minutes });
   } else if (timeElapsedInSeconds < 86400) {
     const hours = Math.floor(timeElapsedInSeconds / 3600);
-    return `${hours} giờ trước`;
+    return t("hour_ago", { count: hours });
   } else {
     const days = Math.floor(timeElapsedInSeconds / 86400);
-    return `${days} ngày trước`;
+    return t("day_ago", { count: days });
   }
 };

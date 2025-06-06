@@ -6,7 +6,9 @@ import AccountItem from '../../component/AccountItem/AccountItem';
 import ChatContainer from '../../component/ChatContainer/ChatContainer';
 import { useUser } from '../../store/useStore';
 import { getListFriend } from '../../action/action';
+import { useTranslation } from 'react-i18next';
 function Messages() {
+    const {t} = useTranslation()
     const socket = useRef();
     const {currentUser}= useUser();
     const [currentChat, setCurrentChat] = useState(undefined);
@@ -58,14 +60,14 @@ function Messages() {
                                 </svg>
                             </div>
                             <div className="content-inner flex j-center a-center flex-column">
-                                <h4 className="title">Tin nhắn của bạn</h4>
-                                <p className="description">Gửi ảnh và tin nhắn riêng tư cho bạn bè hoặc nhóm</p>
-                                <button className="br-8 btn">Gửi tin nhắn</button>
+                                <h4 className="title">{t("message_for_you")}</h4>
+                                <p className="description">{t("send_message_description")}</p>
+                                <button className="br-8 btn">{t("send_message")}</button>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    <ChatContainer  currentChat={currentChat} socket={socket} />
+                    <ChatContainer  currentChat={currentChat} socket={socket} t={t} />
                 )}
             </div>
         </div>

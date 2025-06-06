@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { getTrash } from '../../action/action';
+import { useTranslation } from 'react-i18next';
 function TrashPost() {
+    const {t} = useTranslation()
     const [posts, setPosts] = useState([]);
     const [isCustom, setIsCustom] = useState(false)
     const getTrashByUser = async () => {
@@ -23,7 +25,7 @@ function TrashPost() {
             <div className='flex justify-between'>
                         <Link to={'/profile'} className='flex gap-3 items-center'>
                             <FontAwesomeIcon icon={faAngleLeft}/>
-                            <span className='font-semibold'>Thùng rác</span>
+                            <span className='font-semibold'>{t("trash_can")}</span>
                         </Link>
                         <div className='p-2' onClick={()=> setIsCustom(true)}>
                             <FontAwesomeIcon icon={faEllipsisVertical}  />

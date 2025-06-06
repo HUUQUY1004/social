@@ -146,3 +146,6 @@ public class FriendController {
 
 
 }
+// Bescause controller complex. Therefore I had wriiten in FriendService
+
+// Sign by HQ

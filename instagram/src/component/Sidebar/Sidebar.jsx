@@ -25,94 +25,106 @@ import { useRef, useState } from 'react';
 import { images } from '../../source';
 import Popup from '../Popup/Popup';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
-import Post from '../Post/Post';
-import Search from '../Search/Search';
-import ConvertAccount from '../CovertAccount/ConvertAccount';
-import NotifyComponent from '../Notify/Notify.compoment';
 import { BASE_URL } from '../../action/action';
 import { useUser } from '../../store/useStore';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../config/i18n';
 
 function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
+    const {t} = useTranslation()
     const {currentUser} = useUser()
-    
     const Menu = [
         {
-            name: 'Trang chủ',
+            name: t('home'),
             icon: <FontAwesomeIcon icon={faHomeLgAlt} />,
             link: '/',
         },
         {
-            name: 'Explore',
+            name: t('explore'),
             icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
         },
         {
-            name: 'Bạn bè',
+            name: t('friends'),
             icon: <FontAwesomeIcon icon={faUserGroup}/>,
             link: '/suggestion-friendships',
         },
         {
-            name: 'Khám phá',
+            name: t("discover"),
             icon: <FontAwesomeIcon icon={faCompass} />,
             link: '/explore',
         },
         {
-            name: 'Reels',
+            name: t('reels'),
             icon: <FontAwesomeIcon icon={faClapperboard} />,
             link: '/reels',
         },
         {
-            name: 'Tin nhắn',
+            name: t('messages'),
             icon: <FontAwesomeIcon icon={faMessage} />,
             link: '/direct/inbox',
         },
         {
-            name: 'Thông báo',
+            name: t("notifications"),
             icon: <FontAwesomeIcon icon={faHeart} />,
         },
         {
-            name: 'Tạo',
+            name: t('create'),
             icon: <FontAwesomeIcon icon={faSquarePlus} />,
         },
     ];
     const popUp = [
         {
             icon: <AiOutlineSetting />,
-            name: 'Cài đặt',
+            name: t('settings'),
             direct: <MdOutlineKeyboardArrowRight />,
             link: '/account/edit',
         },
         {
             icon: <FontAwesomeIcon icon={faClockRotateLeft} />,
-            name: 'Hoạt động của bạn',
+            name: t("activity"),
             direct: <MdOutlineKeyboardArrowRight />,
             link: '/your_activity/interactions',
         },
         {
             icon: <FontAwesomeIcon icon={faBookmark} />,
-            name: 'Đã lưu',
+            name: t("saved"),
             direct: <MdOutlineKeyboardArrowRight />,
             link: `/${currentUser.username}/saved`,
         },
         {
             icon: <BsFillSunFill />,
-            name: 'Chuyển chế độ',
+            name: t('switch_mode'),
             direct: <MdOutlineKeyboardArrowRight />,
             link: ' account/edit/',
         },
         {
             icon: <FontAwesomeIcon icon={faAnchorCircleExclamation} />,
-            name: 'Báo cáo sự cố',
+            name: t('report_problem'),
             direct: <MdOutlineKeyboardArrowRight />,
             type: 'show_modal',
         },
         {
-            name: 'Chuyển tài khoản',
+            name: t('switch_account'),
             direct: <MdOutlineKeyboardArrowRight />,
             separator: true,
             type: 'Convert',
         },
         {
-            name: 'Đăng xuất',
+            name: t('changeLanguage'),
+            direct: <MdOutlineKeyboardArrowRight />,
+            separator: true,
+            children: [
+                {
+                    value: "vi",
+                    name: t("vietnamese")
+                },{
+                    value: 'en',
+                    name: t("english")
+                }
+            ]
+        },
+        {
+            name: t('logout'),
             type: 'Logout',
         },
     ];
@@ -140,13 +152,19 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
         if (item.type === 'Convert') {
             onConvertAccount();
         }
+        if(item.value === 'vi'){
+            i18n.changeLanguage(item.value)
+        }
+        if(item.value ==='en'){
+            i18n.changeLanguage(item.value)
+        }
     };
     const handleClick = (name) => {
-        if (name === 'Tạo') onCreatePost(currentUser);
-        if (name === 'Explore') {
+        if (name === t("create")) onCreatePost(currentUser);
+        if (name === t("explore")) {
             onSearch()
         };
-        if (name === 'Thông báo') onNotify();
+        if (name === t("notifications")) onNotify();
     };
     const navigate = useNavigate();
     return (
@@ -185,29 +203,16 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
                         )}
                     </p>
                     <NavLink to={`/profile`} className="link">
-                        Trang cá nhân
+                        {t("profile")}
                     </NavLink>
                 </div>
             </div>
             <div className="more flex a-center" ref={moreRef}>
                 <FontAwesomeIcon icon={faBars} />
-                <h4 onClick={() => setIsShowPopup((prev) => !prev)}>Xem thêm</h4>
+                <h4 onClick={() => setIsShowPopup((prev) => !prev)}>{t("see_more")}</h4>
                 {isShowPopup && <Popup popup={popUp} onClick={handleClinkPopup} />}
             </div>
-            {/* {createPost && <Post onClose={setCreatePost} user={currentUser} />}
-            {isSearch && (
-                <div ref={searchRef}>
-                    <Search />
-                </div>
-            )}
-            {
-                isNotify && (
-                    <div ref={notifyRef}>
-                        <NotifyComponent/>
-                    </div>
-                )
-            }
-            {isConvert && <ConvertAccount onClose={setIsConvert} />} */}
+            
         </div>
     );
 }

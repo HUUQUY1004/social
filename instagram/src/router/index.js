@@ -7,6 +7,7 @@ import Login from "../pages/Login/login";
 import Messages from "../pages/Messages/Messages";
 import Profile from "../pages/MyProFile/MyProfile";
 import PostPage from "../pages/PostPage/PostPage";
+import ProfileUser from "../pages/ProfileUser/ProfileUser";
 import Reels from "../pages/Reel/reels";
 import Register from "../pages/Register/register";
 import FindAccount from "../pages/ResetPassword/FindAccount";
@@ -32,7 +33,7 @@ export const router = [
     path: "/profile",
   },
   {
-    Component: Profile,
+    Component: ProfileUser,
     path: "/:userId",
   },
   {
