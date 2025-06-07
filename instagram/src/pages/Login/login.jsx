@@ -7,11 +7,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { login } from "../../action/action";
 import { toast } from "react-toastify";
-export const isValidEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(email);
-};
+import { useTranslation } from "react-i18next";
+import { isValidEmail } from "../../utils/validators";
 function Login() {
+    const {t} = useTranslation()
     const navigate = useNavigate()
     const [value, setValue] = useState({
         email:'',
@@ -24,10 +23,10 @@ function Login() {
     
     const handInvalid = ()=>{
         if(!isValidEmail(value.email)){
-            return false
+            toast.warn("Vui lòng đúng địa chỉ email")
         }
         if(value.password.length <5 ){
-            return false
+            toast.warn("Mật khẩu phải lớn hơn 5 kí tự")
         }
         return true
     }
@@ -60,38 +59,38 @@ function Login() {
                         <div className="logo-bg">
                             
                         </div>
-                        <h2>Đăng kí để xem ảnh và video từ bạn bè</h2>
+                        <h2>{t("welcome_register")}</h2>
                     </div>
                     <form className='flex flex-column j-center a-center form' onSubmit={(e)=>handleSubmit(e)}>
                         <div className="input-wrapper">
                             <input placeholder="" type="text" name="email" onChange={(e)=>handleChange(e)} />
-                            <span>Số điện thoại, tên người dùng hoặc email</span>
+                            <span>Email</span>
                         </div>
                         <div className="input-wrapper">
                             <input placeholder="" type="text" name="password" onChange={(e)=>handleChange(e)}/>
-                            <span>Mật khẩu</span>
+                            <span>{t("password")}</span>
                         </div>
-                        <button type="submit " className='br-8 btn-w268 btn-submit'>Đăng nhập</button>
+                        <button type="submit " className='br-8 btn-w268 btn-submit'>{t("login")}</button>
                     </form>
                     <div className='flex line-wrapper a-center j-center'>
                         <div className="line-1"></div>
-                        <p className="text-line">Hoặc</p>
+                        <p className="text-line">{t("or")}</p>
                         <div className="line-2"></div>
                     </div>
                     <div className="login-w flex a-center j-center flex-column">
                         <p>
                             <i class="fa-brands fa-square-facebook"></i>
-                            <span>Đăng nhập bằng Facebook</span>
+                            <span>{t("login_with_facebook")}</span>
                         </p>
-                        <Link className="forget-link" to={'/account/find'}>Quên mật khẩu ?</Link>
+                        <Link className="forget-link" to={'/account/find'}>{t("forgot_pass")}</Link>
                     </div>
                 </div>
                 <div className="check-account flex a-center j-center">
-                    <p>Bạn chưa có tài khoản ư ?</p>
-                    <Link to={'/register'}>Đăng ký</Link>
+                    <p>{t("have_an_account")}</p>
+                    <Link to={'/register'}>{t("register")}</Link>
                 </div>
                 <div className="download flex flex-column a-center j-center">
-                    <p>Tải ứng dụng</p>
+                    <p>{t("download")}</p>
                     <div className='img_download flex '>
                         <img src={images.chPlay} alt="chplay" />
                         <img src={images.microsoft} alt="chplay" />

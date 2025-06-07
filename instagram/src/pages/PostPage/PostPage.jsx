@@ -48,17 +48,9 @@ function PostPage() {
     const getPost = async () => {
         if (checkURLTrash) {
             const data  = await getPostById(id)
-            if(data.status){
-                alert(data.message)
-            }
             setPost(data);
         } else {
-            console.log("run 2");
-            
             const data  = await getPostById(id)
-            if(data.status){
-                alert(data.message)
-            }
             setPost(data);
         }
     };

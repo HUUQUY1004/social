@@ -3,10 +3,9 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './convertAccount.scss';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import useOnClickOutside from '../../hook/useOnClickOutSide';
-import { isValidEmail } from '../../pages/Login/login';
 import { login } from '../../action/action';
+import { isValidEmail } from '../../utils/validators';
 function ConvertAccount({ onClose }) {
     const [value, setValue] = useState({
         email: '',

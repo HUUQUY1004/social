@@ -52,12 +52,18 @@ export const register = async (value) => {
 };
 
 export const getMyProfile = async () => {
-  const { data } = await axios.get(
-    `${BASE_URL}/api/profile/my-profile`,
-    config
-  );
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/api/profile/my-profile`,
+      config
+    );
 
-  return data;
+    return data;
+  } catch (error) {
+    console.log("debug:", error);
+
+    handleError(error);
+  }
 };
 export const changeDescription = async (description) => {
   const { data } = await axios.post(

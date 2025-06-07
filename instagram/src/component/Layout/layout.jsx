@@ -34,7 +34,8 @@ function DefaultLayout({children}) {
                 
             }
         } catch (error) {
-            alert(error)
+            console.error("err: " , error);
+            
         }
     }
     useEffect(() => {
