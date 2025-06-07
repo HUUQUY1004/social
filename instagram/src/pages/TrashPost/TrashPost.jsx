@@ -12,9 +12,6 @@ function TrashPost() {
     const [isCustom, setIsCustom] = useState(false)
     const getTrashByUser = async () => {
         const data = await getTrash();
-        if(data.status){
-            alert(data.message)
-        }
         setPosts(data);
     };
     useEffect(() => {
