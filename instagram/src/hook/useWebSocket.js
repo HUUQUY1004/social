@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { BASE_URL } from "../action/action";
 
+const stomp = (url, callback) => {
+  const stompClient = new Client({
+    webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
+    reconnectDelay: 5000,
+    onConnect: () => {
+      console.log("Connected to WebSocket");
+      stompClient.subscribe(url, (message) => {
+        callback(JSON.parse(message.body));
+      });
+    },
+    onDisconnect: () => console.log("Disconnected from WebSocket"),
+  });
+  return stompClient;
+};
 const useWebSocket = (userId, onMessageReceived) => {
   const [client, setClient] = useState(null);
 
@@ -36,6 +51,19 @@ const useWebSocket = (userId, onMessageReceived) => {
   };
 
   return { sendMessage };
+};
+export const useNotifySocket = (userId, onNotifyReceived) => {
+  const [client, setClient] = useState(null);
+  useEffect(() => {
+    if (!userId) return;
+    const stompClient = stomp(`/topic/notify/${userId}`, onNotifyReceived);
+    stompClient.activate();
+    setClient(stompClient);
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [userId]);
+  return {};
 };
 
 export default useWebSocket;

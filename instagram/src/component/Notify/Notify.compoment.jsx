@@ -4,13 +4,18 @@ import LoaderComponent from "../Loader/Loader";
 import { getNotify } from "../../action/action";
 import  { Link}from 'react-router-dom'
 import { useTranslation } from "react-i18next";
+import { useNotifySocket } from "../../hook/useWebSocket";
+import { useUser } from "../../store/useStore";
 
 function NotifyComponent() {
     const {t} = useTranslation()
     const [notify, setNotify] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
+    const {currentUser} = useUser();
+    useNotifySocket(currentUser.id , (newNotify)=>{
+            setNotify(prev=> [newNotify, ...prev])
+        })
     useEffect(()=>{
-
         const notify = async ()=>{
             const data = await getNotify()
             setNotify(data)

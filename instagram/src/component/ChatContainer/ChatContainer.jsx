@@ -51,32 +51,7 @@ function ChatContainer({ currentChat, socket, t }) {
         const data = await sendMessage(body)
         console.log("data",data);
         setMessages([...messages, data])
-
-        // if(multipart){
-        //     const imageUrl = URL.createObjectURL(multipart)
-        //     console.log("URL FILE: " + imageUrl);
-        //     setMessages([...messages, {}])
-        // }
-        
-        // socket.current.emit('send-msg', {
-        //     to: currentChat._id,
-        //     from: currentUser._id,
-        //     msg,
-        // });
-        // const msgs = [...messages];
-        // msgs.push({ fromSelf: true, message: msg });
-        // setMessages(msgs);
     };
-    // useEffect(() => {
-    //     if (socket.current) {
-    //         socket.current.on('msg-recieve', (msg) => {
-    //             setArrivalMessage({ fromSelf: false, message: msg });
-    //         });
-    //     }
-    // }, []);
-    // useEffect(() => {
-    //     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-    // }, [arrivalMessage]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
