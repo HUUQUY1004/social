@@ -5,6 +5,11 @@
     left: 0;
     padding: 15px 7px 30px;
     border-right: 1px solid var(--separator);
+
+    @media (max-width: 1264px) {
+        width: 55px;
+        overflow: hidden;
+    }
     .logo {
         background-image: url('../../source/logo.png');
         width: 220px;

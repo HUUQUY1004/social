@@ -22,14 +22,21 @@ public class PostServiceImp implements  PostService{
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    NotifyService notifyService;
     @Override
     public int getNumberOfArticles(String jwt) {
         return 0;
     }
 
     @Override
-    public Post createPost( Post post) throws Exception {
-        return  postRepository.save(post);
+    public Post createPost( String jwt,Post post) throws Exception {
+        Post newPost = postRepository.save(post);
+//        Send Notify to Friend
+        notifyService.postNotify(jwt, newPost.getId());
+
+        return  newPost;
     }
 
     @Override

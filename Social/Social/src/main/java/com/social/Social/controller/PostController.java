@@ -79,7 +79,7 @@ public class PostController {
         post.setComment(isComment);
         post.setShowLike(isShowLike);
         post.setUser(user);
-        Post post1 = postService.createPost(post);
+        Post post1 = postService.createPost(jwt,post);
         image.setPost(post);
         imageRepository.save(image);
         return  ResponseEntity.ok(post1);
@@ -119,7 +119,6 @@ public class PostController {
     ) throws Exception {
         Response response = new Response();
         boolean check = postService.deleteAndBackupPost(postId);
-        System.out.println("=== DELETE CONTROLLER CALLED ===");
         if(check == true){
             response.setMessage("Success");
             response.setStatus(200);
