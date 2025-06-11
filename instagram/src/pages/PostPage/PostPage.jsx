@@ -9,14 +9,12 @@ import { IoMdPaperPlane } from 'react-icons/io';
 import { BiBookmark } from 'react-icons/bi';
 import { CiFaceSmile } from 'react-icons/ci';
 import Picker from 'emoji-picker-react';
-import axios from 'axios';
 import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
 import { BASE_URL, commentPost, deleteAndBackupPost, deletePost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 import SavedAlbum from '../../component/SaveAlbum/Save';
-import { data } from 'autoprefixer';
 import { useTranslation } from 'react-i18next';
 function PostPage() {
     const {t} = useTranslation()
@@ -33,29 +31,34 @@ function PostPage() {
     const [isSaved,  setIsSaved] = useState(false)
     // custom
     const [isCustom, setIsCustom] = useState(false);
+
+    // Comment 
+    const [comments, setComments] = useState(post?.comments  || [])
+    console.debug("comment: ", comments);
+    
     const customRef = useRef();
     // GET URL
     const url = window.location.href;
     const checkURLTrash = url.includes('trash');
 
+
     // get current user
     const {currentUser} = useUser()
+
 
     useOnClickOutside(customRef, () => setIsCustom(false));
     useOnClickOutside(ref, () => {
         window.history.back();
     });
     const getPost = async () => {
-        if (checkURLTrash) {
-            const data  = await getPostById(id)
-            setPost(data);
-        } else {
-            const data  = await getPostById(id)
-            setPost(data);
-        }
-    };
+
+        const data  = await getPostById(id)
+        setPost(data);
+        setComments(data.comments)
+    }
     useEffect(() => {
         getPost();
+        
     }, [isCustom]);
     const emojiRef = useRef();
     useOnClickOutside(emojiRef, () => {
@@ -83,8 +86,22 @@ function PostPage() {
     };
     //handle comment
     const handlePostComment = async (postId,value) => {
+        console.log(value);
+        
+        if(value.length ===0) return;
         const data = await commentPost({postId, comment: value})
-        console.log("data", data);
+        if(data.status ===200) {
+             const newComment = {
+                content: value,
+                createdAt: new Date().toISOString(), // tạo thời gian hiện tại
+                user: {
+                    id: currentUser.id,
+                    username: currentUser.username,
+                    avatar: currentUser.avatar,
+                }
+                };
+            setComments(prev => [newComment, ...prev])
+        }
         
     };
     const liRef = useRef();
@@ -119,12 +136,30 @@ function PostPage() {
                             </span>
                         </div>
                     </header>
-                    <div className="content-comment">
+                    <div className="content-comment h-[200px] overflow-y-scroll">
+                        <div className="item-comment flex a-center">
+                                    <div className="avatar">
+                                        {currentUser.avatar ? (
+                                            <img src={BASE_URL+currentUser.avatar} alt="avatar" />
+                                        ) : (
+                                            <img src={images.noAvatar} alt="no-avatar" />
+                                        )}
+                                    </div>
+                                    <div className="main">
+                                        <div className="flex a-center">
+                                            <Link to={`/${currentUser.id}`}>{currentUser.username}</Link>
+                                            <p className="comment">{post?.title}</p>
+                                        </div>
+                                        {/* <div className="times">
+                                            <p>{time}</p>
+                                        </div> */}
+                                    </div>
+                                </div>
                         {
-                            post?.comments.length ===0 ? 
+                           comments.length ===0 ? 
                             <p className='w-full h-full flex justify-center items-center text-sa'>{t("fist_comment")}</p>: 
                             
-                       post?.comments.map((item, index) => {
+                       comments.map((item, index) => {
                             const time = times(item.createdAt, t);
 
                             return (
@@ -193,24 +228,27 @@ function PostPage() {
                                     )}
                                 </span>
                             </div>
-                            <div
+                            {/* <div
                                 className="text"
                                 contentEditable={true}
                                 aria-label="Thêm bình luận"
                                 onInput={divLength}
                                 ref={divRef}
-                            ></div>
-                            <div>
-                                <p
-                                    className={value.length > 0 ? 'bold' : 'blur'}
-                                    style={value.length > 0 ? { cursor: 'pointer' } : { cursor: 'text' }}
+                            ></div> */}
+                            <div className='flex-1 flex'>
+                                <input
+                                    className='flex-1 ml-4'
+                                    value={value}
+                                    onChange={(e)=>setValue(e.target.value)}
+                                    placeholder={t("comment_post_placeholder")}
+                                />
+                                    <p
                                     onClick={() => {
                                         setValue('');
                                         handlePostComment(post.id, value);
                                     }}
-                                >
-                                    Đăng
-                                </p>
+                                    className={value.length > 0 ? 'bold cursor-pointer' : 'blur'}>{t("comment")}</p>
+                            
                             </div>
                         </div>
                     </footer>

@@ -19,6 +19,12 @@ function Register() {
         username:'',
         password:''
     })
+    const [error, setError] = useState({
+        emailErr: '',
+        passwordErr: '',
+        usernameErr:'',
+        fullNameErr:''
+    })
     const emailRef = useRef()
     const fullNameRef = useRef()
     const usernameRef = useRef()
@@ -30,23 +36,31 @@ function Register() {
         setValue({...value,[e.target.name]: e.target.value})
     }
     const handInvalid = ()=>{
+        let valid = true
+        const newErr = {
+            emailErr: '',
+            passwordErr: '',
+            usernameErr:'',
+            fullNameErr:''
+        }
         if(!isValidEmail(value.email)){
-            emailRef.current.innerText= "Vui lòng điền email"
-            return false
+            newErr.emailErr = t("invalid_email")
+            valid  = false
         }
         if(value.name === ''){
-            fullNameRef.current.innerText= "Vui lòng thông tin người dùng"
-            return false
+            newErr.fullNameErr = t("not_empty_field")
+            valid = false
         }
         if(value.username === '') {
-            usernameRef.current.innerText= "Vui lòng tên người dùng"
-            return false
+            newErr.usernameErr = t("not_empty_field")
+            valid = false
         }
         if(!isValidPassword(value.password)){
-            passRef.current.innerText= "Vui lòng điền đúng định dạng mật khẩu."
-            return false
+            newErr.passwordErr = t("invalid_password")
+            valid = false
         }
-        return true
+        setError(newErr)
+        return valid
     }
     const handSubmit = async (e)=>{
         e.preventDefault()
@@ -92,22 +106,23 @@ function Register() {
                             <div className="input-wrapper ">
                                 <input className='br-2' placeholder='' type="email" name='email' value={value.email} onChange={(e)=>handlChange(e)} />
                                 <span>Email</span>
-                                <p ref={emailRef} className='err'></p>
+                                {error.emailErr && <p className='err'>{error.emailErr}</p>}
                             </div>
                             <div className="input-wrapper">
                                 <input  className='br-2' placeholder='' type="text" name='nickname' value={value.name} onChange={(e)=>handlChange(e)}  />
                                 <span>{t("fullname")}</span>
-                                <p className='err' ref={fullNameRef}></p>
+                                {error.fullNameErr && <p className='err'>{error.fullNameErr}</p>}
                             </div>
                             <div className="input-wrapper">
                                 <input className='br-2' placeholder='' type="text" name='username' value={value.username} onChange={(e)=>handlChange(e)}  />
                                 <span>{t("username")}</span>
-                                <p className='err' ref={usernameRef}></p>
+                                {error.usernameErr && <p className='err'>{error.usernameErr}</p>}
                             </div>
                             <div className="input-wrapper">
                                 <input className='br-2' placeholder='' type="text" name='password' value={value.password} onChange={(e)=>handlChange(e)}/>
                                 <span>{t("password")}</span>
-                                <p className='err' ref={passRef}></p>
+                                {error.passwordErr && <p className='err'>{error.passwordErr}</p>}
+
                             </div>
                             <div className="policy flex flex-column">
                                 <span>{t("privacy")}<Link>{t("learn_more")}</Link></span>
