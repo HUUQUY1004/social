@@ -1,5 +1,4 @@
 import { Fragment, forwardRef, useCallback, useEffect, useRef, useState } from 'react';
-import Sidebar from '../../component/Sidebar/Sidebar';
 import { RiSettings5Line } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { images } from '../../source';
@@ -7,7 +6,6 @@ import './myprofile.scss';
 import { AiOutlineCamera, AiOutlineTable, AiOutlineTags } from 'react-icons/ai';
 import { FiTrash2 } from 'react-icons/fi';
 import { BsBookmark } from 'react-icons/bs';
-import axios from 'axios';
 import Loading from '../../component/Loading/loading';
 import Footer from '../../component/Footer/Footer';
 import Post from '../../component/Post/Post';
@@ -163,7 +161,7 @@ function Profile() {
                                 
                             </div>
                             <div className="bottom">
-                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(currentUser.id === dataUser.id)}>{(dataUser?.description?.length!==0  ) ? dataUser?.description : dataUser.id == currentUser.id && 'Thêm mô tả' }</h4>
+                                <h4  className="name cursor-pointer" onClick={()=>setShowChangeDescription(currentUser?.id === dataUser?.id)}>{(dataUser?.description?.length  ) ? dataUser?.description : dataUser?.id == currentUser?.id && 'Thêm mô tả' }</h4>
                             </div>
                         </div>
                     </div>

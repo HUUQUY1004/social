@@ -5,6 +5,9 @@
     .container{
         .content{
             flex: 1;
+            @media (max-width: 1264px) {
+                margin-left: 80px ;
+            }
             margin-left: 244px;
         }
     }
