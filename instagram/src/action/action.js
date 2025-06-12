@@ -430,7 +430,15 @@ export const changePassword = async (value) => {
     handleError(error);
   }
 };
+export const changePasswordUser = async (value) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/api/user/change-password`,
+    value,
+    config
+  );
 
+  return data;
+};
 export const sendImageToBLIP = async (base64Image) => {
   const { data } = await axios.post(
     "http://localhost:8080/generate-caption",
