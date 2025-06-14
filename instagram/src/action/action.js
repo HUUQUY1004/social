@@ -421,7 +421,8 @@ export const changePassword = async (value) => {
   try {
     const { data } = await axios.post(
       `${BASE_URL}/auth/change-password`,
-      value
+      value,
+      config
     );
     console.log(data);
 
@@ -429,6 +430,24 @@ export const changePassword = async (value) => {
   } catch (error) {
     handleError(error);
   }
+};
+export const changeStatusComment = async (postId) => {
+  const { data } = await axios.patch(
+    `${BASE_URL}/api/post/change-status-comment`,
+    { postId },
+    config
+  );
+
+  return data;
+};
+export const changeStatusLike = async (postId) => {
+  const { data } = await axios.patch(
+    `${BASE_URL}/api/post/change-status-like`,
+    { postId },
+    config
+  );
+
+  return data;
 };
 export const changePasswordUser = async (value) => {
   const { data } = await axios.post(

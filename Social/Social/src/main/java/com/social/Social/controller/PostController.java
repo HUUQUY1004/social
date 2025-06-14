@@ -6,11 +6,13 @@ import com.social.Social.model.PostVisibility;
 import com.social.Social.model.User;
 import com.social.Social.request.CommentPost;
 import com.social.Social.request.LikePost;
+import com.social.Social.request.ToggleCommentLikeRequest;
 import com.social.Social.response.Response;
 import com.social.Social.responsitory.ImageRepository;
 import com.social.Social.service.FileStorageService;
 import com.social.Social.service.PostService;
 import com.social.Social.service.UserService;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -110,6 +112,30 @@ public class PostController {
         Response response = new Response();
         response.setStatus(200);
         response.setMessage("Success");
+        return  ResponseEntity.ok(response);
+    }
+    @PatchMapping("change-status-comment")
+    public  ResponseEntity<Response> changeStatusComment(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ToggleCommentLikeRequest toggleCommentLikeRequest
+            ) throws Exception {
+
+        postService.toggleComment(jwt, toggleCommentLikeRequest.getPostId());
+        Response response = Response.builder()
+                .status(200)
+                .message("Success").build();
+        return  ResponseEntity.ok(response);
+    }
+    @PatchMapping("change-status-like")
+    public  ResponseEntity<Response> changeStatusLike(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ToggleCommentLikeRequest toggleCommentLikeRequest
+    ) throws Exception {
+
+        postService.toggleLike(jwt, toggleCommentLikeRequest.getPostId());
+        Response response = Response.builder()
+                .status(200)
+                .message("Success").build();
         return  ResponseEntity.ok(response);
     }
 

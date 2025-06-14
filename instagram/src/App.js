@@ -313,7 +313,7 @@ function App() {
           })}
         </Routes>
       </BrowserRouter>
-      <ToastContainer position="bottom-right" />
+      <ToastContainer className="z-50" position="bottom-right" />
     </div>
   );
 }

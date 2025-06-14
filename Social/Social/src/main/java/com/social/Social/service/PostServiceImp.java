@@ -124,4 +124,26 @@ public class PostServiceImp implements  PostService{
         System.out.println("Truy vấn DB lấy reels");
         return postRepository.getReel();
     }
+
+    @Override
+    public void toggleComment(String jwt, Long postId) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        Post post = getPostById(postId);
+        if(post.getUser().getId() != user.getId()){
+            throw  new IllegalArgumentException("Only the post owner can change comment status");
+        }
+        post.setComment(!post.isComment());
+        postRepository.save(post);
+    }
+
+    @Override
+    public void toggleLike(String jwt, Long postId) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        Post post = getPostById(postId);
+        if(post.getUser().getId() != user.getId()){
+            throw  new IllegalArgumentException("Only the post owner can change comment status");
+        }
+        post.setShowLike(!post.isShowLike());
+        postRepository.save(post);
+    }
 }

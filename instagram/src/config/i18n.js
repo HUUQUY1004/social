@@ -162,10 +162,12 @@ i18n
           to: "To",
           send: "Send",
           compose_a_message: "Compose a message",
+          success: "Success",
         },
       },
       vi: {
         translation: {
+          success: "Thành công",
           compose_a_message: "Soạn tin nhắn",
           send: "Gửi",
           to: "Tới",

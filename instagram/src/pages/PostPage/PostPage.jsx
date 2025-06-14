@@ -11,11 +11,12 @@ import { CiFaceSmile } from 'react-icons/ci';
 import Picker from 'emoji-picker-react';
 import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
-import { BASE_URL, commentPost, deleteAndBackupPost, deletePost, getPostById, likePost } from '../../action/action';
+import { BASE_URL, changeStatusComment, changeStatusLike, commentPost, deleteAndBackupPost, deletePost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 import SavedAlbum from '../../component/SaveAlbum/Save';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 function PostPage() {
     const {t} = useTranslation()
     const navigate = useNavigate();
@@ -104,6 +105,7 @@ function PostPage() {
         }
         
     };
+
     const liRef = useRef();
     const handleDeletePost = async () => {
             const data  = await deleteAndBackupPost(post?.id);
@@ -111,6 +113,37 @@ function PostPage() {
             setIsCustom(false);
         }
     };
+
+    const handleChangeTypeComment = async ()=>{
+        try {
+            const data = await changeStatusComment(post?.id)
+            
+            if(data.status === 200) {
+                setIsCustom((prev)=> !prev)
+                toast.info(t("success"), {
+                    delay: 1000,
+                })
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message || "Lỗi không xác định" )
+        }
+        
+    }
+    const handleChangeTypeLike = async ()=>{
+        try {
+            const data = await changeStatusLike(post?.id)
+            
+            if(data.status === 200) {
+                setIsCustom((prev)=> !prev)
+                toast.info(t("success"), {
+                    delay: 1000,
+                })
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message || "Lỗi không xác định" )
+        }
+        
+    }
     return (
         <PopupWrapper isClose={true}>
             <div className="inner-post-page flex" ref={ref}>
@@ -261,8 +294,8 @@ function PostPage() {
                                     <li className="delete" ref={liRef} onClick={() => handleDeletePost()}>
                                         {post?.delete ? t("restore") : t("delete")}
                                     </li>
-                                    <li>{post?.delete ? t("turn_off_comment") : t("turn_on_comment") }</li>
-                                    <li>{post?.isLike ? t("turn_off_like") :  t("turn_on_like")}</li>
+                                    <li onClick={handleChangeTypeComment}>{post?.comment  ? t("turn_off_comment") : t("turn_on_comment") }</li>
+                                    <li onClick={handleChangeTypeLike}>{post?.showLike  ? t("turn_off_like") :  t("turn_on_like")}</li>
                                     <li>{t("change_audience")}</li>
                                 </ul>
                             ) : (

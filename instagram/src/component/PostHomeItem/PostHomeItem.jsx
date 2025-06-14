@@ -131,11 +131,15 @@ function PostHomeItem({ currentUser, item, time,  }) {
                                 {isLike ? <AiFillHeart className="red" /> : <AiOutlineHeart />}
                             </span>
                         )}
-                        <Link to={`/p/${item.id}`}>
-                            <span className="comment" title={t("comment")}>
-                                <FaRegComment />
-                            </span>
-                        </Link>
+                        {
+                            item.comment && (
+                            <Link to={`/p/${item.id}`}>
+                                <span className="comment" title={t("comment")}>
+                                    <FaRegComment />
+                                </span>
+                            </Link>
+                            )
+                        }
                         <span className="share" title={t("share")} onClick={()=>setIsShare(true)}>
                             <IoMdPaperPlane />
                         </span>
