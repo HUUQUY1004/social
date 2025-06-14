@@ -2,6 +2,7 @@ package com.social.Social.service;
 
 import com.social.Social.model.User;
 import com.social.Social.request.ChangePassword;
+import com.social.Social.request.UserChangePassword;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface UserService {
     User getUserById(Long userId) throws  Exception;
 
     void changePassword(ChangePassword changePassword) throws  Exception;
+    void changePassword(String jwt, UserChangePassword userChangePassword) throws  Exception;
 }

@@ -8,6 +8,7 @@ import com.social.Social.responsitory.NotifyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class NotifyImp implements  NotifyService{
     private  UserService userService;
     @Autowired
     private FriendRequestRepository friendRequestRepository;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
     @Override
@@ -46,6 +49,7 @@ public class NotifyImp implements  NotifyService{
             notifys.setRedirect(redirect);
             notifys.setUserId(friend.getId());
             notifyRepository.save(notifys);
+            messagingTemplate.convertAndSend("/topic/messages/" + friend.getId(), notifys);
         }
     }
 

@@ -2,6 +2,7 @@ package com.social.Social.service;
 
 import com.social.Social.model.User;
 import com.social.Social.request.ChangePassword;
+import com.social.Social.request.UserChangePassword;
 import com.social.Social.responsitory.UserRepository;
 import com.social.Social.config.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +78,27 @@ public class UserServiceImp  implements  UserService{
     public void changePassword(ChangePassword changePassword) throws Exception {
         User user = userRepository.findByEmail(changePassword.getEmail());
         if(!changePassword.getPassword().equals(changePassword.getConfirmPassword())){
-            throw  new Exception("No match");
+            throw new IllegalArgumentException("No match");
         }
         user.setPassword(passwordEncoder.encode(changePassword.getPassword()));
         userRepository.save(user);
     }
+
+    @Override
+    public void changePassword(String jwt, UserChangePassword userChangePassword) throws Exception {
+        User user = findUserByToken(jwt);
+
+        if (!passwordEncoder.matches(userChangePassword.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu hiện tại không đúng.");
+        }
+
+        if (!userChangePassword.getNewPassword().equals(userChangePassword.getConfirmPassword())) {
+            throw new IllegalArgumentException("Mật khẩu xác nhận không đúng.");
+        }
+
+        // Cập nhật mật khẩu mới
+        user.setPassword(passwordEncoder.encode(userChangePassword.getNewPassword()));
+        userRepository.save(user);
+    }
+
 }

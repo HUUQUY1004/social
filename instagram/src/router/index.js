@@ -1,6 +1,7 @@
 import VideoCall from "../component/Call/call";
 import AlbumPage from "../pages/Album/album";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
+import EditProfile from "../pages/EditProfile/EditProfile";
 import Friends from "../pages/Friends/Friends";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
@@ -81,5 +82,9 @@ export const router = [
     Component: ChangePassword,
     path: "/account/changePassword",
     layout: null,
+  },
+  {
+    Component: EditProfile,
+    path: "/edit-profile",
   },
 ];

@@ -119,7 +119,7 @@ function Profile() {
                                 <h3 className="username">{dataUser?.username}</h3>
                                 {currentUser?.id === dataUser?.id ? (
                                     <div className="flex a-center ">
-                                        <button className="br-8 btn">{t("edit_profile")}</button>
+                                        <Link to={'/edit-profile'} className="br-8 btn">{t("edit_profile")}</Link>
                                         <Link
                                             to={`/${currentUser?.id}/trash`}
                                             className="icon"

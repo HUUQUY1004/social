@@ -21,4 +21,6 @@ public interface PostService {
     List<Post> getTrash(String jwt) throws  Exception;
 
     List<Post> getReel() throws  Exception;
+    void toggleComment(String jwt, Long postId) throws  Exception;
+    void toggleLike(String jwt, Long postId) throws  Exception;
 }
