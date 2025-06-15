@@ -14,6 +14,7 @@ i18n
     resources: {
       en: {
         translation: {
+          find_album: "Find Album",
           home: "Home",
           explore: "Explore",
           friends: "Friends",
@@ -25,6 +26,7 @@ i18n
           settings: "Settings",
           activity: "Your activity",
           saved: "Saved",
+          saved_post: "Save Post",
           switch_mode: "Switch mode",
           report_problem: "Report a problem",
           switch_account: "Switch account",
@@ -167,6 +169,7 @@ i18n
       },
       vi: {
         translation: {
+          find_album: "Tìm album",
           success: "Thành công",
           compose_a_message: "Soạn tin nhắn",
           send: "Gửi",
@@ -242,6 +245,7 @@ i18n
           new_collect: "Bộ sưu tập",
           collection_description: "Chỉ mình bạn có thể xem mục mình đã lưu",
           save: "Lưu",
+          save_post: "Lưu bài viết",
           save_description:
             "Lưu ảnh và video mà bạn muốn xem lại. Sẽ không có ai được thông báo và chỉ mình bạn có thể xem những gì mình đã lưu.",
           photo_in_you: "Ảnh có mặt bạn",

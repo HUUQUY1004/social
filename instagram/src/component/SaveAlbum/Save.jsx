@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import useOnClickOutside from "../../hook/useOnClickOutSide";
 import { addPostToAlbum, getAllAlbum, getListFriend, sharePost } from "../../action/action";
 import FriendItem from "../../pages/Friends/FriendItem";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function SavedAlbum({onClose, postId}) {
     const shareRef = useRef();
+    const {t} = useTranslation()
     useOnClickOutside(shareRef, ()=>onClose(false))
     const [value,setValue] = useState("")
     const [albums, setAlbums] = useState([])
@@ -32,6 +35,7 @@ function SavedAlbum({onClose, postId}) {
             }
             const data = await addPostToAlbum(dataSend)
             if(data.status === 200){
+                toast.info(t("success"))
                 onClose(false)
             }
             
@@ -45,13 +49,13 @@ function SavedAlbum({onClose, postId}) {
     return ( 
             <div  className="description__wrapper flex a-center j-center fixed top-0 right-0 bottom-0 left-0 z-1 bg-black/80 bg-opacity-90 ">
                 <div ref={shareRef} className="description-inner flex flex-col h-full w-full  bg-white sm:h-[600px] sm:w-[550px] rounded-md py-5 " >
-                    <h3 className="description-title text font-bold text-center text-sm pb-4 ">Lưu bài viết</h3>
+                    <h3 className="description-title text font-bold text-center text-sm pb-4 ">{t("save_post")}</h3>
                     <div className=" flex border-y py-2 px-4 gap-4">
-                        <p className="font-semibold ">Tìm album: </p>
-                        <input type="text" placeholder=" Tìm kiếm" />
+                        <p className="font-semibold ">{t("find_album")}: </p>
+                        <input type="text" placeholder={t("search")} />
                     </div>
                     <div className="px-4 mt-2  flex-1">
-                        <h4 className="font-semibold">Gợi ý:</h4>
+                        <h4 className="font-semibold">{t("suggestion_for_you")}:</h4>
                         <div className="mt-4">
                             {
                                 albums.map((item, index) => (
@@ -63,7 +67,7 @@ function SavedAlbum({onClose, postId}) {
                     <div className="m-5 mb-0 border-t">
                         
                         <button onClick={handleShare} className={`${selectedAlbum.length > 0 ? 'bg-blue-500' : 'bg-blue-200'} py-1 mt-4 rounded-xl text-center w-full text-white transition-colors duration-300`}>
-                            Lưu
+                            {t("save")}
                         </button>
                     </div>
 
