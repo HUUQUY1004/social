@@ -16,11 +16,15 @@ const handleError = (error) => {
   }
 };
 
-export const token = localStorage.getItem("access_token");
-const config = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
+export const getToken = () => localStorage.getItem("access_token");
+
+export const getConfig = () => {
+  const token = getToken();
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 };
 export const login = async (email, password) => {
   console.log(email, password);
@@ -55,14 +59,23 @@ export const getMyProfile = async () => {
   try {
     const { data } = await axios.get(
       `${BASE_URL}/api/profile/my-profile`,
-      config
+      getConfig()
     );
 
     return data;
   } catch (error) {
     console.log("debug:", error);
-
-    handleError(error);
+    
+    if (error.response) {
+      if (error.response.status === 403 || error.response.status === 401) {
+        // Token expired or invalid, redirect to login
+        localStorage.removeItem('access_token');
+        window.location.href = "/login";
+        return null;
+      }
+    }
+    
+    return handleError(error);
   }
 };
 export const changeDescription = async (description) => {
@@ -71,7 +84,7 @@ export const changeDescription = async (description) => {
     {
       description,
     },
-    config
+    getConfig()
   );
   return data;
 };
@@ -82,7 +95,7 @@ export const changeAvatar = async (avatar) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/profile/update-avatar`,
     formData,
-    config
+    getConfig()
   );
   return data;
 };
@@ -90,7 +103,7 @@ export const searchUser = async (value) => {
   try {
     const { data } = await axios.get(
       `http://localhost:5000/api/user/search/${value}`,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -102,7 +115,7 @@ export const getSuggestion = async () => {
   try {
     const { data } = await axios.get(
       `http://localhost:5000/api/suggestion`,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -114,7 +127,7 @@ export const getInvitation = async () => {
   try {
     const { data } = await axios.get(
       `${BASE_URL}/api/friend/getInvitation`,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -127,7 +140,7 @@ export const addFriend = async (receiverId) => {
     const { data } = await axios.post(
       `${BASE_URL}/api/friend/add/${receiverId}`,
       {},
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -140,7 +153,7 @@ export const acceptFriend = async (requestId) => {
     const { data } = await axios.post(
       `${BASE_URL}/api/friend/accept/${requestId}`,
       {},
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -153,7 +166,7 @@ export const rejectFriend = async (requestId) => {
     const { data } = await axios.post(
       `${BASE_URL}/api/friend/reject/${requestId}`,
       {},
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -165,7 +178,7 @@ export const deleteFriend = async (userId) => {
   try {
     const { data } = await axios.delete(
       `${BASE_URL}/api/friend/${userId}`,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -176,7 +189,7 @@ export const deleteFriend = async (userId) => {
 export const getNotify = async (value) => {
   const page = value === null ? "" : value;
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/notify/`, config);
+    const { data } = await axios.get(`${BASE_URL}/api/notify/`, getConfig());
     return data;
   } catch (error) {
     console.error(error.response?.data || error.message);
@@ -186,7 +199,7 @@ export const getNotify = async (value) => {
 
 export const getNumberOfFriends = async () => {
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/friend/quantity`, config);
+    const { data } = await axios.get(`${BASE_URL}/api/friend/quantity`, getConfig());
     return data;
   } catch (error) {
     console.error(error.response?.data || error.message);
@@ -204,7 +217,7 @@ export const getListFriend = async (value) => {
   try {
     console.log("url: " + url);
 
-    const { data } = await axios.get(url, config);
+    const { data } = await axios.get(url, getConfig());
     return data;
   } catch (error) {
     console.error(error.response?.data || error.message);
@@ -223,7 +236,7 @@ export const sendMessage = async (body) => {
     const { data } = await axios.post(
       `${BASE_URL}/api/messages/send`,
       formData,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -235,7 +248,7 @@ export const getConversation = async (toUserId) => {
   try {
     const { data } = await axios.get(
       `${BASE_URL}/api/messages/conversation/${toUserId}`,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -258,20 +271,20 @@ export const createPost = async (value) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/post/create`,
     formData,
-    config
+    getConfig()
   );
   return data;
 };
 
 // getPost for userId
 export const getPostForUserId = async (userId) => {
-  const { data } = await axios.get(`${BASE_URL}/api/post/${userId}`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/post/${userId}`, getConfig());
   return data;
 };
 
 export const getPostById = async (id) => {
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/post?id=${id}`, config);
+    const { data } = await axios.get(`${BASE_URL}/api/post?id=${id}`, getConfig());
     console.log(data);
 
     return data;
@@ -288,7 +301,7 @@ export const likePost = async (id) => {
     {
       postId: id,
     },
-    config
+    getConfig()
   );
   return data;
 };
@@ -296,19 +309,19 @@ export const commentPost = async (value) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/post/comment`,
     value,
-    config
+    getConfig()
   );
   return data;
 };
 export const getUserById = async (userId) => {
-  const { data } = await axios.get(`${BASE_URL}/api/user/${userId}`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/user/${userId}`, getConfig());
   return data;
 };
 export const sharePost = async (value) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/messages/share`,
     value,
-    config
+    getConfig()
   );
   return data;
 };
@@ -316,24 +329,24 @@ export const sharePost = async (value) => {
 // gen Token
 
 export const generateTokenStringee = async () => {
-  const { data } = await axios.get(`${BASE_URL}/api/stringee/token`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/stringee/token`, getConfig());
   return data;
 };
 
 // delete post
 export const deleteAndBackupPost = async (id) => {
-  const { data } = await axios.delete(`${BASE_URL}/api/post/${id}`, config);
+  const { data } = await axios.delete(`${BASE_URL}/api/post/${id}`, getConfig());
   console.log(data);
 
   return data;
 };
 export const getQuantityPost = async () => {
-  const { data } = await axios.get(`${BASE_URL}/api/post/quantity`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/post/quantity`, getConfig());
   return data;
 };
 
 export const getPostHome = async () => {
-  const { data } = await axios.get(`${BASE_URL}/api/post/for-home`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/post/for-home`, getConfig());
   return data;
 };
 
@@ -341,12 +354,12 @@ export const createAlbum = async (value) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/album/create`,
     value,
-    config
+    getConfig()
   );
   return data;
 };
 export const getAllAlbum = async () => {
-  const { data } = await axios.get(`${BASE_URL}/api/album/all`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/album/all`, getConfig());
   return data;
 };
 
@@ -354,23 +367,23 @@ export const addPostToAlbum = async (value) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/album/saved`,
     value,
-    config
+    getConfig()
   );
   return data;
 };
 
 export const getAlbumById = async (id) => {
-  const { data } = await axios.get(`${BASE_URL}/api/album/${id}`, config);
+  const { data } = await axios.get(`${BASE_URL}/api/album/${id}`, getConfig());
   return data;
 };
 export const deleteAlbum = async (id) => {
-  const { data } = await axios.delete(`${BASE_URL}/api/album/${id}`, config);
+  const { data } = await axios.delete(`${BASE_URL}/api/album/${id}`, getConfig());
   return data;
 };
 
 export const getTrash = async () => {
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/post/trash`, config);
+    const { data } = await axios.get(`${BASE_URL}/api/post/trash`, getConfig());
     return data;
   } catch (error) {
     return {
@@ -383,7 +396,7 @@ export const getReels = async (page) => {
   try {
     const { data } = await axios.get(
       `${BASE_URL}/api/post/reels?page=${page}`,
-      config
+      getConfig()
     );
     return data;
   } catch (error) {
@@ -422,7 +435,7 @@ export const changePassword = async (value) => {
     const { data } = await axios.post(
       `${BASE_URL}/auth/change-password`,
       value,
-      config
+      getConfig()
     );
     console.log(data);
 
@@ -435,7 +448,7 @@ export const changeStatusComment = async (postId) => {
   const { data } = await axios.patch(
     `${BASE_URL}/api/post/change-status-comment`,
     { postId },
-    config
+    getConfig()
   );
 
   return data;
@@ -444,7 +457,7 @@ export const changeStatusLike = async (postId) => {
   const { data } = await axios.patch(
     `${BASE_URL}/api/post/change-status-like`,
     { postId },
-    config
+    getConfig()
   );
 
   return data;
@@ -453,7 +466,7 @@ export const changePasswordUser = async (value) => {
   const { data } = await axios.post(
     `${BASE_URL}/api/user/change-password`,
     value,
-    config
+    getConfig()
   );
 
   return data;

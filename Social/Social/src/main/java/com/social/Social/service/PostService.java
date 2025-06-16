@@ -1,6 +1,7 @@
 package com.social.Social.service;
 
 import com.social.Social.model.Post;
+import com.social.Social.model.PostStatus;
 import com.social.Social.request.CommentPost;
 
 import java.util.List;
@@ -23,4 +24,12 @@ public interface PostService {
     List<Post> getReel() throws  Exception;
     void toggleComment(String jwt, Long postId) throws  Exception;
     void toggleLike(String jwt, Long postId) throws  Exception;
+    
+    // Admin methods
+    List<Post> getAllPosts() throws Exception;
+    List<Post> getAllReels() throws Exception;
+    List<Post> getPostsByStatus(PostStatus status) throws Exception;
+    List<Post> getReelsByStatus(PostStatus status) throws Exception;
+    Post moderatePost(String jwt, Long postId, PostStatus status, String reason) throws Exception;
+    Post moderateReel(String jwt, Long reelId, PostStatus status, String reason) throws Exception;
 }

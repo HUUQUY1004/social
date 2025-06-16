@@ -1,0 +1,172 @@
+.admin-sidebar {
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.admin-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo-icon {
+    font-size: 32px;
+    margin-right: 12px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #fff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.admin-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.admin-role {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-sidebar-nav {
+    padding: 20px 0;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: #fff;
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.nav-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-label {
+    font-size: 14px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.nav-badge {
+    position: relative;
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #ff4757;
+    border-radius: 50%;
+    display: block;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+    }
+}
+
+.admin-sidebar-footer {
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.logout-btn:hover {
+    color: #ff4757;
+    background: rgba(255, 71, 87, 0.1);
+    border-left-color: #ff4757;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    
+    .admin-sidebar-header {
+        text-align: center;
+    }
+    
+    .nav-item {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .nav-label {
+        display: none;
+    }
+    
+    .nav-icon {
+        margin-right: 0;
+        font-size: 24px;
+    }
+}

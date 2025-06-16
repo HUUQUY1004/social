@@ -1,8 +1,6 @@
 package com.social.Social.controller;
 
 import com.social.Social.model.Message;
-import com.social.Social.model.User;
-import com.social.Social.request.MessageRequest;
 import com.social.Social.request.ShareRequest;
 import com.social.Social.responsitory.MessageRepository;
 import com.social.Social.service.FileStorageService;

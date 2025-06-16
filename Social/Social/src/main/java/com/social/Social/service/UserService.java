@@ -14,12 +14,16 @@ public interface UserService {
 
     boolean updateBanner(String jwt, String path) throws  Exception;
 
-    boolean updateDescription(String jwt, String description) throws  Exception;
-
-    List<User> getTenUser();
+    boolean updateDescription(String jwt, String description) throws  Exception;    List<User> getTenUser();
 
     User getUserById(Long userId) throws  Exception;
 
     void changePassword(ChangePassword changePassword) throws  Exception;
     void changePassword(String jwt, UserChangePassword userChangePassword) throws  Exception;
+    
+    // Admin methods
+    List<User> getAllUsers() throws Exception;
+    User findUserById(Long userId) throws Exception;
+    User updateUser(User user) throws Exception;
+    void deleteUser(Long userId) throws Exception;
 }

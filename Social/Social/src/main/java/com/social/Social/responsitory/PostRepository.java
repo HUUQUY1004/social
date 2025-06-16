@@ -1,6 +1,7 @@
 package com.social.Social.responsitory;
 
 import com.social.Social.model.Post;
+import com.social.Social.model.PostStatus;
 import com.social.Social.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,12 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PostRepository  extends JpaRepository<Post, Long> {
-    List<Post> getPostByUserId(Long userId);
-
-    @Query("""
+    List<Post> getPostByUserId(Long userId);    @Query("""
     SELECT DISTINCT p FROM Post p
     LEFT JOIN FETCH p.images
-    WHERE p.user.id = :ownerId and p.isDelete = false 
+    WHERE p.user.id = :ownerId and p.isDelete = false AND p.status = 'APPROVED'
       AND (
         :requesterId = :ownerId
         OR (
@@ -38,11 +37,9 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
     List<Post> getVisiblePostsWithImages(@Param("ownerId") Long ownerId, @Param("requesterId") Long requesterId);
 
     @Query("select  count(*) from Post  p where  p.user = :user")
-    int getQuantityPost(User user);
-
-    @Query(
+    int getQuantityPost(User user);    @Query(
             "SELECT p FROM Post p LEFT JOIN FETCH p.images " +
-                    "WHERE p.isDelete = false " +
+                    "WHERE p.isDelete = false AND p.status = 'APPROVED' " +
                     "AND p.postVisibility <> 'PRIVATE' " +
                     "AND EXISTS (" +
                     "SELECT 1 FROM User u " +
@@ -51,9 +48,19 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
                     ")"
     )
     List<Post> getPostHome(@Param("userId") Long userId);
-    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images where  p.user = :user and  p.isDelete = true")
-    List<Post> getTrash(User user);
-    @Query("select  p from Post  p LEFT JOIN FETCH p.images where  p.postVisibility  = 'PUBLIC' and p.isReel= true ")
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images where  p.user = :user and  p.isDelete = true")    List<Post> getTrash(User user);    @Query("select  p from Post  p LEFT JOIN FETCH p.images where  p.postVisibility  = 'PUBLIC' and p.isReel= true and p.status = 'APPROVED' ")
     List<Post> getReel();
 
+    // Admin methods
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images WHERE p.isReel = false AND p.isDelete = false")
+    List<Post> findByIsReelFalseAndIsDeleteFalse();
+    
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images WHERE p.isReel = true AND p.isDelete = false")
+    List<Post> findByIsReelTrueAndIsDeleteFalse();
+    
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images WHERE p.isReel = false AND p.isDelete = false AND p.status = :status")
+    List<Post> findByIsReelFalseAndIsDeleteFalseAndStatus(@Param("status") PostStatus status);
+    
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.images WHERE p.isReel = true AND p.isDelete = false AND p.status = :status")
+    List<Post> findByIsReelTrueAndIsDeleteFalseAndStatus(@Param("status") PostStatus status);
 }

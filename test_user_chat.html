@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test User Chat API</title>
+</head>
+<body>
+    <h2>Test User Chat to Admin</h2>
+    
+    <div>
+        <h3>1. Test Login First</h3>
+        <input type="email" id="email" placeholder="Email" value="nguyen.van.a@gmail.com">
+        <input type="password" id="password" placeholder="Password" value="123456">
+        <button onclick="testLogin()">Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div>
+        <h3>2. Test Send Message to Admin</h3>
+        <textarea id="message" placeholder="Enter message">Xin chào admin, tôi cần hỗ trợ</textarea>
+        <button onclick="testSendMessage()">Send Message</button>
+        <div id="messageResult"></div>
+    </div>
+
+    <div>
+        <h3>3. Test Get My Chat History</h3>
+        <button onclick="testGetHistory()">Get Chat History</button>
+        <div id="historyResult"></div>
+    </div>
+
+    <script>
+        let token = localStorage.getItem('access_token');
+          async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            try {
+                console.log('Attempting login with:', { email, password });
+                const response = await fetch('http://localhost:5000/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Login response:', data);
+                
+                if (data.jwt) {
+                    token = data.jwt;
+                    localStorage.setItem('access_token', token);
+                    resultDiv.innerHTML = `<div style="color: green;">✅ Login successful! Token saved.</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div style="color: red;">❌ Login failed: ${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                resultDiv.innerHTML = `<div style="color: red;">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testSendMessage() {
+            const message = document.getElementById('message').value;
+            const resultDiv = document.getElementById('messageResult');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<div style="color: red;">❌ Please login first</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/chat/send-to-admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                console.log('Send message response:', data);
+                
+                resultDiv.innerHTML = `
+                    <h4>Response Status: ${response.status}</h4>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+${JSON.stringify(data, null, 2)}
+                    </pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div style="color: red;">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testGetHistory() {
+            const resultDiv = document.getElementById('historyResult');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<div style="color: red;">❌ Please login first</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/chat/my-history', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                console.log('Chat history response:', data);
+                
+                resultDiv.innerHTML = `
+                    <h4>Response Status: ${response.status}</h4>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+${JSON.stringify(data, null, 2)}
+                    </pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div style="color: red;">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-load token if exists
+        if (token) {
+            document.getElementById('loginResult').innerHTML = '<div style="color: blue;">ℹ️ Token found in localStorage</div>';
+        }
+    </script>
+</body>
+</html>

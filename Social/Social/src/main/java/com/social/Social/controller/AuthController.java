@@ -2,7 +2,9 @@ package com.social.Social.controller;
 
 import com.social.Social.model.ActivityHistory;
 import com.social.Social.model.EnumActivity;
+import com.social.Social.model.Role;
 import com.social.Social.model.User;
+import com.social.Social.request.AdminLoginRequest;
 import com.social.Social.request.ChangePassword;
 import com.social.Social.request.FindUserByEmailRequest;
 import com.social.Social.request.LoginRequest;
@@ -29,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -175,6 +176,47 @@ public class AuthController {
 
 
     }
+    @PostMapping("/admin/login")
+    public ResponseEntity<AuthResponse> adminLogin(@RequestBody AdminLoginRequest adminLoginRequest, HttpServletRequest request) {
+        AuthResponse authResponse = new AuthResponse();
+        try {
+            // Xác thực người dùng
+            Authentication authentication = authenticate(adminLoginRequest.getEmail(), adminLoginRequest.getPassword());
+            
+            // Kiểm tra quyền admin
+            User user = userService.findUserByEmail(adminLoginRequest.getEmail());
+            if (user.getRole() != Role.ADMIN) {
+                authResponse.setMessage("Bạn không có quyền truy cập trang quản trị");
+                return new ResponseEntity<>(authResponse, HttpStatus.FORBIDDEN);
+            }
+            
+            String jwt = jwtProvider.generateToken(authentication);
+            authResponse.setJwt(jwt);
+            authResponse.setMessage("Đăng nhập admin thành công");
+
+            // Ghi lại hoạt động đăng nhập admin
+            String device = inforDeviceImplement.getDeviceInfo(request);
+            String location = inforDeviceImplement.getLocationInfo(request);
+
+            ActivityHistory activityHistory = ActivityHistory.builder()
+                    .isDelete(false)
+                    .content("Admin đã đăng nhập tại thiết bị " + device + " tại: " + location)
+                    .activityType(EnumActivity.LOGIN)
+                    .build();
+            activityHistoryService.createActivityHistory(activityHistory);
+            
+            return new ResponseEntity<>(authResponse, HttpStatus.OK);
+        } catch (UsernameNotFoundException e) {
+            authResponse.setMessage("Email không tồn tại");
+            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+        } catch (BadCredentialsException e) {
+            authResponse.setMessage(e.getMessage());
+            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            authResponse.setMessage("Lỗi server: " + e.getMessage());
+            return new ResponseEntity<>(authResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }    }
+    
     private Authentication authenticate(String email, String password) {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
         if(userDetails == null) {

@@ -3,6 +3,7 @@ package com.social.Social.config;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,7 @@ import java.util.Collections;
 
 @Configuration //khai báo config
 @EnableWebSecurity // kích hoạt bảo mật
+@EnableMethodSecurity(prePostEnabled = true) // kích hoạt method security
 public class AppConfig  implements WebMvcConfigurer {
     private final  CustomAccessDeniedHandler customAccessDeniedHandler;
 
@@ -30,12 +32,10 @@ public class AppConfig  implements WebMvcConfigurer {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
         httpSecurity.sessionManagement(
-                managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(Authorize -> Authorize
+                managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))                .authorizeHttpRequests(Authorize -> Authorize
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll()
-
-        ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+                        .anyRequest().permitAll()        ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigrationSource()))
         ;
@@ -46,9 +46,10 @@ public class AppConfig  implements WebMvcConfigurer {
         return new CorsConfigurationSource() {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration cfg = new CorsConfiguration();
-                cfg.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3000"
+                CorsConfiguration cfg = new CorsConfiguration();                cfg.setAllowedOrigins(Arrays.asList(
+                        "http://localhost:3000",
+                        "http://127.0.0.1:5500",
+                        "http://localhost:5500"
                 ));
                 cfg.setAllowedMethods(Collections.singletonList("*"));
                 cfg.setAllowCredentials(true);

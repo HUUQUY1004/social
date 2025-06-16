@@ -6,9 +6,9 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,9 +22,13 @@ public class User {
     private String description;
     private String nickname;
     private String avatar;
-    private String banner;
-    private String password;
+    private String banner;    private String password;
     private String stringeeId;
+    private boolean blocked = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role = Role.USER;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -120,6 +124,21 @@ public class User {
 
     public void setBanner(String banner) {
         this.banner = banner;
+    }
+      public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 }
 //cascade = CascadeType.ALL giúp tự động cập nhật hoặc xóa dữ liệu liên quan.

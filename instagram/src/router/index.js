@@ -14,6 +14,9 @@ import Register from "../pages/Register/register";
 import FindAccount from "../pages/ResetPassword/FindAccount";
 import Suggestion from "../pages/Suggesstion/Suggesstion";
 import TrashPost from "../pages/TrashPost/TrashPost";
+import AdminLogin from "../pages/AdminLogin";
+import AdminDashboard from "../pages/AdminDashboard";
+import ProtectedRoute from "../component/ProtectedRoute";
 export const router = [
   {
     Component: Home,
@@ -82,9 +85,22 @@ export const router = [
     Component: ChangePassword,
     path: "/account/changePassword",
     layout: null,
-  },
-  {
+  },  {
     Component: EditProfile,
     path: "/edit-profile",
+  },
+  {
+    Component: AdminLogin,
+    path: "/admin/login",
+    layout: null,
+  },
+  {
+    Component: () => (
+      <ProtectedRoute requiredRole="ADMIN">
+        <AdminDashboard />
+      </ProtectedRoute>
+    ),
+    path: "/admin/dashboard",
+    layout: null,
   },
 ];
