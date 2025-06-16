@@ -94,11 +94,30 @@ public class UserServiceImp  implements  UserService{
 
         if (!userChangePassword.getNewPassword().equals(userChangePassword.getConfirmPassword())) {
             throw new IllegalArgumentException("Mật khẩu xác nhận không đúng.");
-        }
-
-        // Cập nhật mật khẩu mới
+        }        // Cập nhật mật khẩu mới
         user.setPassword(passwordEncoder.encode(userChangePassword.getNewPassword()));
         userRepository.save(user);
     }
 
+    // Admin methods implementation
+    @Override
+    public List<User> getAllUsers() throws Exception {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User findUserById(Long userId) throws Exception {
+        return userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
+    }
+
+    @Override
+    public User updateUser(User user) throws Exception {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) throws Exception {
+        User user = findUserById(userId);
+        userRepository.delete(user);
+    }
 }

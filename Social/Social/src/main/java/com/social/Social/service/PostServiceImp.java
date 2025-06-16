@@ -2,6 +2,7 @@ package com.social.Social.service;
 
 import com.social.Social.model.Comment;
 import com.social.Social.model.Post;
+import com.social.Social.model.PostStatus;
 import com.social.Social.model.User;
 import com.social.Social.request.CommentPost;
 import com.social.Social.responsitory.CommentRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -28,10 +30,11 @@ public class PostServiceImp implements  PostService{
     @Override
     public int getNumberOfArticles(String jwt) {
         return 0;
-    }
-
-    @Override
+    }    @Override
     public Post createPost( String jwt,Post post) throws Exception {
+        // Đặt trạng thái mặc định là PENDING để admin duyệt
+        post.setStatus(PostStatus.PENDING);
+        
         Post newPost = postRepository.save(post);
 //        Send Notify to Friend
         notifyService.postNotify(jwt, newPost.getId());
@@ -81,18 +84,13 @@ public class PostServiceImp implements  PostService{
         commentRepository.save(comment);
         return  true;
 
-    }
-
-    @Override
+    }    @Override
     public boolean deleteAndBackupPost(Long postId) throws Exception {
         Post post = postRepository.findById(postId).orElseThrow(()-> new Exception("Post not found"));
 
         post.setDelete(!post.isDelete());
-        Post newPost =   postRepository.save(post);
-        if(newPost !=null){
-            return  true;
-        }
-        return  false;
+        postRepository.save(post);
+        return true;
     }
 
     @Override
@@ -134,9 +132,7 @@ public class PostServiceImp implements  PostService{
         }
         post.setComment(!post.isComment());
         postRepository.save(post);
-    }
-
-    @Override
+    }    @Override
     public void toggleLike(String jwt, Long postId) throws Exception {
         User user = userService.findUserByToken(jwt);
         Post post = getPostById(postId);
@@ -145,5 +141,56 @@ public class PostServiceImp implements  PostService{
         }
         post.setShowLike(!post.isShowLike());
         postRepository.save(post);
+    }
+
+    // Admin methods implementation
+    @Override
+    public List<Post> getAllPosts() throws Exception {
+        return postRepository.findByIsReelFalseAndIsDeleteFalse();
+    }
+
+    @Override
+    public List<Post> getAllReels() throws Exception {
+        return postRepository.findByIsReelTrueAndIsDeleteFalse();
+    }
+
+    @Override
+    public List<Post> getPostsByStatus(PostStatus status) throws Exception {
+        return postRepository.findByIsReelFalseAndIsDeleteFalseAndStatus(status);
+    }
+
+    @Override
+    public List<Post> getReelsByStatus(PostStatus status) throws Exception {
+        return postRepository.findByIsReelTrueAndIsDeleteFalseAndStatus(status);
+    }
+
+    @Override
+    public Post moderatePost(String jwt, Long postId, PostStatus status, String reason) throws Exception {
+        User moderator = userService.findUserByToken(jwt);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new Exception("Post not found"));
+        
+        post.setStatus(status);
+        post.setModerationReason(reason);
+        post.setModeratedAt(LocalDateTime.now());
+        post.setModeratedBy(moderator);
+        
+        return postRepository.save(post);
+    }
+
+    @Override
+    public Post moderateReel(String jwt, Long reelId, PostStatus status, String reason) throws Exception {
+        User moderator = userService.findUserByToken(jwt);
+        Post reel = postRepository.findById(reelId).orElseThrow(() -> new Exception("Reel not found"));
+        
+        if (!reel.isReel()) {
+            throw new Exception("This is not a reel");
+        }
+        
+        reel.setStatus(status);
+        reel.setModerationReason(reason);
+        reel.setModeratedAt(LocalDateTime.now());
+        reel.setModeratedBy(moderator);
+        
+        return postRepository.save(reel);
     }
 }

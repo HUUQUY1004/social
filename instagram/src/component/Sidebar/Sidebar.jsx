@@ -84,12 +84,11 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
             name: t("activity"),
             direct: <MdOutlineKeyboardArrowRight />,
             link: '/your_activity/interactions',
-        },
-        {
+        },        {
             icon: <FontAwesomeIcon icon={faBookmark} />,
             name: t("saved"),
             direct: <MdOutlineKeyboardArrowRight />,
-            link: `/${currentUser.username}/saved`,
+            link: `/${currentUser?.username || 'user'}/saved`,
         },
         {
             icon: <BsFillSunFill />,
@@ -197,14 +196,13 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
                         );
                     }
                 })}
-            </div>
-            <div className="current-user br-8">
+            </div>            <div className="current-user br-8">
                 <div className="flex">
                     <p className="avatar">
-                        {currentUser.avatar ? (
-                            <img src={ `${BASE_URL}`+currentUser.avatar} />
+                        {currentUser?.avatar ? (
+                            <img src={ `${BASE_URL}`+currentUser.avatar} alt="user avatar" />
                         ) : (
-                            <img src={images.noAvatar} alt="default" />
+                            <img src={images.noAvatar} alt="default avatar" />
                         )}
                     </p>
                     <NavLink to={`/profile`} className="link">

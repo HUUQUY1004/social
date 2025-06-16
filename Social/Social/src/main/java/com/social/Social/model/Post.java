@@ -1,7 +1,6 @@
 package com.social.Social.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,9 +27,22 @@ public class Post {
     private boolean isShowLike;
     private double scaleImage;
     @Column(nullable = false)
-    private boolean isDelete;
-    @Column(nullable = false)
+    private boolean isDelete;    @Column(nullable = false)
     private boolean isReel;
+    
+    // Thêm các trường cho moderation
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PostStatus status = PostStatus.PENDING;
+    
+    private String moderationReason;
+    
+    private LocalDateTime moderatedAt;
+    
+    @ManyToOne
+    @JoinColumn(name = "moderated_by")
+    private User moderatedBy;
+    
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     @ToString.Exclude
@@ -163,13 +175,43 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public boolean isReel() {
+    }    public boolean isReel() {
         return isReel;
     }
 
     public void setReel(boolean reel) {
         isReel = reel;
+    }
+
+    public PostStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PostStatus status) {
+        this.status = status;
+    }
+
+    public String getModerationReason() {
+        return moderationReason;
+    }
+
+    public void setModerationReason(String moderationReason) {
+        this.moderationReason = moderationReason;
+    }
+
+    public LocalDateTime getModeratedAt() {
+        return moderatedAt;
+    }
+
+    public void setModeratedAt(LocalDateTime moderatedAt) {
+        this.moderatedAt = moderatedAt;
+    }
+
+    public User getModeratedBy() {
+        return moderatedBy;
+    }
+
+    public void setModeratedBy(User moderatedBy) {
+        this.moderatedBy = moderatedBy;
     }
 }
