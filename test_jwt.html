@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Debug</title>
+</head>
+<body>
+    <h1>JWT Token Debug</h1>
+    <button onclick="debugToken()">Debug Current Token</button>
+    <button onclick="loginAndGetNewToken()">Get New Token</button>
+    <div id="result"></div>
+
+    <script>
+        function debugToken() {
+            const resultDiv = document.getElementById('result');
+            
+            // Check all possible token locations
+            const token = localStorage.getItem('token');
+            const accessToken = localStorage.getItem('access_token');
+            const user = localStorage.getItem('user');
+            
+            resultDiv.innerHTML = `
+                <h3>Token Debug Info:</h3>
+                <p><strong>token:</strong> ${token ? token.substring(0, 50) + '...' : 'null'}</p>
+                <p><strong>access_token:</strong> ${accessToken ? accessToken.substring(0, 50) + '...' : 'null'}</p>
+                <p><strong>user:</strong> ${user}</p>
+                <hr>
+                <h4>Token Analysis:</h4>
+            `;
+            
+            // Analyze token
+            const tokenToAnalyze = token || accessToken;
+            if (tokenToAnalyze) {
+                try {
+                    // Remove Bearer prefix if exists
+                    const cleanToken = tokenToAnalyze.replace('Bearer ', '');
+                    
+                    // Split JWT parts
+                    const parts = cleanToken.split('.');
+                    resultDiv.innerHTML += `<p>JWT Parts: ${parts.length}</p>`;
+                    
+                    if (parts.length === 3) {
+                        // Decode payload (without verification)
+                        const payload = JSON.parse(atob(parts[1]));
+                        resultDiv.innerHTML += `
+                            <p><strong>Payload:</strong></p>
+                            <pre>${JSON.stringify(payload, null, 2)}</pre>
+                            <p><strong>Expires:</strong> ${new Date(payload.exp * 1000)}</p>
+                            <p><strong>Is Expired:</strong> ${payload.exp * 1000 < Date.now()}</p>
+                        `;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML += `<p style="color: red;">Error analyzing token: ${error.message}</p>`;
+                }
+            } else {
+                resultDiv.innerHTML += '<p style="color: red;">No token found!</p>';
+            }
+        }
+        
+        async function loginAndGetNewToken() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Logging in to get new token...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'nguyen.van.a@gmail.com',
+                        password: '123456'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h3>Login Success:</h3>
+                        <p><strong>New Token:</strong> ${data.jwt ? data.jwt.substring(0, 50) + '...' : 'No token'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                    
+                    if (data.jwt) {
+                        localStorage.setItem('token', data.jwt);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    }
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>Login Failed:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Login error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
