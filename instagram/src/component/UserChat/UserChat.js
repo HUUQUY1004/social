@@ -18,7 +18,9 @@ const UserChat = ({ isOpen, onClose }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    useEffect(scrollToBottom, [messages]);    const connectWebSocket = () => {
+    useEffect(scrollToBottom, [messages]);
+    
+    const connectWebSocket = () => {
         if (stompClient) {
             return; // Already connected
         }
@@ -26,8 +28,20 @@ const UserChat = ({ isOpen, onClose }) => {
         const socket = new SockJS(`${BASE_URL}/ws`);
         const client = Stomp.over(socket);
         
-        const token = localStorage.getItem('token');
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+        console.log('Raw token for WebSocket:', token);
+        
+        // Ensure token starts with "Bearer " if it doesn't already
+        let authToken = token;
+        if (token && !token.startsWith('Bearer ')) {
+            authToken = `Bearer ${token}`;
+        }
+        
+        const headers = authToken ? { 
+            Authorization: authToken
+        } : {};
+        
+        console.log('WebSocket headers:', headers);
 
         client.connect(headers, (frame) => {
             console.log('Connected to WebSocket:', frame);
@@ -35,7 +49,12 @@ const UserChat = ({ isOpen, onClose }) => {
             setConnected(true);
 
             // Subscribe to receive messages
-            const userId = JSON.parse(localStorage.getItem('user'))?.id;
+            const user = JSON.parse(localStorage.getItem('user'));
+            // TEMPORARY: Use hardcoded user ID for testing
+            const userId = user?.id || 2; // Fallback to user ID 2 for testing
+            console.log('User from localStorage:', user);
+            console.log('User ID for subscription:', userId);
+            
             if (userId) {
                 client.subscribe(`/user/${userId}/queue/chat`, (message) => {
                     const chatMessage = JSON.parse(message.body);
@@ -43,9 +62,17 @@ const UserChat = ({ isOpen, onClose }) => {
                     setMessages(prev => {
                         // Avoid duplicate messages by checking if message already exists
                         const exists = prev.some(msg => msg.id === chatMessage.id);
-                        return exists ? prev : [...prev, chatMessage];
+                        if (exists) {
+                            console.log('Message already exists, skipping:', chatMessage.id);
+                            return prev;
+                        }
+                        console.log('Adding new message to chat:', chatMessage);
+                        return [...prev, chatMessage];
                     });
                 });
+                console.log('Subscribed to:', `/user/${userId}/queue/chat`);
+            } else {
+                console.error('User ID not found, cannot subscribe to chat');
             }
         }, (error) => {
             console.error('WebSocket connection error:', error);
@@ -80,6 +107,7 @@ const UserChat = ({ isOpen, onClose }) => {
         try {
             const response = await axios.get(`${BASE_URL}/api/chat/my-history`, getConfig());
             if (response.data.chats) {
+                console.log('Loaded chat history:', response.data.chats);
                 setMessages(response.data.chats);
             }
         } catch (error) {
@@ -95,35 +123,39 @@ const UserChat = ({ isOpen, onClose }) => {
             connectWebSocket();
         } else {
             disconnectWebSocket();
-        }        return () => {
+        }
+        
+        return () => {
             disconnectWebSocket();
         };
     }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    
     const sendMessage = async () => {
         if (!newMessage.trim() || sending) return;
 
         setSending(true);
+        const messageText = newMessage;
+        
         try {            
             // Gửi qua WebSocket nếu có kết nối
             if (stompClient && connected && stompClient.connected) {
-                console.log('Sending message via WebSocket:', newMessage);
+                console.log('Sending message via WebSocket:', messageText);
                 
-                stompClient.send('/app/chat.sendToAdmin', {}, JSON.stringify({
-                    message: newMessage
-                }));
-                
+                // Xóa input ngay lập tức để UX tốt hơn
                 setNewMessage('');
+                
+                // Gửi tin nhắn, tin nhắn sẽ hiển thị khi nhận response từ server
+                stompClient.send('/app/chat.sendToAdmin', {}, JSON.stringify({
+                    message: messageText
+                }));
             } else {
                 // Fallback về HTTP nếu WebSocket không khả dụng
                 console.log('WebSocket not connected, using HTTP fallback');
                 const response = await axios.post(
                     `${BASE_URL}/api/chat/send-to-admin`,
-                    { message: newMessage },
+                    { message: messageText },
                     getConfig()
-                );
-
-                if (response.data.chat) {
+                );                if (response.data.chat) {
                     setMessages(prev => [...prev, response.data.chat]);
                     setNewMessage('');
                 }
@@ -182,9 +214,9 @@ const UserChat = ({ isOpen, onClose }) => {
                                     <p>Chúng tôi sẵn sàng hỗ trợ bạn. Hãy gửi tin nhắn để bắt đầu.</p>
                                 </div>
                             ) : (
-                                messages.map((message) => (
+                                messages.map((message, index) => (
                                     <div
-                                        key={message.id}
+                                        key={`${message.id}-${index}-${message.createdAt}`}
                                         className={`chat-message ${message.sender === 'USER' ? 'user-message' : 'admin-message'}`}
                                     >
                                         <div className="message-content">

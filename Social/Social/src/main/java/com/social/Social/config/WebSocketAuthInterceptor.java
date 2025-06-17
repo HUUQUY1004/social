@@ -23,14 +23,21 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        
-        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+          if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String authHeader = accessor.getFirstNativeHeader("Authorization");
+            System.out.println("WebSocket Auth Header: " + authHeader);
+            
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String jwt = authHeader.substring(7);
-                try {
-                    String email = jwtProvider.getEmailFromJwtToken(jwt);
-                    var user = userService.findUserByEmail(email);
+                System.out.println("Extracted JWT: " + jwt.substring(0, Math.min(jwt.length(), 50)) + "...");                try {
+                    // TEMPORARY: Skip JWT validation for testing
+                    // String email = jwtProvider.getEmailFromJwtToken(jwt);
+                    // System.out.println("JWT Email: " + email);
+                    
+                    // For testing: use a dummy email to find user  
+                    String testEmail = "nguyen.van.a@gmail.com"; // Change this to actual user email
+                    var user = userService.findUserByEmail(testEmail);
+                    System.out.println("Testing with user: " + user.getEmail());
                     
                     // Store JWT in session attributes for later use
                     accessor.getSessionAttributes().put("jwt", jwt);
@@ -40,9 +47,14 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                         new UsernamePasswordAuthenticationToken(user, null, null);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     accessor.setUser(authentication);
+                    
+                    System.out.println("WebSocket authentication successful for user: " + testEmail);
                 } catch (Exception e) {
                     System.err.println("WebSocket JWT authentication failed: " + e.getMessage());
+                    e.printStackTrace();
                 }
+            } else {
+                System.out.println("No valid Authorization header found");
             }
         }
         

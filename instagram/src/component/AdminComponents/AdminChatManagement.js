@@ -41,29 +41,53 @@ const AdminChatManagement = () => {
             console.error('Error fetching unread count:', error);
         }
     }, []);    useEffect(() => {
-        let client = null;
-
-        const connectWebSocket = () => {
+        let client = null;        const connectWebSocket = () => {
             const socket = new SockJS(`${BASE_URL}/ws`);
             client = Stomp.over(socket);
+              const token = localStorage.getItem('access_token');
+            console.log('Admin raw token for WebSocket:', token);
             
-            const token = localStorage.getItem('access_token');
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};            client.connect(headers, (frame) => {
+            // Ensure token starts with "Bearer " if it doesn't already
+            let authToken = token;
+            if (token && !token.startsWith('Bearer ')) {
+                authToken = `Bearer ${token}`;
+            }
+            
+            const wsHeaders = authToken ? { 
+                Authorization: authToken,
+                'Content-Type': 'application/json'
+            } : {};
+            
+            console.log('Admin WebSocket headers:', wsHeaders);
+
+            client.connect(wsHeaders, (frame) => {
                 console.log('Admin connected to WebSocket:', frame);
                 setStompClient(client);
-                setConnected(true);
-
-                // Subscribe to receive new messages from users
+                setConnected(true);                // Subscribe to receive new messages from users
                 client.subscribe('/topic/admin/messages', (message) => {
                     const chatMessage = JSON.parse(message.body);
                     console.log('Admin received message via WebSocket:', chatMessage);
                     
                     // If this is the currently selected user, add to messages
-                    if (selectedUser && chatMessage.userId === selectedUser.id) {
+                    if (selectedUser && (chatMessage.userId === selectedUser.id || 
+                        (chatMessage.user && chatMessage.user.id === selectedUser.id))) {
                         setMessages(prev => {
                             // Avoid duplicate messages by checking if message already exists
-                            const exists = prev.some(msg => msg.id === chatMessage.id);
-                            return exists ? prev : [...prev, chatMessage];
+                            const exists = prev.some(msg => 
+                                msg.id === chatMessage.id || 
+                                (msg.isTemp && msg.message === chatMessage.message && msg.sender === chatMessage.sender)
+                            );
+                            
+                            if (exists) {
+                                // Replace temporary message with real one
+                                return prev.map(msg => 
+                                    msg.isTemp && msg.message === chatMessage.message && msg.sender === chatMessage.sender 
+                                        ? chatMessage 
+                                        : msg
+                                );
+                            } else {
+                                return [...prev, chatMessage];
+                            }
                         });
                     }
                     
@@ -71,8 +95,7 @@ const AdminChatManagement = () => {
                     fetchUnreadCount();
                     
                     // Update user list
-                    fetchChatUsers();
-                });
+                    fetchChatUsers();                });
 
                 // Subscribe to read status updates
                 client.subscribe('/topic/admin/read/*', (message) => {
@@ -129,17 +152,33 @@ const fetchChatHistory = async (userId) => {
         }
 
         setSending(true);
-        try {            
+        const messageText = newMessage; // Store message text outside try block
+        
+        try {
+            setNewMessage(''); // Clear input immediately for better UX
+            
+            // Create temporary message for immediate UI update
+            const tempMessage = {
+                id: Date.now(), // Temporary ID
+                message: messageText,
+                sender: 'ADMIN',
+                userId: selectedUser.id,
+                createdAt: new Date().toISOString(),
+                isTemp: true // Mark as temporary
+            };
+            
+            // Add to UI immediately
+            setMessages(prev => [...prev, tempMessage]);
+            
             // Gửi qua WebSocket nếu có kết nối
             if (stompClient && connected && stompClient.connected) {
-                console.log('Admin sending message via WebSocket:', newMessage);
+                console.log('Admin sending message via WebSocket:', messageText);
                 
                 stompClient.send('/app/chat.sendToUser', {}, JSON.stringify({
                     userId: selectedUser.id,
-                    message: newMessage
+                    message: messageText
                 }));
                 
-                setNewMessage('');
             } else {
                 // Fallback về HTTP nếu WebSocket không khả dụng
                 console.log('WebSocket not connected, using HTTP fallback');
@@ -147,18 +186,25 @@ const fetchChatHistory = async (userId) => {
                     `${BASE_URL}/api/chat/send-to-user`,
                     {
                         userId: selectedUser.id,
-                        message: newMessage
+                        message: messageText
                     },
                     getConfig()
                 );
 
+                // Replace temporary message with real message from server
                 if (response.data.chat) {
-                    setMessages(prev => [...prev, response.data.chat]);
-                    setNewMessage('');
+                    setMessages(prev => 
+                        prev.map(msg => 
+                            msg.isTemp && msg.message === messageText ? response.data.chat : msg
+                        )
+                    );
                 }
             }
         } catch (error) {
             console.error('Error sending message:', error);
+            // Remove temporary message on error
+            setMessages(prev => prev.filter(msg => !msg.isTemp || msg.message !== messageText));
+            setNewMessage(messageText); // Restore message in input
             alert('Không thể gửi tin nhắn. Vui lòng thử lại.');
         } finally {
             setSending(false);
@@ -273,11 +319,11 @@ const fetchChatHistory = async (userId) => {
                                                 <p>Chưa có tin nhắn nào</p>
                                             </div>                                        ) : (                                            messages
                                                 .filter(message => message && message.id) // Filter out null/undefined messages
-                                                .map(message => {
+                                                .map((message, index) => {
                                                     console.log('Message:', message.id, 'Sender:', message.sender, 'Message:', message.message);
                                                     return (
                                                         <div
-                                                            key={message.id}
+                                                            key={`${message.id}-${index}-${message.createdAt}`}
                                                             className={`message ${message.sender === 'ADMIN' ? 'admin-message' : 'user-message'}`}
                                                         >
                                                             <div className="message-content">

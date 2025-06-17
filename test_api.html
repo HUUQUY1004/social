@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test API getPostHome</h1>
+    <button onclick="testGetPostHome()">Test getPostHome API</button>
+    <div id="result"></div>
+
+    <script>
+        // Thay thế token này bằng token thực tế của user
+        const JWT_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsImlhdCI6MTczNDM1Nzc0MiwiZXhwIjoxNzM1MjIxNzQyfQ.FrOA0hF3VpSK4uJywVu8xNVLB3dEwMCxVP5SrNPe7SA";
+
+        async function testGetPostHome() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Đang gọi API...';
+
+            try {
+                const response = await fetch('http://localhost:5000/api/post/for-home', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': JWT_TOKEN,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h3>API Success (${response.status})</h3>
+                        <p>Số lượng post: ${data.length}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>API Error (${response.status})</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Network Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
