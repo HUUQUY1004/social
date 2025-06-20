@@ -1,3 +1,122 @@
+.report-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* nền mờ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.report-menu {
+  background-color: #fff;
+  border-radius: 12px;
+  width: 280px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  font-family: 'Helvetica', sans-serif;
+  animation: fadeIn 0.2s ease;
+}
+
+.report-menu span {
+  display: block;
+  padding: 14px 16px;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition:  0.2s ease;
+}
+
+.report-menu span:hover {
+  background-color: #f5f5f5;
+}
+
+.report-menu span:first-child {
+  color: #ed4956;
+  font-weight: 600;
+}
+
+.report-menu span:last-child {
+  border-bottom: none;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.report-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.report-reason-modal {
+  background: white;
+  width: 360px;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: left;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.report-reason-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.report-reason-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.report-reason-list li:hover {
+  background-color: #f5f5f5;
+}
+
+.cancel-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .post-home-item {
     margin-bottom: 30px;
     .post-header {

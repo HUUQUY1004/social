@@ -38,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
     private void createDemoData() {
         System.out.println("Creating demo data...");        // Tạo users demo
         User admin = createUser("admin@social.com", "admin", "Admin User", Role.ADMIN, false);
-        User user1 = createUser("nguyen.van.a@gmail.com", "nguyenvana", "Nguyễn Văn A", Role.USER, false);
+        User user1 = createUser("thanhphatle20032017@gmail.com", "thanhphat1203", "Nguyễn Đỗ Thanh Phát", Role.USER, false);
         User user2 = createUser("tran.thi.b@gmail.com", "tranthib", "Trần Thị B", Role.USER, false);
         User user3 = createUser("le.minh.c@gmail.com", "leminhc", "Lê Minh C", Role.USER, false);
         User user4 = createUser("pham.thu.d@gmail.com", "phamthud", "Phạm Thu D", Role.USER, true); // blocked user
@@ -78,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
         ));
 
         // Tạo reels demo
-        createDemoPost(user1, "Reel múa hát vui nhộn", PostStatus.APPROVED, true, PostVisibility.PUBLIC, moderator, Arrays.asList(
+        createDemoPost(user1, "Reel múa hát vui nhộn", PostStatus.PENDING, true, PostVisibility.PUBLIC, moderator, Arrays.asList(
             "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
         ));
 

@@ -42,10 +42,8 @@ function PostPage() {
     const url = window.location.href;
     const checkURLTrash = url.includes('trash');
 
-
     // get current user
     const {currentUser} = useUser()
-
 
     useOnClickOutside(customRef, () => setIsCustom(false));
     useOnClickOutside(ref, () => {

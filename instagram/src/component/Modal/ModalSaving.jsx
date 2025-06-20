@@ -44,7 +44,7 @@ function ModalSaving({ onClose }) {
                     }
                 >
                     <p className="done" onClick={handleSubmit}>
-                        Tiếp
+                        Tiếp tục
                     </p>
                 </div>
             </div>

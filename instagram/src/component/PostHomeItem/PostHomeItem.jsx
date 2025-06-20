@@ -25,7 +25,38 @@ function PostHomeItem({ currentUser, item, time,  }) {
 
     const className = useContext(ReelContext)
     const emojiRef = useRef();
-    const videoRef = useRef()
+    const videoRef = useRef();
+const [showReportMenu, setShowReportMenu] = useState(false); // bật tắt menu Report
+const [showReportModal, setShowReportModal] = useState(false); // hiển thị Modal report
+const [showReasonModal, setShowReasonModal] = useState(false); // show modal reseason report
+const [reportReason, setReportReason] = useState('');
+const handleReport = async (postId) => {
+if (!reportReason) return alert('Vui lòng chọn lý do báo cáo');
+    try {
+        const response = await fetch(`${BASE_URL}/posts/${postId}/report`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: currentUser.id,
+                reason: reportReason
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert('Báo cáo đã được gửi.');
+            setShowReportModal(false);
+            setReportReason('');
+        } else {
+            alert('Báo cáo thất bại: ' + data.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Có lỗi xảy ra khi gửi báo cáo.');
+    }
+};
+
     useEffect(() => {
         setIsLike(() => item?.likedByUsers.includes(currentUser.id));
     }, [item]);
@@ -82,6 +113,9 @@ function PostHomeItem({ currentUser, item, time,  }) {
 
 
     return (
+                
+        <>
+        
         <div className="post-home-item">
             <div className="post-header flex a-center j-between">
                 <Link className="post-user flex a-center" to={`/${item.user.id}`}>
@@ -102,11 +136,58 @@ function PostHomeItem({ currentUser, item, time,  }) {
                         <span>{time}</span>
                     </div>
                 </Link>
-                <div className="post-icon">
-                    <span>
+                <div className="post-icon" style={{ position: 'relative' }}>
+                    <span onClick={() => setShowReportMenu(!showReportMenu)} style={{ cursor: 'pointer' }}>
                         <AiOutlineEllipsis />
                     </span>
                 </div>
+                {/* Modal Report UserPost */}
+                {showReportMenu && (
+                <div className="report-overlay" onClick={() => setShowReportMenu(false)}>
+                    <div className="report-menu" onClick={(e) => e.stopPropagation()}>
+                    <span onClick={() => {
+                        setShowReportMenu(false);
+                        setShowReasonModal(true); 
+                    }}>
+                        Báo cáo
+                    </span>
+                    <span>Không quan tâm</span>
+                    <span>Đi đến bài viết</span>
+                    <span>Chia sẻ lên ...</span>
+                    <span>Sao chép liên kết</span>
+                    <span>Nhúng</span>
+                    <span>Giới thiệu về tài khoản này</span>
+                    <span onClick={() => setShowReportMenu(false)}>Hủy</span>
+                    </div>
+                </div>
+                )}
+                {/* Modal Reason Report  */}
+                {showReasonModal && (
+                <div className="report-overlay" onClick={() => setShowReasonModal(false)}>
+                    <div className="report-reason-modal" onClick={(e) => e.stopPropagation()}>
+                    <h3 className="modal-title">Báo cáo</h3>
+                    <p className="modal-subtitle">Tại sao bạn báo cáo bài viết này?</p>
+                    <ul className="report-reason-list">
+                        {[
+                        'Chỉ là tôi không thích nội dung này',
+                        'Bắt nạt hoặc liên hệ theo cách không mong muốn',
+                        'Tự tử, tự gây thương tích hoặc rối loạn ăn uống',
+                        'Bạo lực, thù ghét hoặc bóc lột',
+                        'Bán hoặc quảng cáo mặt hàng bị hạn chế',
+                        'Ảnh khoả thân hoặc hoạt động tình dục',
+                        'Lừa đảo, gian lận hoặc spam',
+                        'Thông tin sai sự thật'
+                        ].map((reason, index) => (
+                        <li key={index} onClick={() => handleReport(item.id, reason)}>
+                            {reason}
+                        </li>
+                        ))}
+                    </ul>
+                    <button className="cancel-btn" onClick={() => setShowReasonModal(false)}>Hủy</button>
+                    </div>
+                </div>
+                )}
+                
             </div>
             <div className="post-content">
                 <div className={`${className} post-file`}>
@@ -197,6 +278,7 @@ function PostHomeItem({ currentUser, item, time,  }) {
                 isShare && <Share postId={item.id} onClose={setIsShare}/>
             }
         </div>
+        </>
     );
 }
 
