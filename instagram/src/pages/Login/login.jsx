@@ -48,6 +48,9 @@ function Login() {
         
         }
     }
+    const handleLoginWithFacebook = async()=>{
+        window.location.href = 'http://localhost:5000/auth/login-facebook';
+    }
     return ( 
         <div>
         <div className="login__wrapper flex j-center a-center">
@@ -78,7 +81,7 @@ function Login() {
                         <div className="line-2"></div>
                     </div>
                     <div className="login-w flex a-center j-center flex-column">
-                        <p>
+                        <p className="cursor-pointer" onClick={handleLoginWithFacebook}>
                             <i class="fa-brands fa-square-facebook"></i>
                             <span>{t("login_with_facebook")}</span>
                         </p>

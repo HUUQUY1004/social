@@ -446,7 +446,14 @@ export const changeStatusLike = async (postId) => {
     { postId },
     config
   );
-
+  return data;
+};
+export const changePermit = async (value) => {
+  const { data } = await axios.patch(
+    `${BASE_URL}/api/post/change-permit`,
+    value,
+    config
+  );
   return data;
 };
 export const changePasswordUser = async (value) => {
@@ -471,4 +478,15 @@ export const sendImageToBLIP = async (base64Image) => {
     }
   );
   return data;
+};
+export const getActivityHistory = async (page) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/api/history?page=${page}`,
+      config
+    );
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
 };

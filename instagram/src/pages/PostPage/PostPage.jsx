@@ -11,7 +11,7 @@ import { CiFaceSmile } from 'react-icons/ci';
 import Picker from 'emoji-picker-react';
 import { times } from '../../component/func/commonFunc';
 import { images } from '../../source';
-import { BASE_URL, changeStatusComment, changeStatusLike, commentPost, deleteAndBackupPost, deletePost, getPostById, likePost } from '../../action/action';
+import { BASE_URL, changePermit, changeStatusComment, changeStatusLike, commentPost, deleteAndBackupPost, deletePost, getPostById, likePost } from '../../action/action';
 import { useUser } from '../../store/useStore';
 import Share from '../../component/share/Share';
 import SavedAlbum from '../../component/SaveAlbum/Save';
@@ -33,9 +33,13 @@ function PostPage() {
     // custom
     const [isCustom, setIsCustom] = useState(false);
 
+    // permit
+    const [isShowVisibility, setIsShowVisibility] = useState(false)
+    const [permit, setPermit] = useState(post?.postVisibility)
+
     // Comment 
     const [comments, setComments] = useState(post?.comments  || [])
-    console.debug("comment: ", comments);
+    console.debug("post: ", post);
     
     const customRef = useRef();
     // GET URL
@@ -56,6 +60,7 @@ function PostPage() {
         const data  = await getPostById(id)
         setPost(data);
         setComments(data.comments)
+        setPermit(data.postVisibility)
     }
     useEffect(() => {
         getPost();
@@ -143,6 +148,31 @@ function PostPage() {
             toast.error(error.response?.data?.message || error.message || "Lỗi không xác định" )
         }
         
+    }
+    const handleChangePremit = async()=>{
+        setIsShowVisibility(true)
+    }
+    const handleSendPermit = async()=>{
+        console.log({
+                postId: post.id,
+                postVisibility: permit
+            });
+        
+        try {
+            const data = await changePermit({
+                postId: post.id,
+                postVisibility: permit
+            })
+            
+            if(data.status === 200) {
+                setIsCustom((prev)=> !prev)
+                toast.info(t("success"), {
+                    delay: 1000,
+                })
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message || "Lỗi không xác định" )
+        }
     }
     return (
         <PopupWrapper isClose={true}>
@@ -289,14 +319,25 @@ function PostPage() {
                 {isCustom && (
                     <div className="custom">
                         <div ref={customRef}>
+                            {/* I can using menu two level but i like :) */}
                             {post?.user?.id === currentUser.id ? (
+                                isShowVisibility ? 
+                                <div>
+                                    <ul >
+                                        <li onClick={()=>setPermit("PUBLIC")} className={`${permit === 'PUBLIC' ? "text-red-500 font-semibold" : "text-black"}`}>{t("public")}</li>
+                                        <li onClick={()=>setPermit('FRIENDS_ONLY')} className={`${permit === 'FRIENDS_ONLY' ? "text-red-500 font-semibold" : "text-black"}`}>{t("friends")}</li>
+                                        <li onClick={()=>setPermit("PRIVATE")} className={`${permit === 'PRIVATE' ? "text-red-500 font-semibold" : "text-black"}`}>{t("only_me")}</li>
+                                    </ul>
+                                    <button onClick={handleSendPermit} className='text-center w-full py-2 text-white bg-blue-500 font-semibold'>{t("save")}</button>
+                                </div>
+                                : 
                                 <ul>
                                     <li className="delete" ref={liRef} onClick={() => handleDeletePost()}>
                                         {post?.delete ? t("restore") : t("delete")}
                                     </li>
                                     <li onClick={handleChangeTypeComment}>{post?.comment  ? t("turn_off_comment") : t("turn_on_comment") }</li>
                                     <li onClick={handleChangeTypeLike}>{post?.showLike  ? t("turn_off_like") :  t("turn_on_like")}</li>
-                                    <li>{t("change_audience")}</li>
+                                    <li onClick={handleChangePremit}>{t("change_audience")}</li>
                                 </ul>
                             ) : (
                                 <ul>

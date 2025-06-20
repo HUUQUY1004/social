@@ -3,6 +3,7 @@ package com.social.Social.service;
 import com.social.Social.model.Comment;
 import com.social.Social.model.Post;
 import com.social.Social.model.User;
+import com.social.Social.request.ChangePermitRequest;
 import com.social.Social.request.CommentPost;
 import com.social.Social.responsitory.CommentRepository;
 import com.social.Social.responsitory.PostRepository;
@@ -145,5 +146,18 @@ public class PostServiceImp implements  PostService{
         }
         post.setShowLike(!post.isShowLike());
         postRepository.save(post);
+    }
+
+    @Override
+    public void changePermit(String jwt, ChangePermitRequest changePermitRequest) throws Exception {
+        User user = userService.findUserByToken(jwt);
+        Post post = getPostById(changePermitRequest.getPostId());
+        if(user.getId() != post.getUser().getId()){
+            throw  new IllegalArgumentException("Only the post owner can change permit status");
+        }
+        else {
+            post.setPostVisibility(changePermitRequest.getPostVisibility());
+            postRepository.save(post);
+        }
     }
 }

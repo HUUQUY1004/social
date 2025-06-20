@@ -30,6 +30,8 @@ public class ActivityHistory {
     private String link;
 
     private LocalDateTime timestamp;
+    @Column(name = "userId")
+    private Long userId;
 
     @PrePersist
     protected  void  onCreated(){

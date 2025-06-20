@@ -1,4 +1,5 @@
 import VideoCall from "../component/Call/call";
+import ActivityHistory from "../pages/Activity/ActivityHistory";
 import AlbumPage from "../pages/Album/album";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import EditProfile from "../pages/EditProfile/EditProfile";
@@ -86,5 +87,9 @@ export const router = [
   {
     Component: EditProfile,
     path: "/edit-profile",
+  },
+  {
+    Component: ActivityHistory,
+    path: "/activity",
   },
 ];

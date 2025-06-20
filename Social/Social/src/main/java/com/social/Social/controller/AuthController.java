@@ -2,6 +2,7 @@ package com.social.Social.controller;
 
 import com.social.Social.model.ActivityHistory;
 import com.social.Social.model.EnumActivity;
+import com.social.Social.model.FacebookUser;
 import com.social.Social.model.User;
 import com.social.Social.request.ChangePassword;
 import com.social.Social.request.FindUserByEmailRequest;
@@ -10,11 +11,16 @@ import com.social.Social.request.VerifyOTPRequest;
 import com.social.Social.response.AuthResponse;
 import com.social.Social.response.Response;
 import com.social.Social.responsitory.UserRepository;
+import com.social.Social.security.UserDetailsImpl;
 import com.social.Social.service.*;
 import com.social.Social.config.JwtProvider;
 import com.social.Social.service.implemenent.InforDeviceImplement;
+import com.social.Social.service.interfaces.IFacebookService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,11 +30,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -60,6 +66,16 @@ public class AuthController {
 
     @Autowired
     private InforDeviceImplement inforDeviceImplement;
+
+    @Autowired
+    private  IFacebookService iFacebookService;
+
+//    Login facebook
+    @Value("${facebook.appId}")
+    private String appId;
+
+    @Value("${facebook.redirect-uri}")
+    private String redirectUri;
 
     @PostMapping("/find-email")
     public ResponseEntity<Response> findUserByEmail(@RequestBody FindUserByEmailRequest findUserByEmailRequest) throws Exception {
@@ -151,12 +167,14 @@ public class AuthController {
 
 
 //           Xác định
+           UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
            String device = inforDeviceImplement.getDeviceInfo(request);
 
            String location = inforDeviceImplement.getLocationInfo(request);
 
            ActivityHistory activityHistory = new ActivityHistory().builder()
                    .isDelete(false).
+                   userId(userDetails.getId()).
                    content("Bạn đã đăng nhập vào tại thiết bị " + device +" tại : "+ location).activityType(EnumActivity.LOGIN).
                    build();
            activityHistoryService.createActivityHistory(activityHistory);
@@ -185,6 +203,36 @@ public class AuthController {
             throw  new BadCredentialsException("Vui lòng kiểm tra lại mật khẩu");
         }
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+    private Authentication authenticate(String email) {
+        UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
+        if(userDetails == null) {
+            throw  new BadCredentialsException("Invalid email...");
+        }
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    @GetMapping("/login-facebook")
+    public void redirectToFacebook(HttpServletResponse response) throws IOException {
+        String facebookAuthUrl = "https://www.facebook.com/v17.0/dialog/oauth" +
+                "?client_id=" + appId +
+                "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8) +
+                "&scope=email";
+
+        response.sendRedirect(facebookAuthUrl);
+    }
+
+    @GetMapping("/facebook/feedback")
+    public ResponseEntity<AuthResponse> facebookCallback(@RequestParam("code") String code) throws Exception {
+        String accessToken = iFacebookService.getAccessToken(code);
+        FacebookUser email = iFacebookService.getEmailFromToken(accessToken);
+        User user = userService.findUserByEmail(email.getEmail());
+        Authentication authentication = authenticate(user.getEmail());
+        String jwt = jwtProvider.generateToken(authentication);
+        AuthResponse authResponse = AuthResponse.builder().message("Success").jwt(jwt)
+        .build();
+
+        return  new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 }
 

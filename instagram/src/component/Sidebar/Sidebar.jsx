@@ -83,7 +83,7 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
             icon: <FontAwesomeIcon icon={faClockRotateLeft} />,
             name: t("activity"),
             direct: <MdOutlineKeyboardArrowRight />,
-            link: '/your_activity/interactions',
+            link: '/activity',
         },
         {
             icon: <FontAwesomeIcon icon={faBookmark} />,
@@ -157,6 +157,9 @@ function Sidebar({ onCreatePost, onSearch, onNotify, onConvertAccount }) {
         }
         if(item.value ==='en'){
             i18n.changeLanguage(item.value)
+        }
+        if(item.name === t("activity")){
+            navigate(item.link)
         }
     };
     const handleClick = (name) => {

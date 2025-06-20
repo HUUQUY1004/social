@@ -18,6 +18,7 @@ import ChangeDescription from '../../component/Change/Description/description';
 import ChangeAvatar from '../../component/Change/Avatar/avatar';
 import { useUser } from '../../store/useStore';
 import Story from '../../component/Remarkable/Story';
+import { useTranslation } from 'react-i18next';
 
 function ProfileUser() {
     const [dataUser, setDataUser] = useState(undefined);
@@ -33,22 +34,22 @@ function ProfileUser() {
     const [quantityFriends, setQuantityFriends] = useState(0);
     
     const params = useParams();
-    const { userId } = params; // Lấy userId từ URL params
+    const { userId } = params; 
+    const {t} = useTranslation()
     
-    // ref flow and unflow
     const flowRef = useRef();
 
-    // Lấy thông tin user theo userId từ params
+   
     const getUserData = async () => {
         if (!userId) return;
         
         setIsLoading(true);
         try {
-            // Nếu userId trùng với currentUser thì dùng currentUser
+            
             if (userId === currentUser?.id || userId === currentUser?._id) {
                 setDataUser(currentUser);
             } else {
-                // Ngược lại gọi API lấy thông tin user khác
+                
                 const userData = await getUserById(userId);
                 setDataUser(userData);
             }
@@ -63,7 +64,7 @@ function ProfileUser() {
         if (!userId) return;
         
         try {
-            const data = await getNumberOfFriends(userId); // Truyền userId vào
+            const data = await getNumberOfFriends(userId); 
             setQuantityFriends(data);
         } catch (error) {
             console.error('Error fetching friends count:', error);
@@ -92,19 +93,19 @@ function ProfileUser() {
     }, [userId, currentUser]); // Thêm dependency userId
 
     // Kiểm tra xem có phải profile của chính mình không
-    const isOwnProfile = currentUser?._id === dataUser?._id || currentUser?.id === dataUser?.id;
+    const isOwnProfile = currentUser?.id === dataUser?.id || currentUser?.id === dataUser?.id;
 
     const nav = [
         {
-            name: 'BÀI VIẾT',
+            name: t("post"),
             icon: <AiOutlineTable />,
         },
         {
-            name: isOwnProfile ? 'ĐÃ LƯU' : 'REELS',
+            name: isOwnProfile ? t("saved") : 'REELS',
             icon: <BsBookmark />,
         },
         {
-            name: 'ĐƯỢC GẮN THẺ',
+            name: t("tag"),
             icon: <AiOutlineTags />,
         },
     ];
@@ -129,7 +130,7 @@ function ProfileUser() {
                             <h3 className="username">{dataUser?.username}</h3>
                             {isOwnProfile ? (
                                 <div className="flex a-center ">
-                                    <button className="br-8 btn">Chỉnh sửa trang cá nhân</button>
+                                    <button className="br-8 btn">{t("edit_profile")}</button>
                                     <Link
                                         to={`/${currentUser?.id}/trash`}
                                         className="icon"
@@ -142,9 +143,9 @@ function ProfileUser() {
                             ) : (
                                 <div className="user-diff flex a-center">
                                     <button className="following br-8" ref={flowRef}>
-                                        Theo dõi
+                                        {t("follow")}
                                     </button>
-                                    <button className="inbox br-8">Nhắn tin</button>
+                                    <button className="inbox br-8">{t("send_message")}</button>
                                     <span>
                                         <BiDotsHorizontalRounded />
                                     </span>
@@ -154,12 +155,12 @@ function ProfileUser() {
                         <div className="center flex">
                             <h3 className="count-post">
                                 <span>{postList?.length}</span>
-                                bài viết
+                                {t("post")}
                             </h3>
                             <h3 className="count_followers">
                                 <Link to={"/friends"}>
                                     <span>{quantityFriends}</span>
-                                    người bạn
+                                    {t("friends")}
                                 </Link>
                             </h3>
                         </div>
@@ -201,12 +202,12 @@ function ProfileUser() {
                                                 <div className="icon flex a-center j-center">
                                                     <AiOutlineCamera />
                                                 </div>
-                                                <h1 className="title">Chia sẻ ảnh</h1>
+                                                <h1 className="title">{t("share_image")}</h1>
                                                 <p className="description">
-                                                    Khi bạn chia sẻ ảnh, ảnh sẽ xuất hiện trên trang cá nhân của bạn{' '}
+                                                    {t("share_image_description")}{' '}
                                                 </p>
                                                 <p className="share-fist" onClick={() => setShowPost(true)}>
-                                                    Chia sẻ ảnh đầu tiên của bạn
+                                                    {t("first_image")}
                                                 </p>
                                                 <Link
                                                     className="trash flex a-center"
@@ -215,7 +216,7 @@ function ProfileUser() {
                                                     <span>
                                                         <FiTrash2 />
                                                     </span>
-                                                    <p>Thùng rác</p>
+                                                    <p>{t("trash_can")}</p>
                                                 </Link>
                                             </div>
                                         ) : (
@@ -225,7 +226,7 @@ function ProfileUser() {
                                 ) : (
                                     <div>
                                         {postList?.length === 0 ? (
-                                            <div>Không có bài đăng</div>
+                                            <div>{t("no_post")}</div>
                                         ) : (
                                             <PostList data={postList} />
                                         )}
@@ -241,16 +242,16 @@ function ProfileUser() {
                                     <div>
                                         <div className="saving-empty flex flex-column">
                                             <div className="add-new-album flex j-between">
-                                                <div className="text">Chỉ mình bạn có thể xem mục mình đã lưu</div>
+                                                <div className="text">{t("collection_description")}</div>
                                                 <div className="new-album" onClick={() => setShowNewSaving(true)}>
-                                                    + Bộ sưu tập
+                                                    + {t("album")}
                                                 </div>
                                             </div>
                                         </div>
                                         {dataUser?.saving?.length > 0 ? (
                                             <div className=" album flex j-between wrap">
                                                 <div className="item-album">
-                                                    <h4 className="name">Tất cả bài viết</h4>
+                                                    <h4 className="name">{t("all_post")}</h4>
                                                 </div>
                                                 {dataUser.saving.map((item, index) => {
                                                     return (
@@ -265,10 +266,9 @@ function ProfileUser() {
                                                 <div className="icon flex a-center j-center">
                                                     <BsBookmark />
                                                 </div>
-                                                <h1 className="title">Lưu</h1>
+                                                <h1 className="title">{t('save')}</h1>
                                                 <p className="description">
-                                                    Lưu ảnh và video mà bạn muốn xem lại. Sẽ không có ai được thông báo và
-                                                    chỉ mình bạn có thể xem những gì mình đã lưu.
+                                                    {t("save_description")}
                                                 </p>
                                             </div>
                                         )}
@@ -276,7 +276,7 @@ function ProfileUser() {
                                 ) : (
                                     <div className="reels-content">
                                         {/* Hiển thị reels của user khác */}
-                                        <div>Reels của {dataUser?.username}</div>
+                                        <div>Reels {t("belong")} {dataUser?.username}</div>
                                     </div>
                                 )}
                             </div>
@@ -289,11 +289,11 @@ function ProfileUser() {
                                     <div className="icon flex a-center j-center">
                                         <AiOutlineTags />
                                     </div>
-                                    <h1 className="title">Ảnh có mặt {isOwnProfile ? 'bạn' : dataUser?.username}</h1>
+                                    <h1 className="title">{t("image_is_present")} {isOwnProfile ? ' bạn' : dataUser?.username}</h1>
                                     <p className="description">
                                         {isOwnProfile 
-                                            ? 'Khi mọi người gắn thẻ bạn trong ảnh, ảnh sẽ xuất hiện tại đây.'
-                                            : `Ảnh có gắn thẻ ${dataUser?.username} sẽ xuất hiện tại đây.`
+                                            ? t("photo_in_you_description")
+                                            : `${t("photo_with_tag")} ${dataUser?.username} ${t("will-appear_here")}`
                                         }
                                     </p>
                                 </div>

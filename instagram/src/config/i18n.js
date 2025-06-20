@@ -14,6 +14,12 @@ i18n
     resources: {
       en: {
         translation: {
+          follow: "Follow",
+          photo_with_tag: "Photos with tags",
+          will_appear_here: "will appear here",
+          belong: "belong to",
+          image_is_present: "Image is present",
+          you: "you",
           find_album: "Find Album",
           home: "Home",
           explore: "Explore",
@@ -169,6 +175,12 @@ i18n
       },
       vi: {
         translation: {
+          follow: "Theo dõi",
+          photo_with_tag: "Ảnh có gắn thẻ",
+          will_appear_here: "sẽ xuất hiện tại đây",
+          belong: "của",
+          image_is_present: "Ảnh có mặt bạn",
+          you: "bạn",
           find_album: "Tìm album",
           success: "Thành công",
           compose_a_message: "Soạn tin nhắn",

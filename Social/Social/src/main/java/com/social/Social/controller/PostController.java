@@ -4,6 +4,7 @@ import com.social.Social.model.Image;
 import com.social.Social.model.Post;
 import com.social.Social.model.PostVisibility;
 import com.social.Social.model.User;
+import com.social.Social.request.ChangePermitRequest;
 import com.social.Social.request.CommentPost;
 import com.social.Social.request.LikePost;
 import com.social.Social.request.ToggleCommentLikeRequest;
@@ -137,6 +138,15 @@ public class PostController {
                 .status(200)
                 .message("Success").build();
         return  ResponseEntity.ok(response);
+    }
+    @PatchMapping("change-permit")
+    public  ResponseEntity<Response> changePermit(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ChangePermitRequest changePermitRequest
+            ) throws Exception {
+        postService.changePermit(jwt,changePermitRequest);
+        Response response = Response.builder().status(200).message("Success").build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

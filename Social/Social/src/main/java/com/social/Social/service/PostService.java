@@ -1,6 +1,7 @@
 package com.social.Social.service;
 
 import com.social.Social.model.Post;
+import com.social.Social.request.ChangePermitRequest;
 import com.social.Social.request.CommentPost;
 
 import java.util.List;
@@ -23,4 +24,5 @@ public interface PostService {
     List<Post> getReel() throws  Exception;
     void toggleComment(String jwt, Long postId) throws  Exception;
     void toggleLike(String jwt, Long postId) throws  Exception;
+    void changePermit(String jwt, ChangePermitRequest changePermitRequest) throws  Exception;
 }
