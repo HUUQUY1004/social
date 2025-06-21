@@ -6,6 +6,7 @@ import com.social.Social.model.PostVisibility;
 import com.social.Social.model.User;
 import com.social.Social.request.CommentPost;
 import com.social.Social.request.LikePost;
+import com.social.Social.request.ReportRequest;
 import com.social.Social.request.ToggleCommentLikeRequest;
 import com.social.Social.response.Response;
 import com.social.Social.responsitory.ImageRepository;
@@ -17,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -202,5 +205,38 @@ public class PostController {
         return  ResponseEntity.ok(posts);
     }
 
+    @PostMapping("/{postId}/report")
+    public ResponseEntity<?> reportPost(
+            @PathVariable Long postId,
+            @RequestBody ReportRequest request,
+            Authentication authentication) {
+
+        if (postId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "ID bài viết không được để trống"));
+        }
+
+        if (request.getReason() == null || request.getReason().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Lý do báo cáo không được để trống"));
+        }
+
+        try {
+            String email = (String) authentication.getPrincipal(); // lấy email từ JWT
+            User user = userService.findUserByEmail(email); // lấy user từ email
+
+            if (user == null || user.getId() == null) {
+                return ResponseEntity.status(401).body(Map.of("message", "Người dùng không hợp lệ"));
+            }
+
+            System.out.println(postId);
+            System.out.println(request);
+            System.out.println(user);
+            postService.reportPost(postId, request, user); // gọi hàm service đã có user
+            return ResponseEntity.ok(Map.of("message", "Đã báo cáo"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("message", "Lỗi máy chủ: " + e.getMessage()));
+        }
+    }
 
 }

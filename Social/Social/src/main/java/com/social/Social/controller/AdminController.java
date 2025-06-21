@@ -137,7 +137,9 @@ public class AdminController {
         response.setMessage("Đã từ chối bài viết thành công");
         response.setStatus(200);
         return ResponseEntity.ok(response);
-    }    @GetMapping("/reels/pending")
+    }
+
+    @GetMapping("/reels/pending")
     public ResponseEntity<List<Post>> getPendingReels() throws Exception {
         List<Post> pendingReels = postService.getReelsByStatus(PostStatus.PENDING);
         return ResponseEntity.ok(pendingReels);
