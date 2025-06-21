@@ -1,12 +1,12 @@
 package com.social.Social.service;
 
-import com.social.Social.model.Comment;
-import com.social.Social.model.Post;
-import com.social.Social.model.PostStatus;
-import com.social.Social.model.User;
+import com.social.Social.model.*;
 import com.social.Social.request.CommentPost;
+import com.social.Social.request.ReportRequest;
 import com.social.Social.responsitory.CommentRepository;
 import com.social.Social.responsitory.PostRepository;
+import com.social.Social.responsitory.ReportRepository;
+import com.social.Social.responsitory.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,11 @@ public class PostServiceImp implements  PostService{
     UserService userService;
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    ReportRepository reportRepository;
 
     @Autowired
     CommentRepository commentRepository;
@@ -173,7 +178,7 @@ public class PostServiceImp implements  PostService{
         post.setModerationReason(reason);
         post.setModeratedAt(LocalDateTime.now());
         post.setModeratedBy(moderator);
-        
+
         return postRepository.save(post);
     }
 
@@ -192,5 +197,23 @@ public class PostServiceImp implements  PostService{
         reel.setModeratedBy(moderator);
         
         return postRepository.save(reel);
+    }
+
+    @Override
+    public void reportPost(Long postId, ReportRequest request, User user) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        System.out.println(user.getId());
+        user = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Report report = new Report();
+        report.setPost(post);
+        report.setReason(request.getReason());
+        report.setReportedBy(user);
+        report.setReportedAt(LocalDateTime.now());
+        reportRepository.save(report);
+        post.setStatus(PostStatus.PENDING); // Cập nhật trạng thái post → PENDING
+        System.out.println(post.getStatus());
+        postRepository.save(post);
     }
 }

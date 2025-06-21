@@ -27,34 +27,38 @@ function PostHomeItem({ currentUser, item, time,  }) {
     const emojiRef = useRef();
     const videoRef = useRef();
 const [showReportMenu, setShowReportMenu] = useState(false); // bật tắt menu Report
-const [showReportModal, setShowReportModal] = useState(false); // hiển thị Modal report
 const [showReasonModal, setShowReasonModal] = useState(false); // show modal reseason report
 const [reportReason, setReportReason] = useState('');
-const handleReport = async (postId) => {
-if (!reportReason) return alert('Vui lòng chọn lý do báo cáo');
+const handleReport = async (postId, reason) => {
+    const token = localStorage.getItem('access_token'); // phải đồng nhất key này
+    console.log(token)
+    if (!token || token.split(".").length !== 3) {
+        alert("Bạn chưa đăng nhập hoặc token không hợp lệ.");
+        return;
+    }
+
     try {
-        const response = await fetch(`${BASE_URL}/posts/${postId}/report`, {
+        const res = await fetch(`http://localhost:5000/api/post/${postId}/report`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-                userId: currentUser.id,
-                reason: reportReason
-            })
+            body: JSON.stringify({ reason })
         });
-        const data = await response.json();
-        if (response.ok) {
-            alert('Báo cáo đã được gửi.');
-            setShowReportModal(false);
-            setReportReason('');
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("Báo cáo đã gửi thành công.");
         } else {
-            alert('Báo cáo thất bại: ' + data.message);
+            alert(`Báo cáo thất bại: ${data.message || "Không rõ lỗi."}`);
         }
     } catch (err) {
-        console.error(err);
-        alert('Có lỗi xảy ra khi gửi báo cáo.');
+        console.error("Report error:", err);
+        alert("Lỗi hệ thống. Vui lòng thử lại sau.");
     }
+    setShowReasonModal(false); // đóng modal
 };
 
     useEffect(() => {

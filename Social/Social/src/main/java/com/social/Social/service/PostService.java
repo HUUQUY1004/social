@@ -2,7 +2,9 @@ package com.social.Social.service;
 
 import com.social.Social.model.Post;
 import com.social.Social.model.PostStatus;
+import com.social.Social.model.User;
 import com.social.Social.request.CommentPost;
+import com.social.Social.request.ReportRequest;
 
 import java.util.List;
 
@@ -32,4 +34,6 @@ public interface PostService {
     List<Post> getReelsByStatus(PostStatus status) throws Exception;
     Post moderatePost(String jwt, Long postId, PostStatus status, String reason) throws Exception;
     Post moderateReel(String jwt, Long reelId, PostStatus status, String reason) throws Exception;
+
+     void reportPost(Long postId, ReportRequest request, User user) ;
 }
